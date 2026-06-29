@@ -1,0 +1,324 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  pageData?: any;
+}
+
+const { pageData } = Astro.props;
+
+const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
+const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
+const heroBg = pageData?.heroBg?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuA6VFsFILS1bgZgSLWyP0Mcwpj09JXJaSISj8azQMJPb3S7SHQtDr6bj2RQ9C0aP9QIoWMjI9wvh45qhKCUhVXcok678H8ZkVm1TNKr4lamzUDodpDk2DABPtr_nlRR9wqHJoASyi9ympTO4ChGiJCL5X6tOIJCcDdrKfIy4_VzmWjUcnu8nrhv4e96hNwKNtDqQz88XQKOtMuoDjIA9LiHePYFP-x4qF_o7rmm5HocWSeXH0OAg8mGVVImkOS9plQiKCrI6Cr29I8d';
+
+const supportCards = pageData?.supportCards?.length ? pageData.supportCards : [
+  { icon: 'hub', title: 'Sales Inquiry', description: 'Discuss large-scale procurement and contract pricing with our account team.', linkText: 'sales@badgemaster.com', linkUrl: 'mailto:sales@badgemaster.com' },
+  { icon: 'brush', title: 'Design Studio', description: 'Technical assistance with artwork preparation and physical mockup requests.', linkText: 'design@badgemaster.com', linkUrl: 'mailto:design@badgemaster.com' },
+  { icon: 'local_shipping', title: 'Order Tracking', description: 'Real-time production updates and shipping logistics for active orders.', linkText: 'Track Status Online', linkUrl: '#' },
+  { icon: 'account_circle', title: 'Dealer Support', description: 'Dedicated priority assistance for our registered wholesale partners.', linkText: 'Portal Access', linkUrl: '#' }
+];
+
+// Quote form copy
+const formTitle = pageData?.formTitle || 'Request a Manufacturing Quote';
+const formIntro = pageData?.formIntro || 'Provide your technical specifications below. Our engineering team will review and provide a digital proof within 24 hours.';
+
+// Direct contact sidebar
+const hqTitle = pageData?.hqTitle || 'Manufacturing HQ';
+const hqAddress = pageData?.hqAddress || '1280 Industrial Way, Suite 400\nManufacturing District\nChicago, IL 60601';
+const phoneTitle = pageData?.phoneTitle || 'Support Hotline';
+const phone = pageData?.phone || '+1 (800) 555-BADGE';
+const hours = pageData?.hours || 'Mon-Fri: 8:00 AM - 6:00 PM CST';
+const emailTitle = pageData?.emailTitle || 'General Mail';
+const email = pageData?.email || 'info@badgemaster.com';
+const directionsUrl = pageData?.directionsUrl || '#';
+const mapImage = pageData?.mapImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRnJwlt0_Ou4KhiGZcRsCO6b_TPeg1m41glcn_XGSO3AEuuu6qMTe9ScZY_uXje57uHeS6mXJIJHq7AM8m-Usf_puKS8vjFUmL33qkGX5BuWJ-X89eo6UcN-nnpLzt7Gyyy1LzgNtRmOlO4zC33eGLD3_OIYpqEFUoRqRyi6G4ILbbO6MUad-8bVDp7txs4WYwBOO5HOimrVqD-dDctWxDTzCk0pl5__NBHhW2IxrXCK0KfIwcbNz4Cgr1dHE-_dPpSaFO-1a_OYXs';
+
+// Socials
+const socialsTitle = pageData?.socialsTitle || 'Follow Our Process';
+const socials = pageData?.socials?.length ? pageData.socials : [
+  { icon: 'share', label: 'LinkedIn Professional', url: '#' },
+  { icon: 'photo_camera', label: 'Instagram Portfolio', url: '#' }
+];
+
+const legalTitle = pageData?.legalTitle || 'Artwork Usage & Intellectual Property';
+const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster Manufacturing, the customer represents and warrants that they possess all necessary legal rights, permissions, and licenses to reproduce the provided trademarks, logos, and designs. BadgeMaster assumes no liability for copyright or trademark infringement arising from the reproduction of customer-supplied artwork. We reserve the right to refuse orders containing imagery that violates our ethical manufacturing standards.';
+---
+
+<Layout title="Contact & Quote Request | BadgeMaster">
+    <main>
+        <!-- Hero Section -->
+        <section class="relative bg-inverse-surface py-xl overflow-hidden">
+            <div class="absolute inset-0 opacity-20 pointer-events-none">
+                <img alt="Industrial Backdrop" class="w-full h-full object-cover" src={heroBg}/>
+            </div>
+            <div class="relative max-w-container-max mx-auto px-gutter text-center text-white">
+                <h1 class="font-display-lg text-display-lg mb-4 tracking-tight">{heroTitle}</h1>
+                <p class="font-body-lg text-body-lg text-surface-variant max-w-2xl mx-auto">
+                    {heroDescription}
+                </p>
+            </div>
+        </section>
+        <!-- Support Cards - Exactly 4 -->
+        <section class="py-xl max-w-container-max mx-auto px-gutter">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+                {supportCards.map((card) => (
+                    <div class="bg-white border border-outline-variant p-md hover:shadow-lg transition-all cursor-pointer group">
+                        <div class="flex flex-col items-start gap-sm">
+                            <span class="material-symbols-outlined text-primary text-4xl">{card.icon}</span>
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">{card.title}</h3>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">{card.description}</p>
+                            <a href={card.linkUrl || '#'} class="text-primary font-label-bold text-label-bold group-hover:translate-x-1 transition-transform border-b border-primary/20 pb-0.5">{card.linkText}</a>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+        <!-- Main Quote Form & Contact Details -->
+        <section class="bg-surface-container-low py-xl">
+            <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-md">
+                <!-- Quote Form: Main Focus -->
+                <div class="lg:col-span-8 bg-white shadow-sm border border-outline-variant p-lg">
+                    <div class="mb-md">
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">{formTitle}</h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant border-l-4 border-primary pl-4">{formIntro}</p>
+                    </div>
+                    <form class="space-y-md quote-form">
+                        <!-- Product Details Group: Two-column focused -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                            <div class="space-y-md">
+                                <div class="relative">
+                                    <label class="visually-hidden">Product Type</label>
+                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                        <option selected disabled>Product Type</option>
+                                        <option>Flex Badges</option>
+                                        <option>Embroidered Patches</option>
+                                        <option>PVC 3D Patches</option>
+                                        <option>Metal Hardware</option>
+                                        <option>Woven Labels</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="visually-hidden">Dimensions (W x H)</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Dimensions (W x H)" type="text"/>
+                                </div>
+                                <div class="relative">
+                                    <label class="visually-hidden">Finish Preference</label>
+                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                        <option selected disabled>Finish Preference</option>
+                                        <option>Matte</option>
+                                        <option>Glossy</option>
+                                        <option>Metallic</option>
+                                        <option>Textured</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-md">
+                                <div>
+                                    <label class="visually-hidden">Estimated Quantity</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Estimated Quantity" type="number"/>
+                                </div>
+                                <div class="relative">
+                                    <label class="visually-hidden">Backing Attachment</label>
+                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                        <option selected disabled>Backing Attachment</option>
+                                        <option>Heat Seal</option>
+                                        <option>Velcro</option>
+                                        <option>Adhesive</option>
+                                        <option>Plain</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <label class="visually-hidden">Requested Lead Time</label>
+                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                        <option selected disabled>Requested Lead Time</option>
+                                        <option>Standard (15-20 days)</option>
+                                        <option>Expedited (10 days)</option>
+                                        <option>Rush (5-7 days)</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Artwork Upload: Large & Clean -->
+                        <div class="py-md">
+                            <label class="visually-hidden">Design Files</label>
+                            <div class="border-2 border-dashed border-outline-variant p-lg text-center bg-surface-container-lowest hover:border-primary hover:bg-primary-container/5 transition-all group cursor-pointer design-file-upload">
+                                <span class="material-symbols-outlined text-outline text-5xl mb-sm group-hover:text-primary transition-colors">cloud_upload</span>
+                                <p class="font-headline-sm text-on-surface font-bold">Click to upload or drag &amp; drop artwork</p>
+                                <p class="font-body-sm text-on-surface-variant mt-1">SVG, AI, PDF, or high-res PNG (Max 25MB)</p>
+                                <input class="hidden" id="artwork-upload" type="file"/>
+                            </div>
+                        </div>
+                        <!-- Contact Info Group: Strong spacing -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-md pt-md border-t border-outline-variant">
+                            <div class="space-y-md">
+                                <div>
+                                    <label class="visually-hidden">Full Name</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Full Name" type="text"/>
+                                </div>
+                                <div>
+                                    <label class="visually-hidden">Email Address</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Email Address" type="email"/>
+                                </div>
+                            </div>
+                            <div class="space-y-md">
+                                <div>
+                                    <label class="visually-hidden">Company Name</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Company Name" type="text"/>
+                                </div>
+                                <div>
+                                    <label class="visually-hidden">Phone Number</label>
+                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Phone Number" type="tel"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="visually-hidden">Additional Project Notes</label>
+                            <textarea class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Additional Project Notes" rows="4"></textarea>
+                        </div>
+                        <div class="flex items-center gap-sm py-sm">
+                            <input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
+                            <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
+                        </div>
+                        <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg" type="submit">
+                            Submit Quote Request
+                        </button>
+                    </form>
+                </div>
+                <!-- Contact Details Sidebar: Clean & Structured -->
+                <div class="lg:col-span-4 space-y-md">
+                    <div class="bg-white border border-outline-variant p-md shadow-sm">
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-md uppercase tracking-tight">Direct Contact</h3>
+                        <div class="space-y-md">
+                            <div class="flex items-start gap-sm">
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">location_on</span>
+                                <div>
+                                    <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{hqTitle}</p>
+                                    <p class="font-body-md text-on-surface-variant leading-relaxed mt-1 whitespace-pre-line">{hqAddress}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-sm">
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">call</span>
+                                <div>
+                                    <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{phoneTitle}</p>
+                                    <p class="font-body-md text-on-surface-variant leading-relaxed mt-1">{phone}{hours && (<><br/>{hours}</>)}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-sm">
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">mail</span>
+                                <div>
+                                    <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{emailTitle}</p>
+                                    <p class="font-body-md text-on-surface-variant leading-relaxed mt-1">{email}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Map Block: Industrial Style -->
+                    <div class="bg-white border border-outline-variant overflow-hidden shadow-sm">
+                        <div class="h-64 relative">
+                            <img alt="Office Map Location" class="w-full h-full object-cover grayscale brightness-90 contrast-125" src={mapImage}/>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="bg-primary text-on-primary p-3 rounded-full shadow-2xl ring-4 ring-white">
+                                    <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="p-sm bg-surface hover:bg-surface-container-high flex justify-between items-center transition-colors" href={directionsUrl} target={directionsUrl !== '#' ? '_blank' : undefined} rel="noopener">
+                            <span class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">Get Directions</span>
+                            <span class="material-symbols-outlined text-primary">open_in_new</span>
+                        </a>
+                    </div>
+                    <!-- Socials: Modern List -->
+                    <div class="bg-inverse-surface text-white p-md border-l-4 border-primary">
+                        <h3 class="font-label-bold text-label-bold mb-sm uppercase tracking-widest text-surface-variant">{socialsTitle}</h3>
+                        <div class="flex flex-col gap-sm">
+                            {socials.map((s) => (
+                                <a class="flex items-center gap-sm hover:text-primary transition-colors py-2 border-b border-white/10" href={s.url || '#'} target={s.url && s.url !== '#' ? '_blank' : undefined} rel="noopener">
+                                    <span class="material-symbols-outlined">{s.icon}</span>
+                                    <span class="font-body-md">{s.label}</span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Legal Note Section -->
+        <section class="py-xl border-t border-outline-variant bg-white">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="bg-surface-container-low p-xl border-l-8 border-primary">
+                    <div class="flex flex-col md:flex-row gap-md items-start">
+                        <span class="material-symbols-outlined text-primary text-5xl">gavel</span>
+                        <div>
+                            <h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 uppercase font-bold tracking-tight">{legalTitle}</h4>
+                            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                {legalText}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<script>
+    const setupContact = () => {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('div')?.querySelector('label')?.classList.add('text-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.closest('div')?.querySelector('label')?.classList.remove('text-primary');
+            });
+        });
+
+        const dropZone = document.querySelector('.design-file-upload') as HTMLElement | null;
+        const fileInput = document.getElementById('artwork-upload') as HTMLInputElement | null;
+        if (dropZone && fileInput) {
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-primary', 'bg-primary-container/10');
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-primary', 'bg-primary-container/10');
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary', 'bg-primary-container/10');
+                if (e.dataTransfer && e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    // Trigger change event
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files && fileInput.files.length) {
+                    const fileName = fileInput.files[0].name;
+                    const pEl = dropZone.querySelector('p.font-headline-sm');
+                    if (pEl) {
+                        pEl.textContent = `Selected file: ${fileName}`;
+                    }
+                }
+            });
+        }
+    };
+
+    setupContact();
+    document.addEventListener('astro:after-swap', setupContact);
+</script>

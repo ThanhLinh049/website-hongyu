@@ -1,0 +1,55 @@
+---
+import Blog from '../../components/blog.astro';
+import { wpQuery } from '../../lib/api';
+
+export const prerender = false; // SSR: always shows latest posts/categories from WP
+
+let posts = [];
+let categories = [];
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetAllPosts {
+        posts(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+          nodes {
+            title
+            slug
+            excerpt
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+        }
+        categories(first: 50, where: { hideEmpty: true }) {
+          nodes {
+            name
+            slug
+            count
+          }
+        }
+      }
+    `
+  });
+
+  if (data?.posts?.nodes) {
+    posts = data.posts.nodes;
+  }
+  if (data?.categories?.nodes) {
+    categories = data.categories.nodes;
+  }
+} catch (e) {
+  console.warn("Failed to fetch blog posts from WordPress. Fallback content will be used.", e);
+}
+---
+
+<Blog posts={posts} categories={categories} />

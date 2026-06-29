@@ -1,0 +1,396 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  pageData?: any;
+  categories?: any[];
+  products?: any[];
+  finishes?: any[];
+  backings?: any[];
+}
+
+const { pageData, categories = [], products = [], finishes = [], backings = [] } = Astro.props;
+
+// Hero
+const heroEyebrow = pageData?.heroEyebrow || 'B2B Industrial Manufacturing';
+const heroTitle = pageData?.heroTitle || 'Precision Engineered <br />Custom Product Catalogue';
+const heroDescription = pageData?.heroDescription || 'Scale your brand identity with our certified manufacturing capabilities. High-fidelity badges, technical PVC, and premium metal components for global procurement.';
+const heroCtaLabel = pageData?.heroCtaLabel || 'Download Full Catalogue';
+const heroCtaUrl = pageData?.heroCtaUrl || '';
+// Only show the catalogue button when a real link/PDF is set (avoid a dead "#" link).
+const hasCatalogue = !!heroCtaLabel && !!heroCtaUrl && heroCtaUrl !== '#';
+const heroSecondaryLabel = pageData?.heroSecondaryLabel || 'Schedule Consultation';
+const heroSecondaryUrl = pageData?.heroSecondaryUrl || '/contact';
+
+// Category cards (from the product-category terms)
+const fallbackCats = [
+  { name: 'Flex Badges', slug: 'flex', count: 0, categoryFields: { catTagline: 'Metallic Polymers' } },
+  { name: 'Embroidery', slug: 'embroidery', count: 0, categoryFields: { catTagline: 'High-Density Thread' } },
+  { name: 'PVC Patches', slug: 'pvc', count: 0, categoryFields: { catTagline: '3D Tactical Polymer' } },
+  { name: 'Metal Products', slug: 'metal', count: 0, categoryFields: { catTagline: 'Die-Cast Alloys' } }
+];
+const catCards = (categories && categories.length > 0) ? categories : fallbackCats;
+const catImg = (c: any) => c?.categoryFields?.catHeroImage?.node?.sourceUrl || '';
+
+// All products
+const allProducts = products || [];
+const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
+const prodLink = (p: any) => {
+  const cslug = p?.productCategories?.nodes?.[0]?.slug;
+  return cslug ? `/products/${cslug}/${p.slug}` : `/products/${p.slug}`;
+};
+const prodFinishes = (p: any) => (p?.finishes?.nodes || []).map((x: any) => x.slug).join(' ');
+const prodBackings = (p: any) => (p?.backings?.nodes || []).map((x: any) => x.slug).join(' ');
+// Filter facets (dynamic from taxonomy terms; client-managed). Fall back to nothing if empty.
+const finishFacet = finishes || [];
+const backingFacet = backings || [];
+
+// Finishes & Materials
+const finishesTitle = pageData?.finishesTitle || 'Finishes & Materials';
+const finishesDescription = pageData?.finishesDescription || "Customize your product to match your brand's tactile and visual requirements. Our standard library includes over 200 finish combinations.";
+const surfaceTexturesTitle = pageData?.surfaceTexturesTitle || 'Surface Textures';
+const surfaceTextures = (pageData?.surfaceTextures && pageData.surfaceTextures.length > 0) ? pageData.surfaceTextures : [
+  { textureName: 'Matte' }, { textureName: 'Shiny' }, { textureName: 'Brushed' }, { textureName: 'Textured' }
+];
+const backingTitle = pageData?.backingTitle || 'Backing Solutions';
+const backingSolutions = (pageData?.backingSolutions && pageData.backingSolutions.length > 0) ? pageData.backingSolutions : [
+  { label: 'Industrial Adhesive' }, { label: 'Velcro Hook/Loop' }, { label: 'Magnetic Clutch' }, { label: 'Safety Pin' }
+];
+const labsTitle = pageData?.labsTitle || 'Material Durability Labs';
+const labsDescription = pageData?.labsDescription || 'All BadgeMaster products undergo rigorous testing in our US-based quality control labs to ensure they meet international industrial standards.';
+const labsStats = (pageData?.labsStats && pageData.labsStats.length > 0) ? pageData.labsStats : [
+  { title: 'Heat Resistance', description: 'Tested up to 250°C for industrial laundering.' },
+  { title: 'UV Stability', description: 'Certified for 5 years outdoor exposure without fading.' }
+];
+const texImg = (t: any) => t?.swatchImage?.node?.sourceUrl || '';
+
+// Final CTA
+const ctaTitle = pageData?.ctaTitle || 'Not sure which product fits your needs?';
+const ctaText = pageData?.ctaText || 'Our material specialists are ready to guide you through technical selections, design optimization, and B2B volume pricing.';
+const ctaPrimaryLabel = pageData?.ctaPrimaryLabel || 'Talk to Our Product Specialist';
+const ctaPrimaryUrl = pageData?.ctaPrimaryUrl || '/contact';
+const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Request Free Sample Kit';
+const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
+---
+
+<Layout title="All Products | BadgeMaster Manufacturing">
+    <main class="w-full">
+        <!-- Hero -->
+        <section class="relative bg-primary py-xl flex items-center overflow-hidden">
+            <div class="container max-w-container-max mx-auto px-gutter relative z-10">
+                <div class="max-w-3xl">
+                    <div class="flex items-center gap-sm text-white/70 mb-sm">
+                        <span class="w-12 h-px bg-white/40"></span>
+                        <span class="text-label-bold uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
+                    </div>
+                    <h1 class="font-display-lg text-display-lg text-white mb-md leading-tight" set:html={heroTitle}></h1>
+                    <p class="font-body-lg text-white/80 mb-lg max-w-xl">{heroDescription}</p>
+                    <div class="flex flex-wrap gap-md">
+                        {hasCatalogue && (
+                            <a href={heroCtaUrl} class="bg-[#E67E22] text-white px-md py-3 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all text-center">{heroCtaLabel}</a>
+                        )}
+                        {heroSecondaryLabel && (
+                            <a href={heroSecondaryUrl} class="border border-white/30 bg-white/5 backdrop-blur-sm text-white px-md py-3 font-label-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center">{heroSecondaryLabel}</a>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-[-20deg] translate-x-1/2"></div>
+        </section>
+
+        <!-- Browse by category -->
+        <section class="py-xl bg-surface-container-low border-b border-outline-variant">
+            <div class="container max-w-container-max mx-auto px-gutter">
+                <div class="mb-lg text-center max-w-2xl mx-auto">
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">Explore Our Product Ranges</h2>
+                    <p class="text-on-surface-variant font-body-md">Choose a category to view its full catalogue, technical specifications, and finishes.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    {catCards.map((c: any) => (
+                        <a class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col" href={`/products/${c.slug}`}>
+                            <div class="h-44 overflow-hidden bg-surface-container relative">
+                                {catImg(c) && (
+                                    <img alt={c.name} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={catImg(c)} />
+                                )}
+                                {typeof c.count === 'number' && c.count > 0 && (
+                                    <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-primary shadow-sm">{c.count} items</span>
+                                )}
+                            </div>
+                            <div class="p-md text-center flex flex-col flex-grow">
+                                <h3 class="font-headline-sm mb-xs group-hover:text-primary transition-colors">{c.name}</h3>
+                                {c.categoryFields?.catTagline && (
+                                    <p class="text-[12px] text-outline uppercase tracking-wider font-bold mb-md">{c.categoryFields.catTagline}</p>
+                                )}
+                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
+                                    View Range <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                                </span>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <!-- All Products: sidebar filters + grid -->
+        <section class="py-xl">
+            <div class="container max-w-container-max mx-auto px-gutter">
+                <div class="mb-lg">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">All Products</h2>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-xl">
+                    <!-- Sidebar (sticky) -->
+                    <aside class="w-full lg:w-72 flex-shrink-0 lg:sticky lg:top-[96px] self-start space-y-md">
+                        <div>
+                            <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Quick Search</h4>
+                            <div class="relative">
+                                <input id="prod-search" type="text" placeholder="SKU or Name..." class="w-full pl-base pr-xl py-2 bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
+                                <span class="material-symbols-outlined absolute right-base top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                            </div>
+                        </div>
+                        {finishFacet.length > 0 && (
+                            <div>
+                                <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Finish</h4>
+                                <div class="flex flex-col gap-xs">
+                                    {finishFacet.map((f: any) => (
+                                        <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+                                            <input type="checkbox" class="facet-finish accent-primary w-4 h-4" value={f.slug} />
+                                            {f.name}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {backingFacet.length > 0 && (
+                            <div>
+                                <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Backing</h4>
+                                <div class="flex flex-col gap-xs">
+                                    {backingFacet.map((b: any) => (
+                                        <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+                                            <input type="checkbox" class="facet-backing accent-primary w-4 h-4" value={b.slug} />
+                                            {b.name}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        <button id="reset-filters" type="button" class="w-full py-sm bg-surface-container text-label-bold uppercase text-[11px] tracking-widest hover:bg-outline-variant transition-colors">Reset All Filters</button>
+                    </aside>
+
+                    <!-- Grid column -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-lg border-b border-outline-variant pb-base">
+                            <p class="text-sm text-outline">Showing <span id="shown-count" class="text-on-background font-bold">0</span> of <span id="total-count" class="text-on-background font-bold">{allProducts.length}</span> products</p>
+                            <div class="flex items-center gap-xs">
+                                <span class="text-[12px] font-bold text-outline uppercase hidden sm:inline">Sort</span>
+                                <select id="prod-sort" aria-label="Sort products" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
+                                    <option value="" disabled selected hidden>Sort by</option>
+                                    <option value="default">Featured</option>
+                                    <option value="az">Name (A-Z)</option>
+                                    <option value="newest">Newest</option>
+                                </select>
+                            </div>
+                        </div>
+                        {allProducts.length > 0 ? (
+                            <div id="prod-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-md">
+                                {allProducts.map((p: any) => (
+                                    <a href={prodLink(p)}
+                                        class="product-card bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all duration-300 group overflow-hidden flex flex-col"
+                                        data-name={(p.title || '').toLowerCase()} data-date={p.date || ''} data-finish={prodFinishes(p)} data-backing={prodBackings(p)}>
+                                        <div class="aspect-square bg-surface-container relative overflow-hidden">
+                                            {prodImg(p) && (<img src={prodImg(p)} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
+                                        </div>
+                                        <div class="p-md flex flex-col flex-grow">
+                                            <h4 class="font-headline-sm text-sm text-on-surface mb-md flex-grow group-hover:text-primary transition-colors">{p.title}</h4>
+                                            <span class="inline-flex items-center gap-1 text-cta-orange font-bold text-[12px] uppercase tracking-wider group-hover:text-primary transition-colors">
+                                                View Details <span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                                            </span>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <p class="text-outline py-lg">No products available yet.</p>
+                        )}
+                        <div id="prod-empty" class="hidden text-center py-xl text-outline">
+                            <span class="material-symbols-outlined text-5xl mb-sm block">search_off</span>
+                            No products match your filters.
+                        </div>
+                        <div id="prod-pagination" class="mt-xl flex justify-center items-center gap-xs flex-wrap"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Finishes & Materials (2-column: customization left, quality box right) -->
+        <section class="py-xl bg-surface">
+            <div class="container max-w-container-max mx-auto px-gutter">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-start">
+                    <!-- Left: Finishes + Surface Textures + Backing -->
+                    <div>
+                        <h2 class="font-headline-lg text-headline-lg mb-md">{finishesTitle}</h2>
+                        {finishesDescription && (<p class="text-on-surface-variant font-body-md mb-lg max-w-xl">{finishesDescription}</p>)}
+                        <div class="space-y-lg">
+                            <div>
+                                <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-sm">{surfaceTexturesTitle}</h5>
+                                <div class="flex flex-wrap gap-md">
+                                    {surfaceTextures.map((tex: any) => (
+                                        <div class="w-20 sm:w-24 text-center group">
+                                            <div class="aspect-square rounded-lg overflow-hidden bg-surface-container border border-outline-variant group-hover:border-primary transition-colors mb-xs">
+                                                {texImg(tex) && (<img src={texImg(tex)} alt={tex.textureName} loading="lazy" class="w-full h-full object-cover" />)}
+                                            </div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wide">{tex.textureName}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-sm">{backingTitle}</h5>
+                                <div class="flex flex-wrap gap-sm">
+                                    {backingSolutions.map((b: any) => (
+                                        <span class="px-sm py-xs bg-white border border-outline-variant rounded text-[12px] font-bold hover:border-primary transition-colors">{b.label}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Material Durability Labs (quality box, sized to content) -->
+                    <div class="bg-surface-container border border-outline-variant rounded-xl p-lg relative overflow-hidden">
+                        <span class="material-symbols-outlined text-[120px] absolute -top-2 -right-2 opacity-[0.07] pointer-events-none select-none">science</span>
+                        <h4 class="font-headline-sm text-primary mb-sm relative">{labsTitle}</h4>
+                        {labsDescription && (<p class="text-sm text-on-surface-variant mb-lg max-w-md relative">{labsDescription}</p>)}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-md relative">
+                            {labsStats.map((stat: any) => (
+                                <div class="bg-white p-md border border-outline-variant rounded-lg">
+                                    <div class="flex items-center gap-xs mb-xs">
+                                        {stat.icon && (<span class="material-symbols-outlined text-primary text-[20px]">{stat.icon}</span>)}
+                                        <h6 class="font-bold text-sm text-on-surface">{stat.title}</h6>
+                                    </div>
+                                    <p class="text-[12px] text-outline leading-relaxed">{stat.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="py-xl bg-primary text-white text-center">
+            <div class="container max-w-container-max mx-auto px-gutter">
+                <h2 class="font-display-lg text-display-lg mb-md">{ctaTitle}</h2>
+                <p class="font-body-lg text-white/70 mb-xl max-w-2xl mx-auto">{ctaText}</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-md">
+                    {ctaPrimaryLabel && (
+                        <a href={ctaPrimaryUrl} class="inline-block bg-[#E67E22] text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg hover:shadow-2xl transition-all sm:w-auto text-center font-black">{ctaPrimaryLabel}</a>
+                    )}
+                    {ctaSecondaryLabel && (
+                        <a href={ctaSecondaryUrl} class="inline-block border border-white/30 hover:bg-white/10 text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg transition-all sm:w-auto text-center font-black">{ctaSecondaryLabel}</a>
+                    )}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // All Products: category filter + search + sort + numbered pagination
+        const setupCatalogue = () => {
+            const grid = document.getElementById('prod-grid');
+            if (!grid) return;
+            const cards = Array.from(grid.querySelectorAll('.product-card')) as HTMLElement[];
+            const search = document.getElementById('prod-search') as HTMLInputElement | null;
+            const sortSel = document.getElementById('prod-sort') as HTMLSelectElement | null;
+            const pag = document.getElementById('prod-pagination');
+            const shown = document.getElementById('shown-count');
+            const total = document.getElementById('total-count');
+            const empty = document.getElementById('prod-empty');
+            const facetFinish = Array.from(document.querySelectorAll('.facet-finish')) as HTMLInputElement[];
+            const facetBacking = Array.from(document.querySelectorAll('.facet-backing')) as HTMLInputElement[];
+            const resetBtn = document.getElementById('reset-filters');
+            const PER_PAGE = 9;
+            let term = '';
+            let page = 1;
+            let order = cards.slice();
+
+            const checked = (inputs: HTMLInputElement[]) => inputs.filter(i => i.checked).map(i => i.value);
+            const hasAny = (vals: string[], sel: string[]) => sel.length === 0 || sel.some(s => vals.includes(s));
+            const matches = (c: HTMLElement) => {
+                if (term && !(c.dataset.name || '').includes(term)) return false;
+                const fin = (c.dataset.finish || '').split(' ');
+                const bak = (c.dataset.backing || '').split(' ');
+                return hasAny(fin, checked(facetFinish)) && hasAny(bak, checked(facetBacking));
+            };
+
+            const pageList = (totalPages: number): (number | string)[] => {
+                if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+                const out: (number | string)[] = [1];
+                const start = Math.max(2, page - 1), end = Math.min(totalPages - 1, page + 1);
+                if (start > 2) out.push('…');
+                for (let i = start; i <= end; i++) out.push(i);
+                if (end < totalPages - 1) out.push('…');
+                out.push(totalPages);
+                return out;
+            };
+
+            const renderPagination = (totalPages: number) => {
+                if (!pag) return;
+                pag.innerHTML = '';
+                if (totalPages <= 1) return;
+                const mk = (label: string, target: number, opts: { active?: boolean, disabled?: boolean } = {}) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.textContent = label;
+                    b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors ' +
+                        (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary') +
+                        (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
+                    if (!opts.disabled && !opts.active) b.addEventListener('click', () => { page = target; render(); grid.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+                    else if (opts.active) b.addEventListener('click', () => {});
+                    return b;
+                };
+                pag.appendChild(mk('‹', page - 1, { disabled: page === 1 }));
+                pageList(totalPages).forEach(p => {
+                    if (p === '…') { const s = document.createElement('span'); s.textContent = '…'; s.className = 'px-2 text-outline'; pag.appendChild(s); }
+                    else { const n = p as number; pag.appendChild(mk(String(n), n, { active: n === page })); }
+                });
+                pag.appendChild(mk('›', page + 1, { disabled: page === totalPages }));
+            };
+
+            const render = () => {
+                const matched = order.filter(matches);
+                const totalPages = Math.max(1, Math.ceil(matched.length / PER_PAGE));
+                if (page > totalPages) page = totalPages;
+                cards.forEach(c => { c.style.display = 'none'; });
+                const from = (page - 1) * PER_PAGE;
+                matched.slice(from, from + PER_PAGE).forEach(c => { c.style.display = 'flex'; });
+                if (total) total.textContent = String(matched.length);
+                if (shown) shown.textContent = matched.length === 0 ? '0' : `${from + 1}–${Math.min(from + PER_PAGE, matched.length)}`;
+                if (empty) empty.classList.toggle('hidden', matched.length !== 0);
+                renderPagination(totalPages);
+            };
+
+            search?.addEventListener('input', () => { term = (search.value || '').trim().toLowerCase(); page = 1; render(); });
+            [...facetFinish, ...facetBacking].forEach(cb => cb.addEventListener('change', () => { page = 1; render(); }));
+            resetBtn?.addEventListener('click', () => {
+                term = '';
+                if (search) search.value = '';
+                [...facetFinish, ...facetBacking].forEach(cb => { cb.checked = false; });
+                if (sortSel) sortSel.selectedIndex = 0;
+                order = cards.slice();
+                order.forEach(c => grid.appendChild(c));
+                page = 1; render();
+            });
+            sortSel?.addEventListener('change', () => {
+                const v = sortSel.value;
+                order = cards.slice();
+                if (v === 'az') order.sort((a, b) => (a.dataset.name || '').localeCompare(b.dataset.name || ''));
+                else if (v === 'newest') order.sort((a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || ''));
+                order.forEach(c => grid.appendChild(c));
+                page = 1; render();
+            });
+
+            render();
+        };
+        setupCatalogue();
+        document.addEventListener('astro:after-swap', setupCatalogue);
+    </script>
+</Layout>

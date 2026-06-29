@@ -1,0 +1,166 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { wpQuery } from '../../lib/api';
+
+export async function getStaticPaths() {
+  let paths = [];
+  try {
+    const data = await wpQuery({
+      query: `
+        query GetAllSlugs {
+          posts(first: 100) {
+            nodes {
+              slug
+            }
+          }
+        }
+      `
+    });
+    if (data?.posts?.nodes) {
+      paths = data.posts.nodes.map((post: any) => ({
+        params: { slug: post.slug }
+      }));
+    }
+  } catch (e) {
+    console.warn("Failed to fetch post slugs for static paths.", e);
+  }
+
+  // Always include at least hello-world as fallback
+  if (paths.length === 0) {
+    paths = [{ params: { slug: 'hello-world' } }];
+  }
+
+  return paths;
+}
+
+const { slug } = Astro.params;
+
+let post = null;
+try {
+  const data = await wpQuery({
+    query: `
+      query GetPostBySlug($slug: ID!) {
+        post(id: $slug, idType: SLUG) {
+          title
+          content
+          date
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+              slug
+            }
+          }
+          author {
+            node {
+              name
+            }
+          }
+        }
+      }
+    `,
+    variables: { slug }
+  });
+
+  if (data?.post) {
+    post = data.post;
+  }
+} catch (e) {
+  console.warn(`Failed to fetch post: ${slug}`, e);
+}
+
+const formatDate = (dateStr: string) => {
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  } catch { return ''; }
+};
+---
+
+<Layout title={post ? `${post.title} | BadgeMaster Blog` : `Blog Post | ${slug}`}>
+  <main class="max-w-full">
+    {post ? (
+      <>
+        <!-- Post Hero -->
+        <section class="relative bg-inverse-surface py-xl overflow-hidden">
+          {post.featuredImage?.node?.sourceUrl && (
+            <div class="absolute inset-0 opacity-20 pointer-events-none">
+              <img alt={post.title} class="w-full h-full object-cover" src={post.featuredImage.node.sourceUrl} />
+            </div>
+          )}
+          <div class="relative max-w-container-max mx-auto px-gutter">
+            <div class="max-w-3xl">
+              <div class="flex items-center gap-md mb-md">
+                <a href="/blog" class="inline-flex items-center gap-1 text-white/70 hover:text-white transition-colors font-label-bold text-sm uppercase tracking-wider">
+                  <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                  Back to Blog
+                </a>
+              </div>
+              {post.categories?.nodes?.[0] && (
+                <span class="inline-block bg-primary text-white px-3 py-1 rounded-full text-[11px] font-label-bold uppercase tracking-widest mb-md">
+                  {post.categories.nodes[0].name}
+                </span>
+              )}
+              <h1 class="font-display-lg text-display-lg text-white mb-md leading-tight">{post.title}</h1>
+              <div class="flex items-center gap-lg text-white/60 font-body-sm">
+                {post.author?.node?.name && (
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">person</span>
+                    <span>{post.author.node.name}</span>
+                  </div>
+                )}
+                {post.date && (
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    <span>{formatDate(post.date)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Post Content -->
+        <section class="max-w-container-max mx-auto px-gutter py-xl">
+          <div class="max-w-3xl mx-auto">
+            <article class="prose prose-lg max-w-none
+              prose-headings:text-primary prose-headings:font-bold
+              prose-p:text-on-surface-variant prose-p:leading-relaxed
+              prose-a:text-primary prose-a:underline
+              prose-img:rounded-lg prose-img:shadow-md
+              prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-surface-container-low prose-blockquote:p-md
+              prose-strong:text-on-surface
+              prose-ul:text-on-surface-variant prose-ol:text-on-surface-variant"
+              set:html={post.content} />
+          </div>
+        </section>
+
+        <!-- CTA Bottom -->
+        <section class="py-xl bg-surface-container-low border-t border-outline-variant">
+          <div class="max-w-container-max mx-auto px-gutter text-center">
+            <h2 class="font-headline-lg text-primary mb-md">Ready to start your custom project?</h2>
+            <p class="font-body-lg text-on-surface-variant mb-lg max-w-xl mx-auto">Our team is here to help you create the perfect custom badges, patches, and metal products for your brand.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-md">
+              <a href="/contact"
+                class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 shadow-lg transition-all text-center">Request Free Design Proof</a>
+              <a href="/blog"
+                class="inline-block px-lg py-3 border border-outline-variant text-on-surface font-bold uppercase tracking-wider hover:bg-surface-container-high transition-all text-center">Browse More Articles</a>
+            </div>
+          </div>
+        </section>
+      </>
+    ) : (
+      <section class="max-w-container-max mx-auto px-gutter py-xl text-center">
+        <span class="material-symbols-outlined text-outline text-7xl mb-md block">article</span>
+        <h1 class="font-display-lg text-primary mb-md">Post Not Found</h1>
+        <p class="text-on-surface-variant font-body-lg mb-lg">The blog post "{slug}" could not be loaded from WordPress.</p>
+        <a href="/blog" class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Return to Blog</a>
+      </section>
+    )}
+  </main>
+</Layout>

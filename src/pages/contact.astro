@@ -1,0 +1,58 @@
+---
+import Contact from '../components/contact.astro';
+import { wpQuery } from '../lib/api';
+
+export const prerender = false; // SSR: always shows latest Contact content from WP
+
+let pageData = null;
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetContactPageData {
+        page(id: "contact", idType: URI) {
+          contactPage {
+            heroTitle
+            heroDescription
+            heroBg { node { sourceUrl } }
+            supportCards {
+              icon
+              title
+              description
+              linkText
+              linkUrl
+            }
+            formTitle
+            formIntro
+            hqTitle
+            hqAddress
+            phoneTitle
+            phone
+            hours
+            emailTitle
+            email
+            directionsUrl
+            mapImage { node { sourceUrl } }
+            socialsTitle
+            socials {
+              icon
+              label
+              url
+            }
+            legalTitle
+            legalText
+          }
+        }
+      }
+    `
+  });
+
+  if (data?.page?.contactPage) {
+    pageData = data.page.contactPage;
+  }
+} catch (e) {
+  console.warn("Failed to fetch contact page data from WordPress. Fallback content will be used.", e);
+}
+---
+
+<Contact pageData={pageData} />

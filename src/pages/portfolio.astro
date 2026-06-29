@@ -1,0 +1,52 @@
+---
+import Portfolio from '../components/portfolio.astro';
+import { wpQuery } from '../lib/api';
+
+export const prerender = false; // SSR: always shows latest projects from WP
+
+let pageData = null;
+let portfolios = [];
+let categories = [];
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetPortfolios {
+        page(id: "portfolio", idType: URI) {
+          portfolioPage {
+            heroEyebrow
+            heroTitle
+            heroDescription
+            ctaTitle
+            ctaText
+            ctaPrimaryLabel
+            ctaPrimaryUrl
+            ctaSecondaryLabel
+            ctaSecondaryUrl
+          }
+        }
+        portfolios(first: 100) {
+          nodes {
+            title
+            slug
+            featuredImage { node { sourceUrl } }
+            portfolioFields { specs { label value } }
+            portfolioCategories { nodes { name slug } }
+          }
+        }
+        portfolioCategories(first: 100, where: { hideEmpty: true }) {
+          nodes { name slug count }
+        }
+      }
+    `
+  });
+
+  if (data?.page?.portfolioPage) pageData = data.page.portfolioPage;
+  if (data?.portfolios?.nodes) portfolios = data.portfolios.nodes;
+  if (data?.portfolioCategories?.nodes) categories = data.portfolioCategories.nodes;
+} catch (e) {
+  console.warn("Failed to fetch portfolios from WordPress. Fallback content will be used.", e);
+}
+---
+
+<Portfolio pageData={pageData} portfolios={portfolios} categories={categories} />

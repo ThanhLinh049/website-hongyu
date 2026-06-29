@@ -1,0 +1,151 @@
+---
+import Home from '../components/home.astro';
+import { wpQuery } from '../lib/api';
+
+let pageData = null;
+let portfolios = [];
+let posts = [];
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetHomePageData {
+        page(id: "home", idType: URI) {
+          homePage {
+            heroSlides {
+              badgeText
+              heading
+              subheading
+              backgroundImage {
+                node {
+                  sourceUrl
+                }
+              }
+              primaryCtaLabel
+              primaryCtaUrl
+              secondaryCtaLabel
+              secondaryCtaUrl
+            }
+            heroTrustBar {
+              icon
+              label
+            }
+            introTitle
+            introText
+            introImage {
+              node {
+                sourceUrl
+              }
+            }
+            specialtiesTitle
+            specialtiesSubtitle
+            specialties {
+              image {
+                node {
+                  sourceUrl
+                }
+              }
+              title
+              description
+              linkLabel
+              linkUrl
+            }
+            advantageTitle
+            advantageSubtitle
+            advantageBlocks {
+              icon
+              title
+              description
+              isHighlight
+              stats {
+                value
+                label
+              }
+            }
+            processTitle
+            processSteps {
+              icon
+              title
+              description
+            }
+            capabilitiesTitle
+            capabilitiesDescription
+            capabilitiesImage {
+              node {
+                sourceUrl
+              }
+            }
+            capabilitiesList {
+              title
+              description
+            }
+            portfolioSectionTitle
+            portfolioSectionSubtitle
+            recentCategories {
+              nodes {
+                name
+                slug
+              }
+            }
+            portfolioCtaLabel
+            portfolioCtaUrl
+            blogSectionTitle
+            blogCtaLabel
+            blogCtaUrl
+            ctaTitle
+            ctaText
+            ctaBtnLabel
+            ctaBtnUrl
+            ctaSecondaryLabel
+            ctaSecondaryUrl
+          }
+        }
+        portfolios(first: 8) {
+          nodes {
+            title
+            slug
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            portfolioCategories { nodes { name slug } }
+          }
+        }
+        posts(first: 3) {
+          nodes {
+            title
+            slug
+            excerpt
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            categories {
+              nodes {
+                name
+              }
+            }
+          }
+        }
+      }
+    `
+  });
+
+  if (data?.page?.homePage) {
+    pageData = data.page.homePage;
+  }
+  if (data?.portfolios?.nodes) {
+    portfolios = data.portfolios.nodes;
+  }
+  if (data?.posts?.nodes) {
+    posts = data.posts.nodes;
+  }
+} catch (e) {
+  console.warn("Failed to fetch home page data from WordPress. Fallback static content will be used in components.", e);
+}
+---
+
+<Home pageData={pageData} portfolios={portfolios} posts={posts} />

@@ -1,0 +1,640 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  pageData?: any;
+  portfolios?: any[];
+  posts?: any[];
+}
+
+const { pageData, portfolios = [], posts = [] } = Astro.props;
+
+// 1. Fallbacks for Hero Slides
+const heroSlides = pageData?.heroSlides || [
+  {
+    badgeText: 'Custom Manufacturing',
+    heading: 'Custom Badges, Patches & Metal Products Made for Your Brand',
+    subheading: 'High-precision manufacturing for elite organizations. From 3D PVC patches to premium metal badges, we deliver industrial-grade custom products globally.',
+    backgroundImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyaphWdVdA51NWxn6qXq-7LvskppaGKPRmoPQkK_WYZptWXq-TU0hvjtHvA_Fp4tBVw_X_E9YYLA03pdNkHYToBgbvKbzP65xWjhdwLEQ97EE4ZkqPfrXSp0K4YnxHZQ1CoLPfMBYtnFsT3KBnuoEQ4tiXLauldgcKU75pPDl5FPtBOaZP1neblsL1Wz0nWDItpUN5p1PSk6v4lrkammbnL3vgUuhZHB_4a4OieZyUxBhEt16BJWQFOe0xWgTlmNDgIT3h0ayRGb2R' } },
+    primaryCtaLabel: 'Get Your Free Design Proof',
+    primaryCtaUrl: '/contact',
+    secondaryCtaLabel: 'Explore Materials',
+    secondaryCtaUrl: '/products'
+  },
+  {
+    badgeText: 'Flexible PVC Patches',
+    heading: 'Durable PVC Patches Built for Color, Shape & Daily Wear',
+    subheading: 'Create dimensional, weather-resistant patches with crisp edges, custom colors, and reliable backing options for uniforms, gear, and branded merchandise.',
+    backgroundImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCQaPQojsuSJlTbXiJqd1r1cg2-JIDN1tu9DFkxZMMNelO5lMv-dQUDMU35IsBU-1LqNEBPJhgNMozpCj_Ita3QsYsqCfsG50ZFTdZt-g92JGUn0zC1qL53ENCLfYAXIx_h22Ou7a5bMZSY1nQWT10guzkk2TR1E-9FZzjArWs32XX50iXHQhP8juMqz0NKpzMCuP4SIBRMO5fkzZpFuZjVAnAT3KodM_imIKT8W5uEhaafJNJ9tXAXVOqPRDj8QSSb_74pjSLKMWzK' } },
+    primaryCtaLabel: 'Request PVC Quote',
+    primaryCtaUrl: '/contact',
+    secondaryCtaLabel: 'View PVC Options',
+    secondaryCtaUrl: '/products#pvc-deep-dive'
+  },
+  {
+    badgeText: 'Premium Metal Products',
+    heading: 'Premium Metal Badges & Emblems for High-End Brand Programs',
+    subheading: 'Elevate uniforms, packaging, vehicles, and accessories with refined metal finishes, precise tooling, and production-ready quality control.',
+    backgroundImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBztqRgC0qgdOIXlzifLjK1UvH3JR_uHqjvSBHpSw-lTN7EKu-jjDUzNaeujqVbN_h3SiVRN0dmDk-VGWB6-yPa0_MOcSQrVfVVhiU6UfaZctKmIC1vfd6bDbSFHUMrAhwlVmeG7itJ2UbsRveQE1TvuumjgIZHa-DM22tKE3xI3I2ddkcpeVjrpzIOMlRffS0lJMJTUmiIYQMwfy4nq03UmNgy4y2AfS9pe8CLs2YWHRRQTWJgcUS8TX3_aLcp50gBkWvEIn3O' } },
+    primaryCtaLabel: 'Start Metal Project',
+    primaryCtaUrl: '/contact',
+    secondaryCtaLabel: 'See Portfolio',
+    secondaryCtaUrl: '/portfolio'
+  }
+];
+
+// 1b. Hero trust bar (running strip under the banner)
+const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0) ? pageData.heroTrustBar : [
+  { icon: 'design_services', label: 'Free Proof' },
+  { icon: 'payments', label: 'No Hidden Costs' },
+  { icon: 'rocket_launch', label: 'Fast Turnaround' },
+  { icon: 'public', label: 'Worldwide Shipping' },
+  { icon: 'verified', label: 'Quality Control' }
+];
+
+// 2. Fallbacks for Manufacturing Specialties (Section 3)
+const specialtiesTitle = pageData?.specialtiesTitle || 'Our Manufacturing Specialties';
+const specialtiesSubtitle = pageData?.specialtiesSubtitle || 'Engineered for durability and visual impact across all industries.';
+const specialties = (pageData?.specialties && pageData.specialties.length > 0) ? pageData.specialties : [
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXevhRkt0YeraaUzM1V3xQXTu-8B3EbEcw5Ga6U-pSh5YYQvzaY8NDqvoJRz7yT97-yT8PurmJz3Y_IWem9e0Ou1pdgmlrP2_meYF2hHj-9Cz_R4R-I5xbc7xYHRSidQQobCilgdYS9OM_KAXw0K5bwwxCpFQuwrn41xoEx5CbcG-y-mPJU1nNV7wC597A8TYBuD6kJgpf478oaEdar9oMjujNA1Mxu9dvKNglEHyNc5Icx9rllWv7wzMp7TXyjNc80O0jZWY5J-Qn' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex →', linkUrl: '/products#flex-deep-dive' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKS7mW3LoAZbQYOdPMsdAFxO0RAU3iNXmqX7-J6hiV-e2yI4lD-HLCoz6nWiVKMZXgeMMiAt032FtlgVXAxVIgBeQ839HrLMuBrEjngsGsnojdb32Gk2nysffLffitoVF7TkpN96d90Et4up32wdSooadkKpY1mp23nxpfIHsYEWbCm6Mynv5n9Pd9ys5q5PWV0zY6pWvHiBLoOW_Q_o3I0os45l4t3KqnL3o-kpRjpT5zHiquTaJ_B83zfhgZ7RXuqvi7Gl3Vm71s' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Stitch →', linkUrl: '/products#embroidery-deep-dive' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf3C-yh9W2g_Ohd5fCDwDWJQSAv4c6UC682WEHcXaCO_bEVNLCwTvjTAMBHQd1XrS2Er1Q0M8EvcAayNlKl2C67aqQJvqW167ZtlmTj4ZOUr4V-3tfbMCBmXyYzRaFwm_cW1qi62xLKHY7tNPLUsYR6ClTkbafMrPsrzn7oOTaJV5BQMkZYiKT_PiGQvOa9ACgyoMp-ADArS2C6rnDkb8d5ob-gpCo8iRd5I-rh_OtVdrSGNOj2dPscOzHeDnC6Y3elWOuijkmyWQ4' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC →', linkUrl: '/products#pvc-deep-dive' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEN3vdbJEbtiIkznfsO9JjF7UO9QAXY_bbWSVta2EtmwFRVcDA8gyDzk6zydJ19_Ezqdj8Wl3_vk0gR41ecQFY6z4b-JbUiM0x6SVkxOof6aNg7qTyqK1mc7FJBWDe68nwyLY5Pt7PkAMTMYtuS6l-zO3XG9pHe8ylmPB1w5Gmu-D9OW6aUUqGsuunN8ormy-0jO2BP8AwEv5-dLs4elv2XZB2IMcVgcvq_NhI84EfUaFg-5_zXpStjv2uL2DpjtPc9aGrrq2WfVHV' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal →', linkUrl: '/products#metal-deep-dive' }
+];
+
+// 3. Fallbacks for Advantages Bento
+const advantageTitle = pageData?.advantageTitle || 'The BadgeMaster Advantage';
+const advantageSubtitle = pageData?.advantageSubtitle || 'Where precision engineering meets industrial capacity.';
+const advantageBlocks = pageData?.advantageBlocks || [
+  {
+    icon: 'precision_manufacturing',
+    title: 'Massive Production Capacity',
+    description: 'Our facilities handle orders from 50 to 500,000 units with consistent precision across the entire run. We scale with your growth.',
+    isHighlight: false,
+    stats: [
+      { value: '24/7', label: 'Manufacturing' },
+      { value: '0.01mm', label: 'Tolerance' },
+      { value: '100%', label: 'Custom' }
+    ]
+  },
+  {
+    icon: 'verified_user',
+    title: 'ISO 9001 Certified',
+    description: 'Every batch undergoes a rigorous 12-point inspection before it leaves our facility. Zero compromise on brand integrity.',
+    isHighlight: true
+  },
+  {
+    icon: 'palette',
+    title: 'Pantone Matching',
+    description: 'We ensure your brand colors are accurate to within 1% variance using professional matching systems.',
+    isHighlight: false
+  },
+  {
+    icon: 'inventory',
+    title: 'White Label Shipping',
+    description: 'For resellers and agencies, we offer fully anonymous blind shipping directly to your clients.',
+    isHighlight: false
+  },
+  {
+    icon: 'bolt',
+    title: 'Priority Rush Lane',
+    description: 'Urgent deadline? Our rush manufacturing can deliver finished custom products in as little as 5-7 business days.',
+    isHighlight: true
+  }
+];
+
+// 4. Fallbacks for Process Steps
+const processTitle = pageData?.processTitle || 'Simple 3-Step Process';
+const processSteps = pageData?.processSteps || [
+  { icon: 'lightbulb', title: '1. Idea & Artwork', description: 'Upload a logo or simple sketch. Our design team creates your production-ready vector file for free.' },
+  { icon: 'fact_check', title: '2. Digital Proof', description: 'Review a high-resolution mock-up in 24 hours. Request unlimited revisions until it\'s perfect.' },
+  { icon: 'local_shipping', title: '3. Manufacturing', description: 'Once approved, we manufacture and ship worldwide. Track your order in real-time to your door.' }
+];
+
+// 5. Fallbacks for Technical Capabilities
+const capabilitiesTitle = pageData?.capabilitiesTitle || 'Technical Capabilities';
+const capabilitiesDescription = pageData?.capabilitiesDescription || 'Our production floor features cutting-edge CNC, laser, and textile machinery for complex custom specifications.';
+const capabilitiesImageUrl = pageData?.capabilitiesImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuA-frtc1bOyOK25pPGoe_4ZD20xuOwpW7_tfnfHYSeqmiLsLCcQrVSwPvqEvoEoU1PV2BpkaVuwXf8T-vNeRYDJNLK9B0IU6SxQdWAV7jNVow8WKE3h06rwuLEd8DuXVQXXEz3JNumytN90yQJQTYDFrsvOvV91O1O3gYr_aSTAtxWX2Mg_UI86V-_XmSZGtcxRgzMQ3khqurLXxK03eKOEVaoBUe5yaZCHhSugea6DTosDtS-n8QY53KzL70bZBdGVmDlMMDtshm-P';
+const capabilitiesList = pageData?.capabilitiesList || [
+  { title: 'Sizing', description: 'From 0.5" micro-pins to 18" large patches.' },
+  { title: 'Backing', description: 'Iron-on, Velcro, Adhesive, or Magnetic.' },
+  { title: 'Dimensions', description: 'Standard flat 2D or sculpted 3D layers.' },
+  { title: 'Materials', description: 'TPU, Silicone, Brass, Zinc, and Eco-Felt.' }
+];
+
+// 6. Fallbacks for CTA Banner
+const ctaTitle = pageData?.ctaTitle || 'Ready to Elevate Your Brand?';
+const ctaText = pageData?.ctaText || 'Upload your artwork and receive a free digital proof with detailed material recommendations in 24 hours.';
+const ctaBtnLabel = pageData?.ctaBtnLabel || 'Start Free Design Proof';
+const ctaBtnUrl = pageData?.ctaBtnUrl || '/contact';
+const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Contact Sales Team';
+const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
+
+// Section headings + CTAs (Recent Work & Insights)
+const portfolioSectionTitle = pageData?.portfolioSectionTitle || 'Our Recent Work';
+const portfolioSectionSubtitle = pageData?.portfolioSectionSubtitle || '';
+const portfolioCtaLabel = pageData?.portfolioCtaLabel || 'View Case Studies';
+const portfolioCtaUrl = pageData?.portfolioCtaUrl || '/portfolio';
+const blogSectionTitle = pageData?.blogSectionTitle || 'Industry Insights';
+const blogCtaLabel = pageData?.blogCtaLabel || 'Browse All Articles';
+const blogCtaUrl = pageData?.blogCtaUrl || '/blog';
+
+// 7. Fallbacks for Portfolios (recent work grid)
+const defaultPortfolios = [
+  {
+    title: 'Elite Tactical Badge', slug: 'elite-tactical-badge',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDRBf_raBYbIRrpMiZUJRdGIojqK3hBrvii21RMfm98VQS3gecMPHomLfe_e-Gt6prhNBbBiUZE8bQIT139h047kGDNjrnYq5MdBoDW-y_Sxr5-3LCWKVefea-mC-TNHXYcgohqYLBknmDDs6rNK6my1-U1FSeDCbsZVKJJ2nIrwBxXimFzbj5fpB-lHGFlioqLb5wHfLWduH4VTnsOLFKd1xKxM8wqXVwUDtHTHpCbhmvRy8k3PBnk5S9Yjb-qonIXTwTy_02jkBcO' } },
+    portfolioCategories: { nodes: [{ name: 'Flex Badges' }] }
+  },
+  {
+    title: 'Heritage Airline Crest', slug: 'heritage-airline-crest',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1EX8Yoan2du0bcQxo2lml-OdMNBH_MqGGS6GLVmIEHueue7FTRWXFDC4x1BU87wUQivjcoIcjh5rS1vQ6FcHPDhdEd8Vjko6gT6tC4WAJvI-DkBrhlyuEMkOY7cJBnMG_vhYhRoxrzHp_SCkq35nnX6vcSi-i36OTVFCoVgAG1nhWqwCF0oQnqp6VP9zn7_2lYbbGIHZlTIAerlSZ8sju0mVCUoOBe09Wr9eOMhP-N5-9mlLRAJ1K3jkcr34DRGzl8yzxrPNe9d80' } },
+    portfolioCategories: { nodes: [{ name: 'Embroidery' }] }
+  },
+  {
+    title: 'Maritime Service Coin', slug: 'maritime-service-coin',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRWAJExJojzABX_KK-k9Q4nntTpyavJlGfwXi2zz5fNBckvSPlcWZnMTzj7UpEzSBAvrH5NxGRUXNDW6NoAE88M1zCW2SMdO0Jn8JtcyU29KIws1JSkibufsNopBqQt-9mO11GY2vXaoE-7VVM5fcEKf_XtalA6Td5mMb3BMI7Ivs5-0Elsu4Zg-3H9mCyVfou-8pEh_b0WW4bzr6GQ7gkG9QMmHHaxKmHA1O31pe22qlCv7ZlmizNxoZT_bkOFU6GQ5Ymsq_7tEP6' } },
+    portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
+  },
+  {
+    title: 'Luxury Automotive Badge', slug: 'luxury-automotive-badge',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZytY5GwgQfFu3JKdsc66nraRX2fQZdP8gtjzfHc_MjMWPWZJhdHTJrMDYdP6appA6xqxJpnA2vYUZ-5fm9xktaroENikcwWvdOSgN9JGgyUrD3asUCxDC5rR7pdGTcDW3f-f9BQZvO7pcrwf6xDo170TBrxImLmYOhCms3M_Xcc76ygfenWtapjrmJn3WMWkTx0KVgCZLSDFnmd_T5nsrExdDb_jA0-N1OEWdtL_ZUoWXvlizQX5w97-RGySiVDSIbX_JL_DY3Z_7' } },
+    portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
+  }
+];
+const displayPortfolios = portfolios.length > 0 ? portfolios : defaultPortfolios;
+
+// "Our Recent Work" filter: category key (slug if present, else derived from name) so buttons match cards
+const catKey = (c: any) => c?.slug || (c?.name || '').toLowerCase().split(/\s+/)[0];
+const recentCardCats = (p: any) => (p?.portfolioCategories?.nodes || []).map(catKey).filter(Boolean).join(' ');
+const recentCatMap = new Map<string, string>();
+displayPortfolios.forEach((p: any) => (p?.portfolioCategories?.nodes || []).forEach((c: any) => {
+  const k = catKey(c);
+  if (k) recentCatMap.set(k, c?.name || k);
+}));
+// Filter tabs the client picked in the admin (Home → Recent Work → Recent Categories).
+// If none are picked, fall back to auto-deriving them from the displayed projects.
+const selectedRecentCats = (pageData?.recentCategories?.nodes || [])
+  .map((c: any) => ({ key: catKey(c), name: c?.name || '' }))
+  .filter((c: any) => c.key && c.name);
+const recentCats = selectedRecentCats.length > 0
+  ? selectedRecentCats
+  : [...recentCatMap].map(([key, name]) => ({ key, name }));
+
+// 8. Fallbacks for Blog Posts
+const defaultPosts = [
+  {
+    title: 'PVC vs. Embroidery: Choosing for Performance',
+    slug: 'pvc-vs-embroidery',
+    excerpt: 'Detailed comparison of durability and design fidelity for tactical gear.',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDHYuHREJz_TSGrZE0pHQes8y9te0cgs9AREaogPbPhYeKK6_PON0Wv8BqsVdO4-nPlEVv27Yz6nUit2_yyYKvkUdm0b-qjR6nYMf_hFF7J_clZdTcXMkbeOKd1ghlF6BUazP2WCFRr_rY0ucH0TjKbo-925DwSmOQzxzSUBHSkw8naUedIGcxiPU1-YWTHAWNnZ7t73MLAQ1WcHgvuBEdjf0seiA1f6C7vZsCCMT7vDnzbklV9WtvAWBC6RN6lfN6dfZkeJTQX9zRE' } },
+    categories: { nodes: [{ name: 'Tech Trends' }] }
+  },
+  {
+    title: 'Understanding Bleeds & Borders for CNC Milling',
+    slug: 'understanding-bleeds-borders',
+    excerpt: 'Crucial artwork guidelines for creating metallic pins with enamel color separation.',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3FYVvxcQTTmW6FDEQitaXXk281hEj24yz25fVKoFNRmI9hdmBz4Tb9JsmJkqLBY9DLhs7xnDkZtfvC_y9qh8DsqN7suyb0fj_sjGNsCMQFuVRLbxCDx5sQHwKZLKzG12Z9F8h3SAzL1C9AwNR-5OyjWEyKzgiQaxNE4ILT5-2gdXwz58XiN9rOiSaQS5DhrfaLlIG1DN033VLthN73i3inMYqx6oPuBjSYWu-WeZgAzY5XoQr9lyc8OMqVvSJcLWQu_Oh6glFPoS8' } },
+    categories: { nodes: [{ name: 'Ordering Guide' }] }
+  },
+  {
+    title: 'What are Flex Badges? The Modern Standard',
+    slug: 'what-are-flex-badges',
+    excerpt: 'Discover the texture, feel, and weight advantages of our patented metallic-polymer badges.',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5R6LwK56WjXTHcTshQhsy0cR1yWnaF3vjdvadVO4ZlesQ0iiaD1UF141i0S7BDEI9udcI4YQ_CBFb1uZ1lNBb1tRFwswrK11bpmBIEJD-t0WU2TxW0wb7JiqCWRs6c73-4lk7KT2vtbR_mDzSGURhJZv5TItVzOSy63rF4f7TgY0nSV3QFPuYUyzEl-fHXZVkMEP9Ir39i0soTsJkXE9VWs4O9MjlTqPYFKC2z6ZgI5VCr9VVn_ZdPqvOm3xuSpLpu04tHtEIDp-x' } },
+    categories: { nodes: [{ name: 'Material Spec' }] }
+  }
+];
+const displayPosts = posts.length > 0 ? posts : defaultPosts;
+---
+
+<Layout title="BadgeMaster | Custom Badges, Patches & Metal Products" heroHeader={true}>
+    <main>
+        <!-- Section 1: Modern Hero Slider (Dynamic) -->
+        <section class="relative overflow-hidden border-b border-outline-variant bg-inverse-surface" id="hero-slider">
+            {heroSlides.map((slide, idx) => (
+                <div class={idx === 0 ? "hero-slide is-active" : "hero-slide"} data-hero-slide>
+                    {slide.backgroundImage?.node?.sourceUrl && (
+                        <img alt={slide.heading} class="hero-bg" src={slide.backgroundImage.node.sourceUrl} />
+                    )}
+                    <div class="hero-overlay"></div>
+                    <div class="relative z-10 max-w-container-max mx-auto px-gutter min-h-[560px] md:min-h-[640px] flex items-center">
+                        <div class="max-w-3xl py-xl hero-content">
+                            <p class="font-label-bold text-label-bold text-cta-orange uppercase tracking-widest mb-sm">
+                                {slide.badgeText}
+                            </p>
+                            <h1 class="font-display-lg text-display-lg text-white mb-md lg:text-[56px] leading-[1.1]">
+                                {slide.heading}
+                            </h1>
+                            <p class="font-body-lg text-body-lg text-white/85 mb-xl max-w-2xl">
+                                {slide.subheading}
+                            </p>
+                            <div class="flex flex-wrap gap-md mb-lg hero-actions">
+                                {slide.primaryCtaLabel && (
+                                    <a href={slide.primaryCtaUrl}
+                                        class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:opacity-95 transition-all text-center">
+                                        {slide.primaryCtaLabel}
+                                    </a>
+                                )}
+                                {slide.secondaryCtaLabel && (
+                                    <a href={slide.secondaryCtaUrl}
+                                        class="inline-block bg-white text-primary px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:bg-white/90 transition-all text-center">
+                                        {slide.secondaryCtaLabel}
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            
+            <!-- Hero Slider Bottom Bar -->
+            <div class="absolute left-0 right-0 bottom-0 z-20 bg-dark-navy/90 border-t border-white/10 backdrop-blur-sm">
+                <div class="max-w-container-max mx-auto px-gutter py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-md">
+                    <div class="grid grid-cols-2 md:grid-cols-5 items-start gap-sm md:gap-md text-white">
+                        {heroTrustBar.map((trust: any) => (
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-secondary-container" data-icon={trust.icon}>{trust.icon}</span>
+                                <span class="font-label-bold text-sm">{trust.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div class="flex items-center justify-between lg:justify-end gap-md">
+                        <div class="flex items-center gap-sm" aria-label="Hero slider dots">
+                            {heroSlides.map((_, idx) => (
+                                <button class={idx === 0 ? "hero-dot is-active h-2 w-2 rounded-full bg-white/50 transition-all" : "hero-dot h-2 w-2 rounded-full bg-white/50 transition-all"}
+                                    type="button" data-hero-dot aria-label={`Go to slide ${idx + 1}`}></button>
+                            ))}
+                        </div>
+                        <div class="flex items-center gap-sm" aria-label="Hero slider controls">
+                            <button class="w-10 h-10 border border-white/30 text-white bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                                type="button" data-hero-prev aria-label="Previous slide">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <button class="w-10 h-10 border border-white/30 text-white bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                                type="button" data-hero-next aria-label="Next slide">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Specialties (Dynamic) -->
+        <section class="py-xl bg-surface">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="mb-xl text-center">
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{specialtiesTitle}</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">{specialtiesSubtitle}</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    {specialties.map((item: any) => (
+                        <div class="bg-white group cursor-pointer border border-outline-variant overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="h-64 overflow-hidden">
+                                {item.image?.node?.sourceUrl && (
+                                    <img alt={item.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src={item.image.node.sourceUrl} />
+                                )}
+                            </div>
+                            <div class="p-md">
+                                <h3 class="font-headline-sm text-primary mb-2">{item.title}</h3>
+                                <p class="text-body-sm text-on-surface-variant mb-md">{item.description}</p>
+                                {item.linkLabel && (
+                                    <a href={item.linkUrl} class="text-primary font-bold text-sm uppercase tracking-widest hover:underline inline-block">{item.linkLabel}</a>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Why Choose Us (Bento Grid) -->
+        <section class="py-xl bg-surface-container-low">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="mb-xl text-center md:text-left">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{advantageTitle}</h2>
+                    <p class="font-body-md text-on-surface-variant">{advantageSubtitle}</p>
+                </div>
+                <div class="bento-grid">
+                    <div class="col-span-12 md:col-span-8 bg-white p-lg border border-outline-variant rounded-xl flex flex-col justify-between">
+                        <div>
+                            <span class="material-symbols-outlined text-primary text-4xl mb-md">{advantageBlocks?.[0]?.icon || 'precision_manufacturing'}</span>
+                            <h3 class="font-headline-md text-primary mb-sm">{advantageBlocks?.[0]?.title || 'Massive Production Capacity'}</h3>
+                            <p class="text-body-lg text-on-surface-variant max-w-xl">{advantageBlocks?.[0]?.description || 'Our facilities handle orders from 50 to 500,000 units with consistent precision across the entire run. We scale with your growth.'}</p>
+                        </div>
+                        <div class="mt-xl flex gap-xl border-t border-outline-variant pt-md">
+                            {(advantageBlocks?.[0]?.stats?.length ? advantageBlocks[0].stats : [{value:'24/7',label:'Manufacturing'},{value:'0.01mm',label:'Tolerance'},{value:'100%',label:'Custom'}]).map((stat: any) => (
+                                <div>
+                                    <p class="text-primary font-bold text-2xl">{stat.value}</p>
+                                    <p class="text-xs uppercase tracking-widest text-on-surface-variant">{stat.label}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div class="col-span-12 md:col-span-4 bg-primary p-lg rounded-xl text-white">
+                        <span class="material-symbols-outlined text-4xl mb-md">{advantageBlocks?.[1]?.icon || 'verified_user'}</span>
+                        <h3 class="font-headline-sm mb-md">{advantageBlocks?.[1]?.title || 'ISO 9001 Certified'}</h3>
+                        <p class="text-body-md opacity-90 leading-relaxed">{advantageBlocks?.[1]?.description || 'Every batch undergoes a rigorous 12-point inspection before it leaves our facility. Zero compromise on brand integrity.'}</p>
+                    </div>
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-md">{advantageBlocks?.[2]?.icon || 'palette'}</span>
+                        <h3 class="font-headline-sm text-primary mb-sm">{advantageBlocks?.[2]?.title || 'Pantone Matching'}</h3>
+                        <p class="text-body-sm text-on-surface-variant">{advantageBlocks?.[2]?.description || 'We ensure your brand colors are accurate to within 1% variance using professional matching systems.'}</p>
+                    </div>
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-md">{advantageBlocks?.[3]?.icon || 'inventory'}</span>
+                        <h3 class="font-headline-sm text-primary mb-sm">{advantageBlocks?.[3]?.title || 'White Label Shipping'}</h3>
+                        <p class="text-body-sm text-on-surface-variant">{advantageBlocks?.[3]?.description || 'For resellers and agencies, we offer fully anonymous blind shipping directly to your clients.'}</p>
+                    </div>
+                    <div class="col-span-12 md:col-span-12 lg:col-span-4 bg-cta-orange p-lg rounded-xl text-white">
+                        <span class="material-symbols-outlined text-3xl mb-md">{advantageBlocks?.[4]?.icon || 'bolt'}</span>
+                        <h3 class="font-headline-sm mb-sm">{advantageBlocks?.[4]?.title || 'Priority Rush Lane'}</h3>
+                        <p class="text-body-sm opacity-90">{advantageBlocks?.[4]?.description || 'Urgent deadline? Our rush manufacturing can deliver finished custom products in as little as 5-7 business days.'}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Ordering Process (Dynamic) -->
+        <section class="py-xl bg-white overflow-hidden">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="text-center mb-xl">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{processTitle}</h2>
+                </div>
+                <div class="relative flex flex-col md:flex-row justify-between items-start gap-xl">
+                    <!-- Progress Line -->
+                    <div class="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 timeline-line z-0"></div>
+                    {processSteps.map((step) => (
+                        <div class="relative z-10 flex flex-col items-center text-center flex-1">
+                            <div class="w-24 h-24 rounded-full bg-white border-4 border-primary flex items-center justify-center mb-md shadow-lg">
+                                <span class="material-symbols-outlined text-primary text-4xl">{step.icon}</span>
+                            </div>
+                            <h3 class="font-headline-sm text-primary mb-xs">{step.title}</h3>
+                            <p class="text-body-sm text-on-surface-variant max-w-[280px]">{step.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Manufacturing Capabilities (Dynamic) -->
+        <section class="py-xl bg-inverse-surface text-white">
+            <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
+                <div class="rounded-xl overflow-hidden shadow-2xl">
+                    <img alt={capabilitiesTitle} class="w-full h-full object-cover" src={capabilitiesImageUrl} />
+                </div>
+                <div>
+                    <h2 class="font-headline-lg mb-md">{capabilitiesTitle}</h2>
+                    <p class="text-body-lg opacity-80 mb-xl">{capabilitiesDescription}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-md gap-x-xl">
+                        {capabilitiesList.map((item) => (
+                            <div class="flex items-start gap-sm">
+                                <span class="material-symbols-outlined text-secondary-container">check_circle</span>
+                                <div>
+                                    <p class="font-label-bold uppercase tracking-widest text-xs text-secondary-container mb-1">
+                                        {item.title}
+                                    </p>
+                                    <p class="text-body-sm">{item.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Portfolio Preview (Dynamic) -->
+        <section class="py-xl bg-surface">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-xl gap-md">
+                    <div>
+                        <h2 class="font-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
+                        {portfolioSectionSubtitle && (
+                            <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{portfolioSectionSubtitle}</p>
+                        )}
+                        <div id="recent-filters" class="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
+                            <button type="button" data-filter="all" class="recent-filter text-primary font-bold border-b-2 border-primary whitespace-nowrap">All Projects</button>
+                            {recentCats.map((c) => (
+                                <button type="button" data-filter={c.key} class="recent-filter text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
+                            ))}
+                        </div>
+                    </div>
+                    <a href={portfolioCtaUrl} class="flex items-center gap-2 text-primary font-bold hover:underline mb-2">
+                        {portfolioCtaLabel} <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div id="recent-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {displayPortfolios.map((item: any) => (
+                        <a href={`/portfolio/${item.slug}`}
+                            data-category={recentCardCats(item)}
+                            class="recent-card group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300">
+                            <div class="relative aspect-square overflow-hidden bg-surface-container-high">
+                                {item.featuredImage?.node?.sourceUrl && (
+                                    <img alt={item.title}
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                        src={item.featuredImage.node.sourceUrl} />
+                                )}
+                                {item.portfolioCategories?.nodes?.[0]?.name && (
+                                    <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary shadow-sm">
+                                        {item.portfolioCategories.nodes[0].name}
+                                    </span>
+                                )}
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-label-bold text-sm text-primary group-hover:text-cta-orange transition-colors line-clamp-1">{item.title}</h3>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+                <div id="recent-empty" class="hidden text-center py-lg text-outline font-body-md">No projects in this category yet.</div>
+            </div>
+        </section>
+
+        <!-- Section 8: Blog Preview (Dynamic) -->
+        <section class="py-xl bg-white">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="flex justify-between items-end mb-xl">
+                    <h2 class="font-headline-lg text-primary">{blogSectionTitle}</h2>
+                    <a class="text-primary font-label-bold" href={blogCtaUrl}>{blogCtaLabel}</a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                    {displayPosts.map((item) => (
+                        <div class="flex flex-col h-full border border-outline-variant rounded-lg overflow-hidden group">
+                            <div class="aspect-video overflow-hidden">
+                                {item.featuredImage?.node?.sourceUrl && (
+                                    <img alt={item.title}
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        src={item.featuredImage.node.sourceUrl} />
+                                )}
+                            </div>
+                            <div class="p-md flex flex-col flex-grow">
+                                <span class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">
+                                    {item.categories?.nodes?.[0]?.name || 'Insights'}
+                                </span>
+                                <h3 class="font-headline-sm text-on-surface mb-3">{item.title}</h3>
+                                <p class="text-body-sm text-on-surface-variant flex-grow mb-4">{item.excerpt?.replace(/<[^>]*>?/gm, '')}</p>
+                                <a class="text-primary font-bold text-sm" href={`/blog/${item.slug}`}>Read More →</a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: CTA (Dynamic) -->
+        <section class="py-xl bg-surface-container-low text-center">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{ctaTitle}</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">{ctaText}</p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-md">
+                    <a href={ctaBtnUrl}
+                        class="w-full max-w-xs md:w-auto md:max-w-none bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
+                        {ctaBtnLabel}
+                    </a>
+                    <a href={ctaSecondaryUrl}
+                        class="w-full max-w-xs md:w-auto md:max-w-none bg-primary text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
+                        {ctaSecondaryLabel}
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Hero Slider logic
+        const setupSlider = () => {
+            const heroSlider = document.getElementById('hero-slider');
+            if (heroSlider) {
+                const slides = Array.from(heroSlider.querySelectorAll('[data-hero-slide]'));
+                const dots = Array.from(heroSlider.querySelectorAll('[data-hero-dot]'));
+                const prev = heroSlider.querySelector('[data-hero-prev]');
+                const next = heroSlider.querySelector('[data-hero-next]');
+
+                if (slides.length <= 1) return;
+
+                let currentSlide = 0;
+                let sliderInterval: any = null;
+
+                const showSlide = (index: number) => {
+                    slides.forEach((slide, idx) => {
+                        if (idx === index) {
+                            slide.classList.add('is-active');
+                        } else {
+                            slide.classList.remove('is-active');
+                        }
+                    });
+
+                    dots.forEach((dot, idx) => {
+                        if (idx === index) {
+                            dot.classList.add('is-active');
+                        } else {
+                            dot.classList.remove('is-active');
+                        }
+                    });
+
+                    currentSlide = index;
+                };
+
+                const nextSlide = () => {
+                    const nextIdx = (currentSlide + 1) % slides.length;
+                    showSlide(nextIdx);
+                };
+
+                const prevSlide = () => {
+                    const prevIdx = (currentSlide - 1 + slides.length) % slides.length;
+                    showSlide(prevIdx);
+                };
+
+                const startAutoSlide = () => {
+                    stopAutoSlide();
+                    sliderInterval = setInterval(nextSlide, 6000);
+                };
+
+                const stopAutoSlide = () => {
+                    if (sliderInterval) {
+                        clearInterval(sliderInterval);
+                    }
+                };
+
+                if (next) next.addEventListener('click', () => {
+                    nextSlide();
+                    startAutoSlide();
+                });
+
+                if (prev) prev.addEventListener('click', () => {
+                    prevSlide();
+                    startAutoSlide();
+                });
+
+                dots.forEach((dot, idx) => {
+                    dot.addEventListener('click', () => {
+                        showSlide(idx);
+                        startAutoSlide();
+                    });
+                });
+
+                // Init auto slide
+                startAutoSlide();
+            }
+        };
+
+        // Scroll reveal logic using IntersectionObserver
+        const setupScrollReveal = () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-8');
+                    }
+                });
+            }, { threshold: 0.01, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('section > div').forEach(div => {
+                if (div.closest('#hero-slider')) return;
+                div.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-8');
+                observer.observe(div);
+            });
+
+            // Fallback safety timeout
+            setTimeout(() => {
+                document.querySelectorAll('section > div').forEach(div => {
+                    if (div.closest('#hero-slider')) return;
+                    div.classList.add('opacity-100', 'translate-y-0');
+                    div.classList.remove('opacity-0', 'translate-y-8');
+                });
+            }, 1200);
+        };
+
+        const setupRecentFilter = () => {
+            const filters = document.getElementById('recent-filters');
+            const grid = document.getElementById('recent-grid');
+            const empty = document.getElementById('recent-empty');
+            if (!filters || !grid) return;
+            const buttons = Array.from(filters.querySelectorAll('.recent-filter')) as HTMLElement[];
+            const cards = Array.from(grid.querySelectorAll('.recent-card')) as HTMLElement[];
+            buttons.forEach(btn => btn.addEventListener('click', () => {
+                buttons.forEach(b => {
+                    b.classList.remove('text-primary', 'font-bold', 'border-primary');
+                    b.classList.add('text-on-surface-variant', 'border-transparent');
+                });
+                btn.classList.add('text-primary', 'font-bold', 'border-primary');
+                btn.classList.remove('text-on-surface-variant', 'border-transparent');
+                const filter = btn.getAttribute('data-filter') || 'all';
+                let shown = 0;
+                cards.forEach(card => {
+                    const cats = (card.getAttribute('data-category') || '').split(' ');
+                    const ok = filter === 'all' || cats.includes(filter);
+                    card.style.display = ok ? 'flex' : 'none';
+                    if (ok) shown++;
+                });
+                if (empty) empty.classList.toggle('hidden', shown !== 0);
+            }));
+        };
+
+        setupSlider();
+        setupScrollReveal();
+        setupRecentFilter();
+        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); });
+    </script>
+</Layout>

@@ -1,0 +1,126 @@
+---
+interface Props {
+  navigation?: Array<{ label: string, url: string }>;
+  productCategories?: Array<{ name: string, slug: string }>;
+  logoText?: string;
+  logoImage?: {
+    node?: {
+      sourceUrl?: string;
+    }
+  } | null;
+  ctaLabel?: string;
+  ctaUrl?: string;
+  /** When true (home page), the header is transparent and overlays the hero, then turns solid on scroll. */
+  transparent?: boolean;
+}
+
+const {
+  navigation = [
+    { label: "Home", url: "/" },
+    { label: "Products", url: "/products" },
+    { label: "Portfolio", url: "/portfolio" },
+    { label: "Services", url: "/services" },
+    { label: "Blog", url: "/blog" },
+    { label: "Contact", url: "/contact" }
+  ],
+  productCategories = [],
+  logoText = "BadgeMaster",
+  logoImage = null,
+  ctaLabel = "Request Free Quote",
+  ctaUrl = "/contact",
+  transparent = false
+} = Astro.props;
+
+const pathname = new URL(Astro.request.url).pathname;
+const cleanPath = pathname.replace(/\/$/, "");
+
+const isActive = (href: string) => {
+  if (href === "/") {
+    return cleanPath === "";
+  }
+  return cleanPath === href;
+};
+
+// Home: transparent overlay on the hero (solidifies on scroll via the script below).
+// Other pages: solid primary bar that matches the hero colour.
+const headerClass = transparent
+  ? "site-header fixed top-0 left-0 right-0 z-50 w-full bg-transparent transition-colors duration-300"
+  : "site-header sticky top-0 z-50 w-full bg-primary border-b border-white/10 shadow-sm transition-colors duration-300";
+---
+
+<header id="site-header" data-transparent={transparent ? "true" : "false"} class={headerClass}>
+    <div class="flex flex-col w-full max-w-container-max mx-auto px-gutter py-4">
+        <div class="flex items-center justify-between">
+            <a href="/" class="font-headline-md text-headline-md font-bold text-white flex items-center gap-2">
+                {logoImage?.node?.sourceUrl ? (
+                    <img src={logoImage.node.sourceUrl} alt={logoText} class="h-10 w-auto object-contain" />
+                ) : (
+                    <span>{logoText}</span>
+                )}
+            </a>
+            <nav class="hidden md:flex flex-1 items-center justify-center gap-md px-8">
+                {navigation.map(item => {
+                    const hasDropdown = item.url === "/products" && productCategories.length > 0;
+                    const active = isActive(item.url) || (item.url === "/products" && cleanPath.startsWith("/products"));
+                    const linkClass = active
+                        ? "text-white border-b-2 border-cta-orange pb-1 font-bold font-label-md text-label-md"
+                        : "text-white/75 font-medium font-label-md text-label-md hover:text-white transition-colors py-1";
+                    if (!hasDropdown) {
+                        return (
+                            <a id={`nav-${item.label.toLowerCase()}`} href={item.url} class={linkClass}>{item.label}</a>
+                        );
+                    }
+                    return (
+                        <div class="relative group">
+                            <a id={`nav-${item.label.toLowerCase()}`} href={item.url} class={`${linkClass} flex items-center gap-1 cursor-pointer`}>
+                                {item.label}
+                                <span class="material-symbols-outlined text-[18px] transition-transform group-hover:rotate-180">expand_more</span>
+                            </a>
+                            <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 hidden group-hover:block z-50">
+                                <div class="bg-white shadow-xl rounded-lg border border-outline-variant py-2 min-w-[210px]">
+                                    <a href="/products" class="block px-4 py-2 text-sm font-bold text-primary hover:bg-surface-container-low transition-colors">All Products</a>
+                                    <div class="h-px bg-outline-variant my-1"></div>
+                                    {productCategories.map(c => (
+                                        <a href={`/products/${c.slug}`} class="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors">{c.name}</a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </nav>
+            <div class="flex items-center gap-md">
+                <a href={ctaUrl} class="bg-cta-orange text-white px-md py-2 font-label-bold text-label-bold hover:brightness-110 transition-all rounded-sm shadow-sm">
+                    {ctaLabel}
+                </a>
+                <!-- Hamburger Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-cta-orange focus:outline-none flex items-center justify-center p-2 transition-colors" aria-label="Toggle Menu">
+                    <span class="material-symbols-outlined text-[28px]">menu</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Transparent home header: stays clear over the hero, turns solid once scrolled.
+    const setupHeader = () => {
+        const header = document.getElementById('site-header');
+        if (!header || header.dataset.transparent !== 'true') return;
+        const solidClasses = ['bg-primary', 'shadow-sm', 'border-b', 'border-white/10'];
+        const onScroll = () => {
+            if (window.scrollY > 40) {
+                header.classList.remove('bg-transparent');
+                solidClasses.forEach(c => header.classList.add(c));
+            } else {
+                solidClasses.forEach(c => header.classList.remove(c));
+                header.classList.add('bg-transparent');
+            }
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+    };
+
+    setupHeader();
+    document.addEventListener('astro:after-swap', setupHeader);
+</script>

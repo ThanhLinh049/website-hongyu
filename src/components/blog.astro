@@ -1,0 +1,339 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  posts?: any[];
+  categories?: any[];
+}
+
+const { posts = [], categories = [] } = Astro.props;
+
+const fallbackPosts = [
+  {
+    title: 'How to Choose the Right Custom Badge Material for Industrial Use',
+    slug: 'how-to-choose-badge-material',
+    excerpt: 'Navigating the complexities of flex badges versus traditional metal can be challenging. We break down durability, cost-efficiency, and brand impact for high-volume corporate orders.',
+    date: '2023-10-24T00:00:00',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_V6nhAEUFxKw2NsZarGQTe_KUs1YPfg5Cu1_j0cV-Cbm2gZf06X-FZIEgx3CtzdgQhn2PdIlXfoz6ZiDOQHZe1qdyoErNo1nyyfXQG38GYPhwIAtSqKCjdPDOQdFRTcm9Jn-iDo7k7J_ds9iuDrQ9YJYGovMJrufDCei9GdNdCM1yV6uVA3xyg9bq-Tml5QJfT46Q5IhRmlSncRfjRespglJAjSkHb46Che1xdXJdU0H5phCpwr9b3mafeQGBv1eR5c1_iQGcuyGU' } },
+    categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
+  },
+  {
+    title: 'Optimizing Logo Files for Flex Badge Production',
+    slug: 'optimizing-logo-files',
+    excerpt: 'Learn the essential file types and vector requirements to ensure your custom badges maintain perfect fidelity during the extrusion process.',
+    date: '2023-10-24T00:00:00',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC2o8ddDffrNQjWHo0ZmcfK8pcBcYN6I2i_5TR6uPb6_vDXshmeUT1k2ULoyTE-OuX7rshGAcNSmAkeIluKxxoP7Y7vqEGcYVOcPSTiKvhDX9hp06R2VinxaYxf-Ks8aWFaca_NIvJIPVpyb17gcWbFcA-RPSNBD7xLxPtnreBJOiTOGxF9dMqjIPuGrQF8jwGwYaWlPcbKOalMWj1eb5_RFeFKgHMrjLzSOBvpA6YhavJAHNoMfS_6cUSSLmC6jJMh7CLYUeLTgyXr' } },
+    categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
+  },
+  {
+    title: 'The Science of Durability: PVC vs. TPU Materials',
+    slug: 'pvc-vs-tpu-materials',
+    excerpt: 'A technical comparison of polymer performance under extreme heat and chemical exposure in industrial workwear environments.',
+    date: '2023-10-18T00:00:00',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC1UbovBk6cnOfnAOGpDvB12e40jwA_OcV9xMI3XacBrVqKaxjIF2FndyUo2u3WdVVp4XVwSrsn1yXRnwHk-LJVMKYjCMfHMwzcSM0BgvdCx3SxnKyHcruiqIjGoZ_iMXqhYPlvR7MMSdiO_XXt_Yh5yS7eZl18tMFiHKxzE5TA23zyG9Uxo7aNn9S26OcjAmO-iYTN-D4X02hRCpGqfjl_GP-j79MF_JBfeUVvusvH4pMMZt6QynnQiMlUWzkmUIA6VplYrtGXm8QP' } },
+    categories: { nodes: [{ name: 'Manufacturing', slug: 'manufacturing' }] }
+  },
+  {
+    title: 'Reducing Lead Times for High-Volume Orders',
+    slug: 'reducing-lead-times',
+    excerpt: 'Strategies for supply chain management and proof approval to shave weeks off your custom manufacturing timeline.',
+    date: '2023-10-12T00:00:00',
+    featuredImage: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDS1bSh2GqtbusEMhVp6kty0vQ8sG3MSVoflWRpQESlv5yHhWczTxJrDf-wK3n5v4lotKvALb_K1wOkEqXxbpFe9we7MEkqVNECTdeFlzNm3clJK1kpkXsOp5c-lx7-K88ynY6deEdDNNnYmGB9jMU3vmlQTNlQQ2N5bk_HX7OMO6no0PJX_rjYeObQWDSr8AkUZfm1j0-ZJ98lsDDawlVgDpckUQAKEpYsoqRgz4W-SmZ29ThrUZ23N8nCCnBEgrCx9LBfvzGktqqi' } },
+    categories: { nodes: [{ name: 'Ordering Guide', slug: 'ordering-guide' }] }
+  }
+];
+
+const activePosts = posts.length > 0 ? posts : fallbackPosts;
+const featuredPost = activePosts[0];
+
+// Category filter buttons: dynamic from WP, fall back to those present on posts.
+const presentMap = new Map<string, string>();
+activePosts.forEach((p: any) => (p?.categories?.nodes || []).forEach((c: any) => {
+  if (c?.slug) presentMap.set(c.slug, c.name || c.slug);
+}));
+const filterCats = (categories && categories.length > 0)
+  ? categories
+  : [...presentMap].map(([slug, name]) => ({ slug, name }));
+
+const formatDate = (dateStr: string) => {
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+  } catch { return ''; }
+};
+
+const stripHtml = (html: string) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
+// Data attributes used by the client-side filter/search.
+const catSlugs = (p: any) => (p?.categories?.nodes || []).map((c: any) => c.slug).join(' ');
+const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}`.toLowerCase();
+---
+
+<Layout title="Blog | BadgeMaster Manufacturing Insights">
+    <main class="max-w-full">
+        <!-- Hero Section -->
+        <section class="bg-surface-container-low py-xl">
+            <div class="max-w-container-max mx-auto px-gutter">
+                <div class="max-w-3xl">
+                    <div
+                        class="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed-variant px-4 py-1.5 rounded-full mb-md">
+                        <span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+                        <span class="font-label-bold text-xs">B2B RESOURCE HUB</span>
+                    </div>
+                    <h1 class="font-display-lg text-display-lg text-primary mb-md">Product Guides &amp; Custom
+                        Manufacturing Insights</h1>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Expert advice on materials,
+                        manufacturing techniques, and design best-practices for high-performance industrial branding.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- Category Filter + Search -->
+        <section class="bg-white border-b border-outline-variant sticky top-[68px] z-40">
+            <div class="max-w-container-max mx-auto px-gutter py-md flex flex-col lg:flex-row lg:items-center gap-md lg:justify-between">
+                <div class="flex items-center gap-md overflow-x-auto hide-scrollbar">
+                    <span class="font-label-bold text-on-surface whitespace-nowrap hidden sm:inline">CATEGORIES:</span>
+                    <div class="flex gap-sm" id="blog-filters">
+                        <button data-filter="all"
+                            class="blog-filter-btn px-5 py-2 rounded-full bg-primary text-on-primary font-label-md transition-all whitespace-nowrap">All Posts</button>
+                        {filterCats.map((c: any) => (
+                            <button data-filter={c.slug}
+                                class="blog-filter-btn px-5 py-2 rounded-full border border-outline-variant hover:border-primary text-on-surface-variant font-label-md transition-all whitespace-nowrap">{c.name}</button>
+                        ))}
+                    </div>
+                </div>
+                <div class="relative w-full lg:w-72 shrink-0">
+                    <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">search</span>
+                    <input id="blog-search" type="text" placeholder="Search insights..."
+                        class="w-full pl-11 pr-4 py-2.5 rounded-full border border-outline-variant bg-surface-container-low text-body-sm text-on-surface placeholder:text-outline focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                </div>
+            </div>
+        </section>
+        <!-- Featured Article (First Post) -->
+        {featuredPost && (
+            <section id="blog-featured" class="max-w-container-max mx-auto px-gutter py-xl">
+                <a href={`/blog/${featuredPost.slug}`}
+                    class="relative group cursor-pointer overflow-hidden rounded-xl bg-white border border-outline-variant hover:border-primary transition-all duration-300 shadow-sm block">
+                    <div class="flex flex-col lg:flex-row min-h-[380px]">
+                        <div class="lg:w-[60%] overflow-hidden">
+                            <img alt={featuredPost.title}
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[240px]"
+                                src={featuredPost.featuredImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_V6nhAEUFxKw2NsZarGQTe_KUs1YPfg5Cu1_j0cV-Cbm2gZf06X-FZIEgx3CtzdgQhn2PdIlXfoz6ZiDOQHZe1qdyoErNo1nyyfXQG38GYPhwIAtSqKCjdPDOQdFRTcm9Jn-iDo7k7J_ds9iuDrQ9YJYGovMJrufDCei9GdNdCM1yV6uVA3xyg9bq-Tml5QJfT46Q5IhRmlSncRfjRespglJAjSkHb46Che1xdXJdU0H5phCpwr9b3mafeQGBv1eR5c1_iQGcuyGU'} />
+                        </div>
+                        <div class="lg:w-[40%] p-xl flex flex-col justify-center">
+                            <div class="text-tertiary font-label-bold mb-base uppercase tracking-[0.2em] text-xs">Featured
+                                Guide</div>
+                            <h2 class="font-headline-lg text-headline-lg text-primary mb-md leading-tight">{featuredPost.title}</h2>
+                            <p class="font-body-lg text-on-surface-variant mb-lg leading-relaxed line-clamp-3">
+                                {stripHtml(featuredPost.excerpt)}
+                            </p>
+                            <div class="mt-auto flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-[20px]">schedule</span>
+                                    <span class="font-label-md">{formatDate(featuredPost.date)}</span>
+                                </div>
+                                <span class="text-primary font-label-bold inline-flex items-center gap-2 group/btn">
+                                    Read Full Article
+                                    <span
+                                        class="material-symbols-outlined transition-transform group-hover/btn:translate-x-2">arrow_forward</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </section>
+        )}
+        <!-- Article Grid (all posts; featured one is hidden here in the default view) -->
+        <section class="max-w-container-max mx-auto px-gutter pb-xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md" id="blog-grid">
+                {activePosts.map((post: any, idx: number) => (
+                    <a href={`/blog/${post.slug}`}
+                        data-featured={idx === 0 ? '1' : '0'}
+                        data-cats={catSlugs(post)}
+                        data-search={searchData(post)}
+                        class="blog-card bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary transition-all duration-300 group shadow-sm">
+                        <div class="aspect-[4/3] overflow-hidden">
+                            <img alt={post.title}
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                src={post.featuredImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC2o8ddDffrNQjWHo0ZmcfK8pcBcYN6I2i_5TR6uPb6_vDXshmeUT1k2ULoyTE-OuX7rshGAcNSmAkeIluKxxoP7Y7vqEGcYVOcPSTiKvhDX9hp06R2VinxaYxf-Ks8aWFaca_NIvJIPVpyb17gcWbFcA-RPSNBD7xLxPtnreBJOiTOGxF9dMqjIPuGrQF8jwGwYaWlPcbKOalMWj1eb5_RFeFKgHMrjLzSOBvpA6YhavJAHNoMfS_6cUSSLmC6jJMh7CLYUeLTgyXr'} />
+                        </div>
+                        <div class="p-md flex flex-col flex-grow">
+                            <div class="flex items-center gap-base mb-sm">
+                                {post.categories?.nodes?.[0] && (
+                                    <span
+                                        class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-label-bold uppercase">{post.categories.nodes[0].name}</span>
+                                )}
+                                <span class="text-outline text-[12px]">{formatDate(post.date)}</span>
+                            </div>
+                            <h3
+                                class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors line-clamp-2">
+                                {post.title}</h3>
+                            <div class="mt-auto pt-md flex items-center justify-between">
+                                <div class="flex items-center gap-1.5 text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-[18px]">timer</span>
+                                    <span class="text-[12px] font-medium">5 min read</span>
+                                </div>
+                                <span class="text-primary font-label-bold text-[12px]">Read More</span>
+                            </div>
+                        </div>
+                    </a>
+                ))}
+            </div>
+            <div id="blog-empty" class="hidden text-center py-xl text-outline font-body-md">No articles match your search.</div>
+            <nav id="blog-pagination" class="hidden flex-wrap items-center justify-center gap-2 pt-xl" aria-label="Blog pagination"></nav>
+        </section>
+        <!-- Newsletter CTA -->
+        <section class="max-w-container-max mx-auto px-gutter pb-xl">
+            <div
+                class="bg-primary text-on-primary rounded-2xl p-xl flex flex-col lg:flex-row items-center gap-xl relative overflow-hidden">
+                <div
+                    class="absolute right-[-50px] top-[-50px] w-64 h-64 opacity-10 pointer-events-none bg-white rounded-full">
+                </div>
+                <div class="flex-1 relative z-10 text-center lg:text-left">
+                    <h2 class="font-headline-lg text-headline-lg mb-base leading-tight">Industrial Insights to Your
+                        Inbox</h2>
+                    <p class="text-primary-fixed font-body-md max-w-xl">Get bi-weekly updates on manufacturing trends,
+                        material sciences, and cost-saving procurement strategies for your branding needs.</p>
+                </div>
+                <div class="w-full lg:w-1/3 relative z-10">
+                    <form class="flex flex-col gap-base">
+                        <div class="relative">
+                            <input
+                                class="w-full bg-white border-0 rounded-lg px-5 py-4 text-on-background focus:ring-2 focus:ring-secondary outline-none transition-all"
+                                placeholder="Enter your work email" type="email" />
+                        </div>
+                        <button
+                            class="bg-[#E67E22] text-white px-8 py-4 rounded-lg font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95"
+                            type="submit">Subscribe to Insights</button>
+                        <p class="text-[12px] text-primary-fixed/70 text-center">Strict B2B only. No spam. <a
+                                class="underline hover:text-white" href="#">Privacy Policy</a></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<script>
+    const PER_PAGE = 9;
+
+    // Page-number list with ellipsis: 1 … 4 5 [6] 7 8 … 20
+    const pageList = (current: number, total: number): (number | string)[] => {
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+        const out: (number | string)[] = [1];
+        const start = Math.max(2, current - 1);
+        const end = Math.min(total - 1, current + 1);
+        if (start > 2) out.push('…');
+        for (let i = start; i <= end; i++) out.push(i);
+        if (end < total - 1) out.push('…');
+        out.push(total);
+        return out;
+    };
+
+    const setupBlog = () => {
+        const filterWrap = document.getElementById('blog-filters');
+        const grid = document.getElementById('blog-grid');
+        const featured = document.getElementById('blog-featured');
+        const empty = document.getElementById('blog-empty');
+        const pager = document.getElementById('blog-pagination');
+        const search = document.getElementById('blog-search') as HTMLInputElement | null;
+        if (!filterWrap || !grid || !pager) return;
+        const buttons = Array.from(filterWrap.querySelectorAll('.blog-filter-btn')) as HTMLElement[];
+        const cards = Array.from(grid.querySelectorAll('.blog-card')) as HTMLElement[];
+
+        let filter = 'all';
+        let term = '';
+        let page = 1;
+
+        const isDefault = () => filter === 'all' && term === '';
+
+        const matches = (card: HTMLElement) => {
+            const cats = (card.getAttribute('data-cats') || '').split(' ');
+            const okCat = filter === 'all' || cats.includes(filter);
+            const okSearch = term === '' || (card.getAttribute('data-search') || '').includes(term);
+            return okCat && okSearch;
+        };
+
+        const render = () => {
+            const def = isDefault();
+            // Default view shows the featured block; once filtering/searching, it collapses to a normal card.
+            if (featured) featured.style.display = def ? '' : 'none';
+
+            const visible = cards.filter(c => {
+                if (!matches(c)) return false;
+                if (def && c.getAttribute('data-featured') === '1') return false; // shown in the featured block instead
+                return true;
+            });
+
+            const totalPages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
+            if (page > totalPages) page = totalPages;
+            const startIdx = (page - 1) * PER_PAGE;
+            const endIdx = startIdx + PER_PAGE;
+
+            cards.forEach(c => { c.style.display = 'none'; });
+            visible.forEach((c, i) => { c.style.display = (i >= startIdx && i < endIdx) ? 'flex' : 'none'; });
+
+            if (empty) empty.classList.toggle('hidden', !(visible.length === 0 && !def));
+
+            // Pagination
+            pager.innerHTML = '';
+            if (totalPages <= 1) { pager.classList.add('hidden'); return; }
+            pager.classList.remove('hidden');
+
+            const mkBtn = (label: string, target: number, opts: { disabled?: boolean, active?: boolean, dots?: boolean } = {}) => {
+                if (opts.dots) {
+                    const span = document.createElement('span');
+                    span.textContent = '…';
+                    span.className = 'px-2 text-outline select-none';
+                    pager.appendChild(span);
+                    return;
+                }
+                const b = document.createElement('button');
+                b.textContent = label;
+                b.className = opts.active
+                    ? 'min-w-[40px] h-10 px-3 rounded-md bg-primary text-white font-bold'
+                    : 'min-w-[40px] h-10 px-3 rounded-md border border-outline-variant font-medium hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:pointer-events-none';
+                if (opts.disabled) b.disabled = true;
+                b.addEventListener('click', () => {
+                    page = target;
+                    render();
+                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+                pager.appendChild(b);
+            };
+
+            mkBtn('‹', page - 1, { disabled: page === 1 });
+            pageList(page, totalPages).forEach(p => {
+                if (typeof p === 'string') mkBtn('', 0, { dots: true });
+                else mkBtn(String(p), p, { active: p === page });
+            });
+            mkBtn('›', page + 1, { disabled: page === totalPages });
+        };
+
+        buttons.forEach(btn => btn.addEventListener('click', () => {
+            buttons.forEach(b => {
+                b.classList.remove('bg-primary', 'text-on-primary');
+                b.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+            });
+            btn.classList.add('bg-primary', 'text-on-primary');
+            btn.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+            filter = btn.getAttribute('data-filter') || 'all';
+            page = 1;
+            render();
+        }));
+
+        if (search) search.addEventListener('input', () => {
+            term = search.value.trim().toLowerCase();
+            page = 1;
+            render();
+        });
+
+        render();
+    };
+
+    setupBlog();
+    document.addEventListener('astro:after-swap', setupBlog);
+</script>

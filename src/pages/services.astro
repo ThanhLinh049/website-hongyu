@@ -1,0 +1,77 @@
+---
+import Services from '../components/services.astro';
+import { wpQuery } from '../lib/api';
+
+export const prerender = false; // SSR: always shows latest Services content from WP
+
+let pageData = null;
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetServicesPageData {
+        page(id: "services", idType: URI) {
+          servicesPage {
+            heroBadgeText
+            heroTag
+            heroTitle
+            heroDescription
+            heroBg {
+              node {
+                sourceUrl
+              }
+            }
+            heroCtaPrimaryText
+            heroCtaSecondaryText
+            capabilitiesTitle
+            capabilitiesDescription
+            capabilitiesList {
+              icon
+              title
+              description
+            }
+            workflowTitle
+            workflowSubtitle
+            workflowSteps {
+              stepNumber
+              title
+              description
+            }
+            qaTitle
+            qaDescription
+            qaList {
+              title
+              description
+            }
+            certTitle
+            certList {
+              name
+              value
+            }
+            certNote
+            faqTitle
+            faqSubtitle
+            faqList {
+              question
+              answer
+            }
+            ctaTitle
+            ctaDescription
+            ctaPrimaryText
+            ctaSecondaryText
+            ctaNote
+          }
+        }
+      }
+    `
+  });
+
+  if (data?.page?.servicesPage) {
+    pageData = data.page.servicesPage;
+  }
+} catch (e) {
+  console.warn("Failed to fetch services page data from WordPress. Fallback content will be used.", e);
+}
+---
+
+<Services pageData={pageData} />

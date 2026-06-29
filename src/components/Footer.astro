@@ -1,0 +1,113 @@
+---
+interface FooterLink { label?: string; url?: string; }
+interface FooterColumn { title?: string; links?: FooterLink[]; }
+interface Column1 {
+  logo?: { node?: { sourceUrl?: string } } | null;
+  companyName?: string;
+  description?: string;
+  phone?: string;
+  email?: string;
+  facebook?: string;
+  linkedin?: string;
+  instagram?: string;
+}
+interface AbsoluteFooter { copyright?: string; credit?: string; }
+
+interface Props {
+  footerColumn1?: Column1 | null;
+  footerColumns?: FooterColumn[] | null;
+  absoluteFooter?: AbsoluteFooter | null;
+}
+
+const { footerColumn1, footerColumns, absoluteFooter } = Astro.props;
+
+// --- Column 1 (brand block) — single editable group, with fallbacks ---
+const c1: Column1 = footerColumn1 || {};
+const logoUrl = c1.logo?.node?.sourceUrl || '';
+const companyName = c1.companyName || 'BadgeMaster';
+const description = c1.description || 'Global leader in industrial custom badge manufacturing for corporate, military, and lifestyle brands.';
+const phone = c1.phone || '';
+const email = c1.email || '';
+const facebook = c1.facebook && c1.facebook !== '#' ? c1.facebook : '';
+const linkedin = c1.linkedin && c1.linkedin !== '#' ? c1.linkedin : '';
+const instagram = c1.instagram && c1.instagram !== '#' ? c1.instagram : '';
+
+// --- Columns 2,3,4 — fallback to default link columns ---
+const defaultColumns: FooterColumn[] = [
+  { title: "Products", links: [
+    { label: "Flex Badges", url: "/products#flex-deep-dive" },
+    { label: "Embroidery", url: "/products#embroidery-deep-dive" },
+    { label: "PVC Patches", url: "/products#pvc-deep-dive" },
+    { label: "Metal Badges", url: "/products#metal-deep-dive" }
+  ]},
+  { title: "Support", links: [
+    { label: "Free Design Proof", url: "/services" },
+    { label: "Pricing Guide", url: "/products" },
+    { label: "Production Timeline", url: "/services" },
+    { label: "Contact Us", url: "/contact" }
+  ]},
+  { title: "Company", links: [
+    { label: "About Us", url: "/services" },
+    { label: "Industry Insights", url: "/blog" },
+    { label: "Terms of Service", url: "/contact" },
+    { label: "Privacy Policy", url: "/contact" }
+  ]}
+];
+const columns: FooterColumn[] = (footerColumns && footerColumns.length > 0) ? footerColumns : defaultColumns;
+
+// --- Absolute footer (below the line) — copyright (year auto) + credit ---
+const currentYear = new Date().getFullYear();
+const copyrightRaw = absoluteFooter?.copyright || '© 2024 BadgeMaster Manufacturing. All rights reserved.';
+const copyrightLine = copyrightRaw.replace(/\b(19|20)\d{2}\b/, String(currentYear));
+const credit = absoluteFooter?.credit || 'Design by Vareno';
+---
+
+<footer class="bg-dark-navy text-white">
+    <!-- Columns -->
+    <div class="max-w-container-max mx-auto px-gutter py-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-xl">
+        <!-- Column 1: Brand block -->
+        <div class="col-span-1">
+            <a href="/" class="flex items-center gap-2 mb-6">
+                {logoUrl && (
+                    <img src={logoUrl} alt={companyName} class="h-10 w-auto object-contain" />
+                )}
+                <span class="font-headline-md font-bold block text-white">{companyName}</span>
+            </a>
+            <p class="text-body-sm opacity-60 mb-6 max-w-xs">{description}</p>
+            <div class="flex flex-col gap-2 mb-6 text-body-sm opacity-70">
+                {phone && (
+                    <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">call</span>{phone}
+                    </a>
+                )}
+                {email && (
+                    <a href={`mailto:${email}`} class="flex items-center gap-2 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">mail</span>{email}
+                    </a>
+                )}
+            </div>
+            <div class="flex gap-4">
+                <a href={facebook || "/"} target="_blank" rel="noopener noreferrer" class="material-symbols-outlined cursor-pointer hover:text-secondary-container" title="Facebook">public</a>
+                <a href={linkedin || "/contact"} target="_blank" rel="noopener noreferrer" class="material-symbols-outlined cursor-pointer hover:text-secondary-container" title="LinkedIn">contact_mail</a>
+                <a href={instagram || "/blog"} target="_blank" rel="noopener noreferrer" class="material-symbols-outlined cursor-pointer hover:text-secondary-container" title="Instagram">share</a>
+            </div>
+        </div>
+        <!-- Columns 2, 3, 4 -->
+        {columns.map((col) => (
+            <div>
+                <h4 class="font-label-bold text-primary-fixed mb-6 uppercase tracking-widest text-xs">{col.title}</h4>
+                <ul class="space-y-4 opacity-70">
+                    {col.links?.map((link) => link.label && (
+                        <li><a class="text-body-sm hover:text-white hover:underline transition-all" href={link.url}>{link.label}</a></li>
+                    ))}
+                </ul>
+            </div>
+        ))}
+    </div>
+
+    <!-- Absolute footer (below the line) -->
+    <div class="max-w-container-max mx-auto px-gutter py-md border-t border-white/10 flex flex-col md:flex-row justify-between gap-md opacity-40 text-[12px]">
+        <p>{copyrightLine}</p>
+        <p>{credit}</p>
+    </div>
+</footer>

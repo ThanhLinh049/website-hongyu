@@ -1,0 +1,295 @@
+---
+export const prerender = false; // SSR: renders any product category live from WP
+import Layout from '../../../layouts/Layout.astro';
+import { wpQuery } from '../../../lib/api';
+
+const { category } = Astro.params;
+
+let cat: any = null;
+let allCats: any[] = [];
+try {
+  const data = await wpQuery({
+    query: `
+      query GetCategory($slug: ID!) {
+        productCategory(id: $slug, idType: SLUG) {
+          name
+          slug
+          categoryFields {
+            catTagline
+            catIntro
+            benefitsTitle
+            benefits { icon text }
+            technicalSpecs { specName specValue }
+            faqs { question answer }
+          }
+          products(first: 100) {
+            nodes {
+              title
+              slug
+              date
+              featuredImage { node { sourceUrl } }
+            }
+          }
+        }
+        productCategories(first: 50, where: { hideEmpty: false }) {
+          nodes { name slug }
+        }
+      }
+    `,
+    variables: { slug: category }
+  });
+  cat = data?.productCategory || null;
+  allCats = data?.productCategories?.nodes || [];
+} catch (e) {
+  console.warn('Failed to fetch category', category, e);
+}
+
+if (!cat) {
+  Astro.response.status = 404;
+}
+
+const cf = cat?.categoryFields || {};
+const products = cat?.products?.nodes || [];
+const specs = (cf.technicalSpecs || []).filter((s: any) => s.specName || s.specValue);
+const benefits = (cf.benefits || []).filter((b: any) => b.text);
+const faqs = (cf.faqs || []).filter((f: any) => f.question);
+const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
+const base = `/products/${cat?.slug}`;
+---
+
+<Layout title={cat ? `${cat.name} | Products | BadgeMaster` : 'Category not found'} description={cf.catIntro || ''}>
+  {cat ? (
+    <main class="w-full bg-surface">
+      <!-- Breadcrumb -->
+      <nav class="bg-white border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto px-gutter py-sm text-[12px] text-on-surface-variant flex flex-wrap items-center gap-xs">
+          <a href="/" class="hover:text-primary">Home</a><span>/</span>
+          <a href="/products" class="hover:text-primary">Products</a><span>/</span>
+          <span class="text-primary font-bold">{cat.name}</span>
+        </div>
+      </nav>
+
+      <!-- Compact category header (sub-page style: light, low profile) -->
+      <header class="bg-surface-container-low border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto px-gutter py-lg flex flex-col sm:flex-row sm:items-end sm:justify-between gap-md">
+          <div class="max-w-2xl">
+            {cf.catTagline && (<span class="block text-cta-orange uppercase tracking-[0.2em] text-[11px] font-bold mb-xs">{cf.catTagline}</span>)}
+            <h1 class="font-headline-lg text-headline-lg text-primary">{cat.name}</h1>
+            {cf.catIntro && (<p class="font-body-md text-on-surface-variant mt-sm">{cf.catIntro}</p>)}
+          </div>
+          <a href="/contact" class="shrink-0 inline-block bg-cta-orange text-white px-md py-2.5 font-label-bold uppercase tracking-wider text-sm hover:brightness-110 transition-all text-center">Request Quote</a>
+        </div>
+      </header>
+
+      <!-- Catalogue: category switcher + toolbar + grid -->
+      <section class="py-xl">
+        <div class="max-w-container-max mx-auto px-gutter">
+          <!-- Toolbar: category select + search + sort -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-md mb-lg border-b border-outline-variant pb-base">
+            <p class="text-sm text-outline">Showing <span id="shown-count" class="text-on-background font-bold">0</span> of <span id="total-count" class="text-on-background font-bold">{products.length}</span> products</p>
+            <div class="flex items-center gap-sm flex-wrap">
+              <div class="relative">
+                <input id="cat-search" type="text" placeholder="Search by name..." class="w-40 sm:w-52 pl-base pr-xl py-2 bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
+                <span class="material-symbols-outlined absolute right-base top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+              </div>
+              {allCats.length > 1 && (
+                <select id="cat-switch" aria-label="Switch category" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
+                  <option value="" disabled selected hidden>Category</option>
+                  {allCats.map((c: any) => (<option value={c.slug}>{c.name}</option>))}
+                </select>
+              )}
+              <select id="cat-sort" aria-label="Sort products" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
+                <option value="" disabled selected hidden>Sort by</option>
+                <option value="default">Featured</option>
+                <option value="az">Name (A-Z)</option>
+                <option value="newest">Newest</option>
+              </select>
+            </div>
+          </div>
+
+          {products.length > 0 ? (
+            <div id="cat-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-md">
+              {products.map((p: any) => (
+                <a href={`${base}/${p.slug}`}
+                  class="product-card bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all duration-300 group overflow-hidden flex flex-col"
+                  data-name={(p.title || '').toLowerCase()} data-date={p.date || ''}>
+                  <div class="aspect-square bg-surface-container relative overflow-hidden">
+                    {prodImg(p) && (<img src={prodImg(p)} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
+                  </div>
+                  <div class="p-md flex flex-col flex-grow">
+                    <h4 class="font-headline-sm text-sm text-on-surface mb-md flex-grow group-hover:text-primary transition-colors">{p.title}</h4>
+                    <span class="inline-flex items-center gap-1 text-cta-orange font-bold text-[12px] uppercase tracking-wider group-hover:text-primary transition-colors">
+                      View Details <span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="text-outline py-lg">No products in this category yet.</p>
+          )}
+          <div id="cat-empty" class="hidden text-center py-xl text-outline">
+            <span class="material-symbols-outlined text-5xl mb-sm block">search_off</span>
+            No products match your search.
+          </div>
+          <div id="cat-pagination" class="mt-xl flex justify-center items-center gap-xs flex-wrap"></div>
+        </div>
+      </section>
+
+      <!-- Benefits -->
+      {benefits.length > 0 && (
+        <section class="py-xl bg-surface-container-low border-y border-outline-variant">
+          <div class="max-w-container-max mx-auto px-gutter">
+            {cf.benefitsTitle && (<h2 class="font-headline-lg text-headline-lg text-primary mb-lg text-center">{cf.benefitsTitle}</h2>)}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+              {benefits.map((b: any) => (
+                <div class="bg-white p-lg border border-outline-variant rounded-xl flex items-start gap-md">
+                  {b.icon && (<span class="material-symbols-outlined text-primary text-3xl">{b.icon}</span>)}
+                  <p class="font-body-md text-on-surface-variant">{b.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Technical Specifications -->
+      {specs.length > 0 && (
+        <section class="py-xl bg-inverse-surface text-white">
+          <div class="max-w-container-max mx-auto px-gutter">
+            <h2 class="font-headline-lg text-headline-lg mb-lg text-center">Technical Specifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md max-w-3xl mx-auto">
+              {specs.map((s: any) => (
+                <div class="bg-white/5 border border-white/10 p-md rounded-lg">
+                  <p class="text-cta-orange font-label-bold uppercase tracking-wider text-[12px] mb-xs">{s.specName}</p>
+                  <p class="text-sm text-white/80">{s.specValue}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- FAQ -->
+      {faqs.length > 0 && (
+        <section class="py-xl bg-surface-container-low border-t border-outline-variant">
+          <div class="max-w-3xl mx-auto px-gutter">
+            <h2 class="font-headline-lg text-headline-lg text-primary mb-lg text-center">Frequently Asked Questions</h2>
+            <div class="space-y-sm">
+              {faqs.map((f: any) => (
+                <details class="group bg-white border border-outline-variant rounded-lg">
+                  <summary class="flex items-center justify-between cursor-pointer p-md font-headline-sm text-sm text-primary list-none">
+                    {f.question}
+                    <span class="material-symbols-outlined text-outline transition-transform group-open:rotate-180">expand_more</span>
+                  </summary>
+                  <p class="px-md pb-md text-on-surface-variant font-body-md">{f.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- CTA -->
+      <section class="py-xl bg-primary text-white text-center">
+        <div class="max-w-container-max mx-auto px-gutter">
+          <h2 class="font-headline-lg text-headline-lg mb-sm">Ready to start your {cat.name} project?</h2>
+          <p class="font-body-lg text-white/70 mb-lg max-w-xl mx-auto">Send us your artwork and our specialists will prepare a free digital proof and B2B quote.</p>
+          <a href="/contact" class="inline-block bg-cta-orange text-white px-xl py-md font-label-bold uppercase tracking-widest hover:brightness-110 transition-all">Request Free Quote</a>
+        </div>
+      </section>
+    </main>
+  ) : (
+    <main class="w-full">
+      <section class="max-w-container-max mx-auto px-gutter py-xl text-center">
+        <span class="material-symbols-outlined text-outline text-7xl mb-md block">category</span>
+        <h1 class="font-display-lg text-display-lg text-primary mb-md">Category not found</h1>
+        <p class="text-on-surface-variant font-body-lg mb-lg">The category "{category}" doesn't exist.</p>
+        <a href="/products" class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
+      </section>
+    </main>
+  )}
+
+  <script>
+    const setupCatalogue = () => {
+      const grid = document.getElementById('cat-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.product-card')) as HTMLElement[];
+      const search = document.getElementById('cat-search') as HTMLInputElement | null;
+      const sortSel = document.getElementById('cat-sort') as HTMLSelectElement | null;
+      const pag = document.getElementById('cat-pagination');
+      const shown = document.getElementById('shown-count');
+      const total = document.getElementById('total-count');
+      const empty = document.getElementById('cat-empty');
+      const PER_PAGE = 8;
+      let term = '';
+      let page = 1;
+      let order = cards.slice();
+
+      const matches = (c: HTMLElement) => !term || (c.dataset.name || '').includes(term);
+
+      const pageList = (totalPages: number): (number | string)[] => {
+        if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+        const out: (number | string)[] = [1];
+        const start = Math.max(2, page - 1), end = Math.min(totalPages - 1, page + 1);
+        if (start > 2) out.push('…');
+        for (let i = start; i <= end; i++) out.push(i);
+        if (end < totalPages - 1) out.push('…');
+        out.push(totalPages);
+        return out;
+      };
+
+      const renderPagination = (totalPages: number) => {
+        if (!pag) return;
+        pag.innerHTML = '';
+        if (totalPages <= 1) return;
+        const mk = (label: string, target: number, opts: { active?: boolean, disabled?: boolean } = {}) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = label;
+          b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors ' +
+            (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary') +
+            (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
+          if (!opts.disabled && !opts.active) b.addEventListener('click', () => { page = target; render(); grid.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+          return b;
+        };
+        pag.appendChild(mk('‹', page - 1, { disabled: page === 1 }));
+        pageList(totalPages).forEach(p => {
+          if (p === '…') { const s = document.createElement('span'); s.textContent = '…'; s.className = 'px-2 text-outline'; pag.appendChild(s); }
+          else { const n = p as number; pag.appendChild(mk(String(n), n, { active: n === page })); }
+        });
+        pag.appendChild(mk('›', page + 1, { disabled: page === totalPages }));
+      };
+
+      const render = () => {
+        const matched = order.filter(matches);
+        const totalPages = Math.max(1, Math.ceil(matched.length / PER_PAGE));
+        if (page > totalPages) page = totalPages;
+        cards.forEach(c => { c.style.display = 'none'; });
+        const from = (page - 1) * PER_PAGE;
+        matched.slice(from, from + PER_PAGE).forEach(c => { c.style.display = 'flex'; });
+        if (total) total.textContent = String(matched.length);
+        if (shown) shown.textContent = matched.length === 0 ? '0' : `${from + 1}–${Math.min(from + PER_PAGE, matched.length)}`;
+        if (empty) empty.classList.toggle('hidden', matched.length !== 0);
+        renderPagination(totalPages);
+      };
+
+      const catSwitch = document.getElementById('cat-switch') as HTMLSelectElement | null;
+      catSwitch?.addEventListener('change', () => { if (catSwitch.value) window.location.href = '/products/' + catSwitch.value; });
+
+      search?.addEventListener('input', () => { term = (search.value || '').trim().toLowerCase(); page = 1; render(); });
+      sortSel?.addEventListener('change', () => {
+        const v = sortSel.value;
+        order = cards.slice();
+        if (v === 'az') order.sort((a, b) => (a.dataset.name || '').localeCompare(b.dataset.name || ''));
+        else if (v === 'newest') order.sort((a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || ''));
+        order.forEach(c => grid.appendChild(c));
+        page = 1; render();
+      });
+
+      render();
+    };
+    setupCatalogue();
+    document.addEventListener('astro:after-swap', setupCatalogue);
+  </script>
+</Layout>

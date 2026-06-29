@@ -1,0 +1,80 @@
+---
+import Products from '../components/products.astro';
+import { wpQuery } from '../lib/api';
+
+export const prerender = false; // SSR: always shows latest products/categories from WP
+
+let pageData = null;
+let categories = [];
+let products = [];
+let finishes = [];
+let backings = [];
+
+try {
+  const data = await wpQuery({
+    query: `
+      query GetProductsHub {
+        page(id: "products", idType: URI) {
+          productsPage {
+            heroEyebrow
+            heroTitle
+            heroDescription
+            heroCtaLabel
+            heroCtaUrl
+            heroSecondaryLabel
+            heroSecondaryUrl
+            finishesTitle
+            finishesDescription
+            surfaceTexturesTitle
+            surfaceTextures { textureName swatchImage { node { sourceUrl } } }
+            backingTitle
+            backingSolutions { label }
+            labsTitle
+            labsDescription
+            labsStats { icon title description }
+            ctaTitle
+            ctaText
+            ctaPrimaryLabel
+            ctaPrimaryUrl
+            ctaSecondaryLabel
+            ctaSecondaryUrl
+          }
+        }
+        productCategories(first: 50, where: { hideEmpty: false }) {
+          nodes {
+            name
+            slug
+            count
+            categoryFields {
+              catTagline
+              catHeroImage { node { sourceUrl } }
+            }
+          }
+        }
+        products(first: 200) {
+          nodes {
+            title
+            slug
+            date
+            featuredImage { node { sourceUrl } }
+            productCategories { nodes { name slug } }
+            finishes { nodes { slug } }
+            backings { nodes { slug } }
+          }
+        }
+        finishes(first: 50, where: { hideEmpty: true }) { nodes { name slug } }
+        backings(first: 50, where: { hideEmpty: true }) { nodes { name slug } }
+      }
+    `
+  });
+  if (data?.page?.productsPage) pageData = data.page.productsPage;
+  if (data?.productCategories?.nodes) categories = data.productCategories.nodes;
+  if (data?.products?.nodes) products = data.products.nodes;
+  if (data?.finishes?.nodes) finishes = data.finishes.nodes;
+  if (data?.backings?.nodes) backings = data.backings.nodes;
+} catch (e) {
+  console.warn("Failed to fetch products hub data from WordPress. Fallback content will be used.", e);
+}
+---
+
+<Products pageData={pageData} categories={categories} products={products} finishes={finishes} backings={backings} />
