@@ -407,8 +407,8 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
         <!-- Section 7: Portfolio Preview (Dynamic) -->
         <section class="py-xl bg-surface">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-xl gap-md">
-                    <div>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-xl gap-md">
+                    <div class="w-full md:w-auto">
                         <h2 class="font-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
                         {portfolioSectionSubtitle && (
                             <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{portfolioSectionSubtitle}</p>
@@ -420,7 +420,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                             ))}
                         </div>
                     </div>
-                    <a href={portfolioCtaUrl} class="flex items-center gap-2 text-primary font-bold hover:underline mb-2">
+                    <a href={portfolioCtaUrl} class="flex items-center gap-2 text-primary font-bold hover:underline mb-2 shrink-0">
                         {portfolioCtaLabel} <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
                 </div>
