@@ -424,7 +424,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                         {portfolioCtaLabel} <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
                 </div>
-                <div id="recent-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div id="recent-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {displayPortfolios.map((item: any) => (
                         <a href={`/portfolio/${item.slug}`}
                             data-category={recentCardCats(item)}
@@ -458,7 +458,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     <h2 class="font-headline-lg text-primary">{blogSectionTitle}</h2>
                     <a class="text-primary font-label-bold" href={blogCtaUrl}>{blogCtaLabel}</a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
                     {displayPosts.map((item) => (
                         <div class="flex flex-col h-full border border-outline-variant rounded-lg overflow-hidden group">
                             <div class="aspect-video overflow-hidden">

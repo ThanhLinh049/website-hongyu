@@ -108,7 +108,7 @@ const base = `/products/${cat?.slug}`;
           </div>
 
           {products.length > 0 ? (
-            <div id="cat-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-md">
+            <div id="cat-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
               {products.map((p: any) => (
                 <a href={`${base}/${p.slug}`}
                   class="product-card bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all duration-300 group overflow-hidden flex flex-col"

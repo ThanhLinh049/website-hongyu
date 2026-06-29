@@ -78,7 +78,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 
       <!-- Product showcase: gallery + buy-box -->
       <section class="py-xl bg-white">
-        <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+        <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-md lg:gap-xl items-start">
           <!-- Gallery -->
           <div class="lg:col-span-7">
             <div class="aspect-square bg-surface border border-outline-variant overflow-hidden">
@@ -90,7 +90,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
               <div class="flex gap-sm mt-sm flex-wrap">
                 {galleryUrls.map((url, i) => (
                   <button type="button" data-thumb={url}
-                    class={`detail-thumb w-20 h-20 border ${i === 0 ? 'border-primary' : 'border-outline-variant'} overflow-hidden hover:border-primary transition-colors`}>
+                    class={`detail-thumb w-16 sm:w-20 h-16 sm:h-20 border ${i === 0 ? 'border-primary' : 'border-outline-variant'} overflow-hidden hover:border-primary transition-colors`}>
                     <img src={url} alt={`${product.title} ${i + 1}`} class="w-full h-full object-cover" />
                   </button>
                 ))}
