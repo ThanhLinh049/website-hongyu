@@ -4,7 +4,11 @@ interface GraphQLRequest {
 }
 
 export async function wpQuery({ query, variables = {} }: GraphQLRequest) {
-  const url = import.meta.env.WORDPRESS_API_URL || 'http://localhost/hongyu/graphql';
+  // Build-time vars come from import.meta.env; Vercel serverless runtime exposes process.env.
+  const url =
+    import.meta.env.WORDPRESS_API_URL ||
+    (typeof process !== 'undefined' ? process.env.WORDPRESS_API_URL : undefined) ||
+    'http://localhost/hongyu/graphql';
   
   try {
     const response = await fetch(url, {
