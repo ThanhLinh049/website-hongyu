@@ -47,11 +47,11 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
 <Layout title="Contact & Quote Request | BadgeMaster">
     <main>
         <!-- Hero Section -->
-        <section class="relative bg-inverse-surface py-xl overflow-hidden">
+        <section class="relative bg-inverse-surface py-xl flex items-center min-h-[260px] md:min-h-[420px] overflow-hidden">
             <div class="absolute inset-0 opacity-20 pointer-events-none">
                 <img alt="Industrial Backdrop" class="w-full h-full object-cover" src={heroBg}/>
             </div>
-            <div class="relative max-w-container-max mx-auto px-gutter text-center text-white">
+            <div class="relative max-w-container-max mx-auto px-gutter text-center text-white w-full">
                 <h1 class="font-display-lg text-display-lg mb-4 tracking-tight">{heroTitle}</h1>
                 <p class="font-body-lg text-body-lg text-surface-variant max-w-2xl mx-auto">
                     {heroDescription}
