@@ -5,9 +5,10 @@ interface Props {
   pageData?: any;
   portfolios?: any[];
   posts?: any[];
+  seo?: any;
 }
 
-const { pageData, portfolios = [], posts = [] } = Astro.props;
+const { pageData, portfolios = [], posts = [], seo } = Astro.props;
 
 // Normalize internal links: strip any "https://domain" prefix so links stay
 // relative ("/contact"), regardless of what the client pastes into ACF URL fields.
@@ -218,7 +219,7 @@ const defaultPosts = [
 const displayPosts = posts.length > 0 ? posts : defaultPosts;
 ---
 
-<Layout title="BadgeMaster | Custom Badges, Patches & Metal Products" heroHeader={true}>
+<Layout title="BadgeMaster | Custom Badges, Patches & Metal Products" heroHeader={true} seo={seo}>
     <main>
         <!-- Section 1: Modern Hero Slider (Dynamic) -->
         <section class="relative overflow-hidden border-b border-outline-variant bg-inverse-surface" id="hero-slider">

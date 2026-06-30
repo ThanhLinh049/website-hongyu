@@ -7,6 +7,10 @@ import vercel from '@astrojs/vercel/serverless';
 // opt into SSR (export const prerender = false) so new items appear instantly from WP.
 // Deployed on Vercel via @astrojs/vercel (serverless functions for the SSR routes).
 export default defineConfig({
+  // Public site origin — used for canonical / Open Graph absolute URLs. Set
+  // PUBLIC_SITE_URL on deploy (e.g. https://your-frontend.com); falls back to
+  // the request origin when unset (fine for local dev).
+  site: process.env.PUBLIC_SITE_URL || undefined,
   output: 'hybrid',
   adapter: vercel({
     // ISR (Incremental Static Regeneration): cache each SSR page at Vercel's

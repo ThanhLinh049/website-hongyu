@@ -20,14 +20,37 @@ export const WP_MEDIA_BASE: string = (() => {
   return api.replace(/\/graphql\/?$/, '').replace(/\/+$/, '');
 })();
 
-// Normalize a WordPress media URL to a portable one: keep only the
-// "/wp-content/..." path and re-apply the configurable base above. External
-// images (no "/wp-content/", e.g. CDN placeholders) are returned unchanged.
+// Media proxy toggle. When on (default), WordPress images are rewritten to a
+// same-origin "/media/..." path served by src/pages/media/[...path].ts — this
+// hides the WP/CMS domain, gives one origin for every image, and lets us send
+// long-lived immutable cache headers. Set PUBLIC_MEDIA_PROXY="0" to fall back to
+// absolute WP URLs (the previous behaviour).
+export const MEDIA_PROXY: boolean = (() => {
+  const v =
+    import.meta.env.PUBLIC_MEDIA_PROXY ??
+    (typeof process !== 'undefined' ? process.env.PUBLIC_MEDIA_PROXY : undefined);
+  return !(v === '0' || v === 'false');
+})();
+
+// Origin WordPress serves uploads from, e.g. "http://localhost/hongyu". The
+// /media proxy endpoint fetches the real bytes from here.
+export const WP_UPLOADS_ORIGIN: string = WP_MEDIA_BASE;
+
+// Normalize a WordPress media URL.
+//  - Proxy ON  → "/media/2026/06/x.png"  (same-origin, domain-independent)
+//  - Proxy OFF → "<WP_MEDIA_BASE>/wp-content/uploads/2026/06/x.png"
+// External images (no "/wp-content/uploads/") are returned unchanged.
 export function mediaUrl(u: any): any {
   if (!u || typeof u !== 'string') return u;
-  const i = u.indexOf('/wp-content/');
-  if (i < 0) return u;
-  return WP_MEDIA_BASE + u.slice(i);
+  const up = u.indexOf('/wp-content/uploads/');
+  if (up >= 0) {
+    const rel = u.slice(up + '/wp-content/uploads/'.length);
+    return MEDIA_PROXY ? '/media/' + rel : WP_MEDIA_BASE + u.slice(u.indexOf('/wp-content/'));
+  }
+  // Other wp-content assets (themes/plugins) — keep them resolvable.
+  const wc = u.indexOf('/wp-content/');
+  if (wc >= 0) return WP_MEDIA_BASE + u.slice(wc);
+  return u;
 }
 
 // Walk a GraphQL response and rewrite every "sourceUrl" through mediaUrl(), so

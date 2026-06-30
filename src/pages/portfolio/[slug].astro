@@ -2,6 +2,7 @@
 export const prerender = false; // SSR: renders any project slug live from WP
 import Layout from '../../layouts/Layout.astro';
 import { wpQuery } from '../../lib/api';
+import { SEO_FRAGMENT } from '../../lib/seo';
 
 const { slug } = Astro.params;
 
@@ -18,7 +19,7 @@ try {
           featuredImage { node { sourceUrl } }
           portfolioFields { specs { label value } }
           portfolioCategories { nodes { name slug } }
-          seo { title description openGraph { image { url } } }
+          ${SEO_FRAGMENT}
         }
         portfolios(first: 200) {
           nodes {
@@ -63,7 +64,7 @@ const seoImage = project?.seo?.openGraph?.image?.url || mainImage;
 const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 ---
 
-<Layout title={seoTitle} description={seoDesc} ogTitle={project?.title} ogImage={seoImage}>
+<Layout title={seoTitle} seo={project?.seo} description={seoDesc} ogTitle={project?.title} ogImage={seoImage}>
   {project ? (
     <main class="w-full bg-slate-50 min-h-screen pb-16">
       

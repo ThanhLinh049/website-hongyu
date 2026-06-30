@@ -1,8 +1,10 @@
 ---
 import Home from '../components/home.astro';
 import { wpQuery } from '../lib/api';
+import { SEO_FRAGMENT } from '../lib/seo';
 
 let pageData = null;
+let seoData = null;
 let portfolios = [];
 let posts = [];
 
@@ -99,6 +101,7 @@ try {
             ctaSecondaryLabel
             ctaSecondaryUrl
           }
+          ${SEO_FRAGMENT}
         }
         portfolios(first: 8) {
           nodes {
@@ -137,6 +140,9 @@ try {
   if (data?.page?.homePage) {
     pageData = data.page.homePage;
   }
+  if (data?.page?.seo) {
+    seoData = data.page.seo;
+  }
   if (data?.portfolios?.nodes) {
     portfolios = data.portfolios.nodes;
   }
@@ -148,4 +154,4 @@ try {
 }
 ---
 
-<Home pageData={pageData} portfolios={portfolios} posts={posts} />
+<Home pageData={pageData} portfolios={portfolios} posts={posts} seo={seoData} />

@@ -2,6 +2,7 @@
 export const prerender = false; // SSR: renders any product slug live from WP
 import Layout from '../../../layouts/Layout.astro';
 import { wpQuery } from '../../../lib/api';
+import { SEO_FRAGMENT } from '../../../lib/seo';
 
 const { category, slug } = Astro.params;
 
@@ -19,7 +20,7 @@ try {
           featuredImage { node { sourceUrl } }
           productGallery { gallery { nodes { sourceUrl } } }
           productCategories { nodes { name slug } }
-          seo { title description openGraph { image { url } } }
+          ${SEO_FRAGMENT}
         }
         products(first: 200) {
           nodes {
@@ -63,7 +64,7 @@ const seoImage = product?.seo?.openGraph?.image?.url || mainImage;
 const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 ---
 
-<Layout title={seoTitle} description={seoDesc} ogTitle={product?.title} ogImage={seoImage}>
+<Layout title={seoTitle} seo={product?.seo} description={seoDesc} ogTitle={product?.title} ogImage={seoImage}>
   {product ? (
     <main class="w-full bg-surface">
       <!-- Breadcrumb -->

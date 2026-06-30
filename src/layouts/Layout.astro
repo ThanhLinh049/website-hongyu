@@ -3,21 +3,37 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { wpQuery } from '../lib/api';
+import { buildSeo } from '../lib/seo';
 
 interface Props {
   title: string;
   /** Home page only: render a transparent header that overlays the hero. */
   heroHeader?: boolean;
-  /** SEO (from Rank Math on detail pages) */
+  /** Rank Math SEO object (from `${SEO_FRAGMENT}` in the page query). */
+  seo?: any;
+  /** SEO fallbacks when no Rank Math `seo` is passed. */
   description?: string;
   ogTitle?: string;
   ogImage?: string;
 }
 
-const { title, heroHeader = false, description, ogTitle, ogImage } = Astro.props;
+const { title, heroHeader = false, seo, description, ogTitle, ogImage } = Astro.props;
 
 const pathname = new URL(Astro.request.url).pathname;
 const cleanPath = pathname.replace(/\/$/, "");
+
+// Build the full, frontend-correct SEO meta set (Rank Math when present, else
+// the title/description/ogImage fallbacks). origin: configured `site` on deploy,
+// else the current request origin.
+const siteOrigin = Astro.site?.toString().replace(/\/$/, "") || new URL(Astro.request.url).origin;
+const meta = buildSeo({
+  seo,
+  url: siteOrigin + pathname,
+  origin: siteOrigin,
+  fallbackTitle: title,
+  fallbackDescription: description,
+  fallbackImage: ogImage,
+});
 
 // 1. Define default site settings (fallbacks)
 const defaultSettings: Record<string, any> = {
@@ -131,13 +147,25 @@ const faviconUrl = siteSettings.siteFavicon?.node?.sourceUrl || "/favicon.ico";
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={ogTitle || title} />
-    {description && <meta property="og:description" content={description} />}
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    <title>{meta.title || title}</title>
+    {meta.description && <meta name="description" content={meta.description} />}
+    <meta name="robots" content={meta.robots} />
+    {meta.keywords && <meta name="keywords" content={meta.keywords} />}
+    <link rel="canonical" href={meta.canonical} />
+    <!-- Open Graph -->
+    <meta property="og:type" content={meta.ogType} />
+    <meta property="og:title" content={meta.ogTitle || ogTitle || title} />
+    {meta.ogDescription && <meta property="og:description" content={meta.ogDescription} />}
+    <meta property="og:url" content={meta.ogUrl} />
+    {meta.ogImage && <meta property="og:image" content={meta.ogImage} />}
+    <meta property="og:site_name" content={siteSettings.siteLogoText} />
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta.ogTitle || title} />
+    {meta.ogDescription && <meta name="twitter:description" content={meta.ogDescription} />}
+    {meta.ogImage && <meta name="twitter:image" content={meta.ogImage} />}
+    <!-- JSON-LD structured data (Rank Math) -->
+    {meta.jsonLd && <Fragment set:html={meta.jsonLd} />}
     <link rel="icon" type="image/png" href={faviconUrl} />
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />

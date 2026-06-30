@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { wpQuery } from '../../lib/api';
+import { SEO_FRAGMENT } from '../../lib/seo';
+import { buildToc } from '../../lib/toc';
 
 export async function getStaticPaths() {
   let paths = [];
@@ -61,6 +63,7 @@ try {
               name
             }
           }
+          ${SEO_FRAGMENT}
         }
       }
     `,
@@ -74,6 +77,9 @@ try {
   console.warn(`Failed to fetch post: ${slug}`, e);
 }
 
+// Auto table of contents: add ids to h2/h3 in the post body and collect them.
+const { html: contentHtml, toc } = buildToc(post?.content || '');
+
 const formatDate = (dateStr: string) => {
   try {
     const d = new Date(dateStr);
@@ -82,7 +88,7 @@ const formatDate = (dateStr: string) => {
 };
 ---
 
-<Layout title={post ? `${post.title} | BadgeMaster Blog` : `Blog Post | ${slug}`}>
+<Layout title={post ? `${post.title} | BadgeMaster Blog` : `Blog Post | ${slug}`} seo={post?.seo}>
   <main class="max-w-full">
     {post ? (
       <>
@@ -128,6 +134,21 @@ const formatDate = (dateStr: string) => {
         <!-- Post Content -->
         <section class="max-w-container-max mx-auto px-gutter py-xl">
           <div class="max-w-3xl mx-auto">
+            {toc.length >= 2 && (
+              <nav aria-label="Table of contents" class="mb-lg rounded-lg border border-outline-variant bg-surface-container-low p-md">
+                <p class="font-label-bold text-label-bold uppercase tracking-wider text-on-surface-variant mb-sm flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">list</span>
+                  On this page
+                </p>
+                <ul class="space-y-1">
+                  {toc.map((item) => (
+                    <li class={item.level === 3 ? "pl-4" : ""}>
+                      <a href={`#${item.id}`} class="text-primary hover:underline text-body-sm">{item.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
             <article class="prose prose-lg max-w-none
               prose-headings:text-primary prose-headings:font-bold
               prose-p:text-on-surface-variant prose-p:leading-relaxed
@@ -135,8 +156,9 @@ const formatDate = (dateStr: string) => {
               prose-img:rounded-lg prose-img:shadow-md
               prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-surface-container-low prose-blockquote:p-md
               prose-strong:text-on-surface
-              prose-ul:text-on-surface-variant prose-ol:text-on-surface-variant"
-              set:html={post.content} />
+              prose-ul:text-on-surface-variant prose-ol:text-on-surface-variant
+              prose-headings:scroll-mt-28"
+              set:html={contentHtml} />
           </div>
         </section>
 
