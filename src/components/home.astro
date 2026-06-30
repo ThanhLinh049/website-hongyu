@@ -9,6 +9,16 @@ interface Props {
 
 const { pageData, portfolios = [], posts = [] } = Astro.props;
 
+// Normalize internal links: strip any "https://domain" prefix so links stay
+// relative ("/contact"), regardless of what the client pastes into ACF URL fields.
+// Leaves already-relative paths, anchors, and mailto:/tel: untouched.
+const rel = (u: any) => {
+  if (!u || typeof u !== 'string') return u;
+  const s = u.trim();
+  const m = s.match(/^https?:\/\/[^/]+(\/[^\s]*)?$/i);
+  return m ? (m[1] || '/') : s;
+};
+
 // 1. Fallbacks for Hero Slides
 const heroSlides = pageData?.heroSlides || [
   {
@@ -126,18 +136,18 @@ const capabilitiesList = pageData?.capabilitiesList || [
 const ctaTitle = pageData?.ctaTitle || 'Ready to Elevate Your Brand?';
 const ctaText = pageData?.ctaText || 'Upload your artwork and receive a free digital proof with detailed material recommendations in 24 hours.';
 const ctaBtnLabel = pageData?.ctaBtnLabel || 'Start Free Design Proof';
-const ctaBtnUrl = pageData?.ctaBtnUrl || '/contact';
+const ctaBtnUrl = rel(pageData?.ctaBtnUrl) || '/contact';
 const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Contact Sales Team';
-const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
+const ctaSecondaryUrl = rel(pageData?.ctaSecondaryUrl) || '/contact';
 
 // Section headings + CTAs (Recent Work & Insights)
 const portfolioSectionTitle = pageData?.portfolioSectionTitle || 'Our Recent Work';
 const portfolioSectionSubtitle = pageData?.portfolioSectionSubtitle || '';
 const portfolioCtaLabel = pageData?.portfolioCtaLabel || 'View Case Studies';
-const portfolioCtaUrl = pageData?.portfolioCtaUrl || '/portfolio';
+const portfolioCtaUrl = rel(pageData?.portfolioCtaUrl) || '/portfolio';
 const blogSectionTitle = pageData?.blogSectionTitle || 'Industry Insights';
 const blogCtaLabel = pageData?.blogCtaLabel || 'Browse All Articles';
-const blogCtaUrl = pageData?.blogCtaUrl || '/blog';
+const blogCtaUrl = rel(pageData?.blogCtaUrl) || '/blog';
 
 // 7. Fallbacks for Portfolios (recent work grid)
 const defaultPortfolios = [
@@ -212,7 +222,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
     <main>
         <!-- Section 1: Modern Hero Slider (Dynamic) -->
         <section class="relative overflow-hidden border-b border-outline-variant bg-inverse-surface" id="hero-slider">
-            {heroSlides.map((slide, idx) => (
+            {heroSlides.map((slide: any, idx: number) => (
                 <div class={idx === 0 ? "hero-slide is-active" : "hero-slide"} data-hero-slide>
                     {slide.backgroundImage?.node?.sourceUrl && (
                         <img alt={slide.heading} class="hero-bg" src={slide.backgroundImage.node.sourceUrl} />
@@ -231,13 +241,13 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                             </p>
                             <div class="flex flex-wrap gap-md mb-lg hero-actions">
                                 {slide.primaryCtaLabel && (
-                                    <a href={slide.primaryCtaUrl}
+                                    <a href={rel(slide.primaryCtaUrl)}
                                         class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:opacity-95 transition-all text-center">
                                         {slide.primaryCtaLabel}
                                     </a>
                                 )}
                                 {slide.secondaryCtaLabel && (
-                                    <a href={slide.secondaryCtaUrl}
+                                    <a href={rel(slide.secondaryCtaUrl)}
                                         class="inline-block bg-white text-primary px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:bg-white/90 transition-all text-center">
                                         {slide.secondaryCtaLabel}
                                     </a>
@@ -261,7 +271,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     </div>
                     <div class="flex items-center justify-between lg:justify-end gap-md">
                         <div class="flex items-center gap-sm" aria-label="Hero slider dots">
-                            {heroSlides.map((_, idx) => (
+                            {heroSlides.map((_: any, idx: number) => (
                                 <button class={idx === 0 ? "hero-dot is-active h-2 w-2 rounded-full bg-white/50 transition-all" : "hero-dot h-2 w-2 rounded-full bg-white/50 transition-all"}
                                     type="button" data-hero-dot aria-label={`Go to slide ${idx + 1}`}></button>
                             ))}
@@ -290,7 +300,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
                     {specialties.map((item: any) => (
-                        <a href={item.linkUrl || '#'} class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                        <a href={rel(item.linkUrl) || '#'} class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
                             <div class="h-44 overflow-hidden bg-surface-container relative">
                                 {item.image?.node?.sourceUrl && (
                                     <img alt={item.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={item.image.node.sourceUrl} />
@@ -364,7 +374,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                 <div class="relative flex flex-col md:flex-row justify-between items-start gap-xl">
                     <!-- Progress Line -->
                     <div class="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 timeline-line z-0"></div>
-                    {processSteps.map((step) => (
+                    {processSteps.map((step: any) => (
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             <div class="w-24 h-24 rounded-full bg-white border-4 border-primary flex items-center justify-center mb-md shadow-lg">
                                 <span class="material-symbols-outlined text-primary text-4xl">{step.icon}</span>
@@ -387,7 +397,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     <h2 class="font-headline-lg mb-md">{capabilitiesTitle}</h2>
                     <p class="text-body-lg opacity-80 mb-xl">{capabilitiesDescription}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-md gap-x-xl">
-                        {capabilitiesList.map((item) => (
+                        {capabilitiesList.map((item: any) => (
                             <div class="flex items-start gap-sm">
                                 <span class="material-symbols-outlined text-secondary-container">check_circle</span>
                                 <div>
@@ -414,7 +424,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                         )}
                         <div id="recent-filters" class="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
                             <button type="button" data-filter="all" class="recent-filter text-primary font-bold border-b-2 border-primary whitespace-nowrap">All Projects</button>
-                            {recentCats.map((c) => (
+                            {recentCats.map((c: any) => (
                                 <button type="button" data-filter={c.key} class="recent-filter text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
                             ))}
                         </div>
@@ -447,6 +457,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     ))}
                 </div>
                 <div id="recent-empty" class="hidden text-center py-lg text-outline font-body-md">No projects in this category yet.</div>
+                <nav id="recent-pagination" class="hidden flex flex-wrap items-center justify-center gap-xs pt-xl" aria-label="Recent work pagination"></nav>
             </div>
         </section>
 
@@ -458,7 +469,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     <a class="text-primary font-label-bold" href={blogCtaUrl}>{blogCtaLabel}</a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                    {displayPosts.map((item) => (
+                    {displayPosts.map((item: any) => (
                         <div class="flex flex-col h-full border border-outline-variant rounded-lg overflow-hidden group">
                             <div class="aspect-video overflow-hidden">
                                 {item.featuredImage?.node?.sourceUrl && (
@@ -609,9 +620,62 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
             const filters = document.getElementById('recent-filters');
             const grid = document.getElementById('recent-grid');
             const empty = document.getElementById('recent-empty');
+            const pager = document.getElementById('recent-pagination');
             if (!filters || !grid) return;
             const buttons = Array.from(filters.querySelectorAll('.recent-filter')) as HTMLElement[];
             const cards = Array.from(grid.querySelectorAll('.recent-card')) as HTMLElement[];
+
+            // 4 per page on mobile (≤767px), 8 on tablet/desktop.
+            const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 8;
+            let filter = 'all';
+            let page = 1;
+
+            const filtered = () => cards.filter(card => {
+                const cats = (card.getAttribute('data-category') || '').split(' ');
+                return filter === 'all' || cats.includes(filter);
+            });
+
+            const pageList = (total: number): (number | string)[] => {
+                if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+                const out: (number | string)[] = [1];
+                const start = Math.max(2, page - 1), end = Math.min(total - 1, page + 1);
+                if (start > 2) out.push('…');
+                for (let i = start; i <= end; i++) out.push(i);
+                if (end < total - 1) out.push('…');
+                out.push(total);
+                return out;
+            };
+
+            const render = () => {
+                const PER_PAGE = perPage();
+                const visible = filtered();
+                const totalPages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
+                if (page > totalPages) page = totalPages;
+                const from = (page - 1) * PER_PAGE;
+                cards.forEach(c => { c.style.display = 'none'; });
+                visible.slice(from, from + PER_PAGE).forEach(c => { c.style.display = 'flex'; });
+                if (empty) empty.classList.toggle('hidden', visible.length !== 0);
+
+                if (!pager) return;
+                pager.innerHTML = '';
+                if (totalPages <= 1) { pager.classList.add('hidden'); return; }
+                pager.classList.remove('hidden');
+                const mk = (label: string, target: number, opts: { active?: boolean, disabled?: boolean, dots?: boolean } = {}) => {
+                    if (opts.dots) { const s = document.createElement('span'); s.textContent = '…'; s.className = 'px-2 text-outline'; pager.appendChild(s); return; }
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.textContent = label;
+                    b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors '
+                        + (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary')
+                        + (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
+                    if (!opts.disabled && !opts.active) b.addEventListener('click', () => { page = target; render(); grid.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+                    pager.appendChild(b);
+                };
+                mk('‹', page - 1, { disabled: page === 1 });
+                pageList(totalPages).forEach(p => { if (typeof p === 'string') mk('', 0, { dots: true }); else mk(String(p), p, { active: p === page }); });
+                mk('›', page + 1, { disabled: page === totalPages });
+            };
+
             buttons.forEach(btn => btn.addEventListener('click', () => {
                 buttons.forEach(b => {
                     b.classList.remove('text-primary', 'font-bold', 'border-primary');
@@ -619,16 +683,15 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                 });
                 btn.classList.add('text-primary', 'font-bold', 'border-primary');
                 btn.classList.remove('text-on-surface-variant', 'border-transparent');
-                const filter = btn.getAttribute('data-filter') || 'all';
-                let shown = 0;
-                cards.forEach(card => {
-                    const cats = (card.getAttribute('data-category') || '').split(' ');
-                    const ok = filter === 'all' || cats.includes(filter);
-                    card.style.display = ok ? 'flex' : 'none';
-                    if (ok) shown++;
-                });
-                if (empty) empty.classList.toggle('hidden', shown !== 0);
+                filter = btn.getAttribute('data-filter') || 'all';
+                page = 1;
+                render();
             }));
+
+            // Re-paginate when crossing the mobile breakpoint (rotate/resize).
+            window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
+
+            render();
         };
 
         setupSlider();

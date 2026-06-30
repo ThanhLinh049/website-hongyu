@@ -54,7 +54,7 @@ const cat = cats.find((c: any) => c.slug === category) || cats[0];
 const catSlug = cat?.slug || category;
 const base = `/products/${catSlug}`;
 const related = product
-  ? (all || []).filter((p) => p.slug !== product.slug && (p.productCategories?.nodes || []).some((c: any) => c.slug === catSlug)).slice(0, 4)
+  ? (all || []).filter((p: any) => p.slug !== product.slug && (p.productCategories?.nodes || []).some((c: any) => c.slug === catSlug)).slice(0, 4)
   : [];
 
 const seoTitle = product?.seo?.title || (product ? `${product.title} | Products` : 'Product not found');
@@ -88,7 +88,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             </div>
             {galleryUrls.length > 1 && (
               <div class="flex gap-sm mt-sm flex-wrap">
-                {galleryUrls.map((url, i) => (
+                {galleryUrls.map((url: any, i: number) => (
                   <button type="button" data-thumb={url}
                     class={`detail-thumb w-16 sm:w-20 h-16 sm:h-20 border ${i === 0 ? 'border-primary' : 'border-outline-variant'} overflow-hidden hover:border-primary transition-colors`}>
                     <img src={url} alt={`${product.title} ${i + 1}`} class="w-full h-full object-cover" />
@@ -138,7 +138,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
           <div class="max-w-container-max mx-auto px-gutter">
             <h2 class="font-headline-lg text-primary mb-lg">Related Products</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
-              {related.map((p) => (
+              {related.map((p: any) => (
                 <a href={`${base}/${p.slug}`} class="bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all group overflow-hidden flex flex-col">
                   <div class="aspect-square bg-surface relative overflow-hidden">
                     {relImg(p) && <img src={relImg(p)} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}

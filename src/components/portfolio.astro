@@ -58,10 +58,10 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                 <h1 class="font-display-lg text-display-lg mb-md text-on-surface">{heroTitle}</h1>
                 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-lg">{heroDescription}</p>
                 <!-- Filter Tabs -->
-                <div class="flex flex-wrap justify-center items-center gap-md pt-md" id="portfolio-filters">
-                    <button class="px-md py-sm bg-primary text-white font-bold rounded-full" data-filter="all">All Projects</button>
+                <div class="flex md:flex-wrap justify-start md:justify-center items-center gap-sm pt-md overflow-x-auto hide-scrollbar md:overflow-visible" id="portfolio-filters">
+                    <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm bg-primary text-white font-bold rounded-full" data-filter="all">All Projects</button>
                     {filterCats.map((c: any) => (
-                        <button class="px-md py-sm hover:bg-surface-container-high transition-colors font-medium rounded-full" data-filter={c.slug}>{c.name}</button>
+                        <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm border border-outline-variant hover:bg-surface-container-high transition-colors font-medium rounded-full" data-filter={c.slug}>{c.name}</button>
                     ))}
                 </div>
             </div>
@@ -89,7 +89,7 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             </div>
             <div id="portfolio-empty" class="hidden text-center py-xl text-outline">No projects in this category yet.</div>
             <!-- Numbered pagination -->
-            <nav id="portfolio-pagination" class="hidden flex-wrap items-center justify-center gap-2 pt-xl" aria-label="Portfolio pagination"></nav>
+            <nav id="portfolio-pagination" class="hidden flex flex-wrap items-center justify-center gap-xs pt-xl" aria-label="Portfolio pagination"></nav>
         </section>
         <!-- Footer CTA -->
         <section class="py-xl bg-primary text-white overflow-hidden relative">
@@ -110,7 +110,8 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
     </main>
 
     <script>
-        const PER_PAGE = 12;
+        // 4 per page on mobile (≤767px), 12 on tablet/desktop.
+        const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 12;
 
         // Build a page-number list with ellipsis: 1 … 4 5 [6] 7 8 … 20
         const pageList = (current: number, total: number): (number | string)[] => {
@@ -143,6 +144,7 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             });
 
             const render = () => {
+                const PER_PAGE = perPage();
                 const visible = filtered();
                 const totalPages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
                 if (page > totalPages) page = totalPages;
@@ -171,9 +173,9 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                     }
                     const b = document.createElement('button');
                     b.textContent = label;
-                    b.className = opts.active
-                        ? 'min-w-[40px] h-10 px-3 rounded-md bg-primary text-white font-bold'
-                        : 'min-w-[40px] h-10 px-3 rounded-md border border-outline-variant font-medium hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:pointer-events-none';
+                    b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors '
+                        + (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary')
+                        + (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
                     if (opts.disabled) b.disabled = true;
                     b.addEventListener('click', () => {
                         page = target;
@@ -199,6 +201,9 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                 page = 1;
                 render();
             }));
+
+            // Re-paginate when crossing the mobile breakpoint (rotate/resize).
+            window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
 
             render();
         };

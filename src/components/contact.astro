@@ -50,7 +50,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
         <section class="relative bg-inverse-surface py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
             <div class="absolute inset-0 pointer-events-none">
                 <img alt="Industrial Backdrop" class="w-full h-full object-cover opacity-90" src={heroBg}/>
-                <div class="absolute inset-0 bg-gradient-to-b from-inverse-surface/80 via-inverse-surface/40 to-inverse-surface/80"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
             </div>
             <div class="relative z-10 max-w-container-max mx-auto px-gutter text-center text-white w-full">
                 <h1 class="font-display-lg text-display-lg mb-4 tracking-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]">{heroTitle}</h1>
@@ -62,7 +62,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
         <!-- Support Cards - Exactly 4 -->
         <section class="py-xl max-w-container-max mx-auto px-gutter">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
-                {supportCards.map((card) => (
+                {supportCards.map((card: any) => (
                     <div class="bg-white border border-outline-variant p-md hover:shadow-lg transition-all cursor-pointer group">
                         <div class="flex flex-col items-start gap-sm">
                             <span class="material-symbols-outlined text-primary text-4xl">{card.icon}</span>
@@ -189,7 +189,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                             <textarea class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Additional Project Notes" rows="4"></textarea>
                         </div>
                         <div class="flex items-center gap-sm py-sm">
-                            <input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
+                            <input class="w-5 h-5 shrink-0 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
                             <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
                         </div>
                         <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg" type="submit">
@@ -203,21 +203,21 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                         <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-md uppercase tracking-tight">Direct Contact</h3>
                         <div class="space-y-md">
                             <div class="flex items-start gap-sm">
-                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">location_on</span>
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full shrink-0">location_on</span>
                                 <div>
                                     <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{hqTitle}</p>
                                     <p class="font-body-md text-on-surface-variant leading-relaxed mt-1 whitespace-pre-line">{hqAddress}</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-sm">
-                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">call</span>
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full shrink-0">call</span>
                                 <div>
                                     <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{phoneTitle}</p>
                                     <p class="font-body-md text-on-surface-variant leading-relaxed mt-1">{phone}{hours && (<><br/>{hours}</>)}</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-sm">
-                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">mail</span>
+                                <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full shrink-0">mail</span>
                                 <div>
                                     <p class="font-label-bold text-label-bold text-on-surface uppercase tracking-wider">{emailTitle}</p>
                                     <p class="font-body-md text-on-surface-variant leading-relaxed mt-1">{email}</p>
@@ -244,9 +244,9 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                     <div class="bg-surface border border-outline-variant p-md border-l-4 border-l-primary shadow-sm">
                         <h3 class="font-label-bold text-label-bold mb-sm uppercase tracking-widest text-primary">{socialsTitle}</h3>
                         <div class="flex flex-col gap-sm">
-                            {socials.map((s) => (
+                            {socials.map((s: any) => (
                                 <a class="flex items-center gap-sm text-on-surface hover:text-primary transition-colors py-2 border-b border-outline-variant/60 last:border-b-0" href={s.url || '#'} target={s.url && s.url !== '#' ? '_blank' : undefined} rel="noopener">
-                                    <span class="material-symbols-outlined text-primary">{s.icon}</span>
+                                    <span class="material-symbols-outlined text-primary shrink-0">{s.icon}</span>
                                     <span class="font-body-md">{s.label}</span>
                                 </a>
                             ))}

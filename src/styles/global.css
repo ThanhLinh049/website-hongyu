@@ -223,6 +223,14 @@ header a[href][class*="bg-cta-orange"] {
     height: 2px;
     background: #e0e0e0;
     z-index: 0;
+    display: none;
+}
+
+/* Horizontal connector line only in the desktop row layout */
+@media (min-width: 1024px) {
+    .assembly-line::before {
+        display: block;
+    }
 }
 
 .glass-card {

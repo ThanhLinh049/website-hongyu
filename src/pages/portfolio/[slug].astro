@@ -45,7 +45,7 @@ const pf = project?.portfolioFields || {};
 const mainImage = project?.featuredImage?.node?.sourceUrl || '';
 const cat = project?.portfolioCategories?.nodes?.[0];
 const related = project
-  ? (all || []).filter((p) => p.slug !== project.slug && (p.portfolioCategories?.nodes || []).some((c: any) => c.slug === cat?.slug)).slice(0, 6)
+  ? (all || []).filter((p: any) => p.slug !== project.slug && (p.portfolioCategories?.nodes || []).some((c: any) => c.slug === cat?.slug)).slice(0, 6)
   : [];
 
 // Project Details rows from the repeater (hide rows with empty value)
@@ -92,7 +92,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                 {cat.name}
               </span>
             )}
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-6">
+            <h1 class="font-display-lg text-display-lg text-on-surface leading-[1.1] mb-6">
               {project.title}
             </h1>
           </div>
@@ -145,10 +145,10 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       {related.length > 0 && (
         <section class="mt-20 pt-16 pb-16 border-t border-slate-200 bg-white">
           <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-bold text-slate-900 mb-8 tracking-tight">More from {cat?.name || 'Showcase'}</h2>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-8">More from {cat?.name || 'Showcase'}</h2>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {related.slice(0, 4).map((p) => (
+              {related.slice(0, 4).map((p: any) => (
                 <a href={`/portfolio/${p.slug}`}
                   class="group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300">
                   <div class="relative aspect-square overflow-hidden bg-surface-container-high">
@@ -177,7 +177,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       <section class="mt-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-primary rounded-3xl overflow-hidden relative shadow-2xl">
           <div class="relative z-10 px-6 py-16 md:py-20 text-center text-white">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">Ready to start your project?</h2>
+            <h2 class="font-display-lg text-display-lg mb-4">Ready to start your project?</h2>
             <p class="text-primary-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
               Our design team is ready to translate your brand vision into a physical masterpiece. Get a free digital proof today.
             </p>

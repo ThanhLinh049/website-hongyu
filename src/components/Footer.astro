@@ -93,11 +93,11 @@ const credit = absoluteFooter?.credit || 'Design by Vareno';
             </div>
         </div>
         <!-- Columns 2, 3, 4 -->
-        {columns.map((col) => (
+        {columns.map((col: any) => (
             <div>
                 <h4 class="font-label-bold text-primary-fixed mb-6 uppercase tracking-widest text-xs">{col.title}</h4>
                 <ul class="space-y-4 opacity-70">
-                    {col.links?.map((link) => link.label && (
+                    {col.links?.map((link: any) => link.label && (
                         <li><a class="text-body-sm hover:text-white hover:underline transition-all" href={link.url}>{link.label}</a></li>
                     ))}
                 </ul>

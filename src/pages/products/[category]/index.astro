@@ -221,7 +221,8 @@ const base = `/products/${cat?.slug}`;
       const shown = document.getElementById('shown-count');
       const total = document.getElementById('total-count');
       const empty = document.getElementById('cat-empty');
-      const PER_PAGE = 8;
+      // 4 per page on mobile (≤767px), 8 on tablet/desktop.
+      const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 8;
       let term = '';
       let page = 1;
       let order = cards.slice();
@@ -262,6 +263,7 @@ const base = `/products/${cat?.slug}`;
       };
 
       const render = () => {
+        const PER_PAGE = perPage();
         const matched = order.filter(matches);
         const totalPages = Math.max(1, Math.ceil(matched.length / PER_PAGE));
         if (page > totalPages) page = totalPages;
@@ -286,6 +288,9 @@ const base = `/products/${cat?.slug}`;
         order.forEach(c => grid.appendChild(c));
         page = 1; render();
       });
+
+      // Re-paginate when crossing the mobile breakpoint (rotate/resize).
+      window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
 
       render();
     };

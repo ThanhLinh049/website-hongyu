@@ -183,7 +183,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                 ))}
             </div>
             <div id="blog-empty" class="hidden text-center py-xl text-outline font-body-md">No articles match your search.</div>
-            <nav id="blog-pagination" class="hidden flex-wrap items-center justify-center gap-2 pt-xl" aria-label="Blog pagination"></nav>
+            <nav id="blog-pagination" class="hidden flex flex-wrap items-center justify-center gap-xs pt-xl" aria-label="Blog pagination"></nav>
         </section>
         <!-- Newsletter CTA -->
         <section class="max-w-container-max mx-auto px-gutter pb-xl">
@@ -218,7 +218,8 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 </Layout>
 
 <script>
-    const PER_PAGE = 9;
+    // 4 per page on mobile (≤767px), 9 on tablet/desktop.
+    const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 9;
 
     // Page-number list with ellipsis: 1 … 4 5 [6] 7 8 … 20
     const pageList = (current: number, total: number): (number | string)[] => {
@@ -258,6 +259,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
         };
 
         const render = () => {
+            const PER_PAGE = perPage();
             const def = isDefault();
             // Default view shows the featured block; once filtering/searching, it collapses to a normal card.
             if (featured) featured.style.display = def ? '' : 'none';
@@ -293,9 +295,9 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                 }
                 const b = document.createElement('button');
                 b.textContent = label;
-                b.className = opts.active
-                    ? 'min-w-[40px] h-10 px-3 rounded-md bg-primary text-white font-bold'
-                    : 'min-w-[40px] h-10 px-3 rounded-md border border-outline-variant font-medium hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:pointer-events-none';
+                b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors '
+                    + (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary')
+                    + (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
                 if (opts.disabled) b.disabled = true;
                 b.addEventListener('click', () => {
                     page = target;
@@ -330,6 +332,9 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
             page = 1;
             render();
         });
+
+        // Re-paginate when crossing the mobile breakpoint (rotate/resize).
+        window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
 
         render();
     };
