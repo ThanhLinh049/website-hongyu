@@ -39,9 +39,19 @@ try {
   console.warn('Failed to fetch product', slug, e);
 }
 
-if (!product) {
-  Astro.response.status = 404;
-}
+// Fallback demo product — keeps the page design when the catalog can't be
+// loaded from WordPress (e.g. no backend), instead of a bare "not found".
+const defaultProduct = {
+  title: 'Custom Metal Badge',
+  slug: slug || 'sample-product',
+  content: '<p>This is sample product content, shown when the product catalog is unavailable so the page layout stays intact.</p>',
+  productFields: { shortDescription: 'Premium die-struck metal badge with custom plating and color fill — built to your specification.' },
+  featuredImage: null,
+  productGallery: { gallery: { nodes: [] } },
+  productCategories: { nodes: [{ name: 'Metal', slug: category || 'metal' }] },
+  seo: null,
+};
+product = product || defaultProduct;
 
 const shortDesc = product?.productFields?.shortDescription || '';
 const mainImage = product?.featuredImage?.node?.sourceUrl || '';

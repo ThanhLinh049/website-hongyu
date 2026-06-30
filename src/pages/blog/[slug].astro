@@ -77,6 +77,29 @@ try {
   console.warn(`Failed to fetch post: ${slug}`, e);
 }
 
+// Fallback demo article — shown when the post can't be loaded from WordPress
+// (e.g. no backend connection), so the page always renders its original design
+// instead of an empty "not found" state.
+const defaultPost = {
+  title: 'Custom Badges: A Complete Guide to Materials & Finishes',
+  content: `
+    <p>When the content management system is unavailable, this sample article keeps the page design intact so you can still preview the layout, typography and components.</p>
+    <h2>Choosing the Right Material</h2>
+    <p>From die-struck metal to woven and PVC, each material delivers a different look, feel and durability profile for your custom badges and patches.</p>
+    <h2>Finishes &amp; Plating</h2>
+    <p>Polished, antique, matte and color-fill options let you match any brand identity. Our team helps you select the ideal combination for your project.</p>
+    <h3>Backing Options</h3>
+    <p>Iron-on, velcro, pin and adhesive backings are available depending on how the final product will be used.</p>
+  `,
+  date: '2026-01-01T00:00:00',
+  excerpt: '',
+  featuredImage: null,
+  categories: { nodes: [{ name: 'Insights', slug: 'insights' }] },
+  author: { node: { name: 'BadgeMaster' } },
+  seo: null,
+};
+post = post || defaultPost;
+
 // Auto table of contents: add ids to h2/h3 in the post body and collect them.
 const { html: contentHtml, toc } = buildToc(post?.content || '');
 

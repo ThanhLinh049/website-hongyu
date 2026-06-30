@@ -38,9 +38,24 @@ try {
   console.warn('Failed to fetch project', slug, e);
 }
 
-if (!project) {
-  Astro.response.status = 404;
-}
+// Fallback demo project — keeps the page design when the portfolio can't be
+// loaded from WordPress (e.g. no backend), instead of a bare "not found".
+const defaultProject = {
+  title: 'Metro Police Emblem',
+  slug: slug || 'sample-project',
+  content: '<p>This is a sample case study, shown when the portfolio is unavailable so the page layout stays intact.</p>',
+  featuredImage: null,
+  portfolioFields: {
+    specs: [
+      { label: 'Material', value: 'Die-struck metal' },
+      { label: 'Finish', value: 'Antique silver' },
+      { label: 'Size', value: '3 inches' },
+    ],
+  },
+  portfolioCategories: { nodes: [{ name: 'Law Enforcement', slug: 'law-enforcement' }] },
+  seo: null,
+};
+project = project || defaultProject;
 
 const pf = project?.portfolioFields || {};
 const mainImage = project?.featuredImage?.node?.sourceUrl || '';
