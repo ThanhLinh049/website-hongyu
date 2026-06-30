@@ -15,8 +15,8 @@ const heroDescription = pageData?.heroDescription || 'Partner with the industry 
 const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.png';
 
 const supportCards = pageData?.supportCards?.length ? pageData.supportCards : [
-  { icon: 'hub', title: 'Sales Inquiry', description: 'Discuss large-scale procurement and contract pricing with our account team.', linkText: 'sales@badgemaster.com', linkUrl: 'mailto:sales@badgemaster.com' },
-  { icon: 'brush', title: 'Design Studio', description: 'Technical assistance with artwork preparation and physical mockup requests.', linkText: 'design@badgemaster.com', linkUrl: 'mailto:design@badgemaster.com' },
+  { icon: 'hub', title: 'Sales Inquiry', description: 'Discuss large-scale procurement and contract pricing with our account team.', linkText: 'sales@hongyu.com', linkUrl: 'mailto:sales@hongyu.com' },
+  { icon: 'brush', title: 'Design Studio', description: 'Technical assistance with artwork preparation and physical mockup requests.', linkText: 'design@hongyu.com', linkUrl: 'mailto:design@hongyu.com' },
   { icon: 'local_shipping', title: 'Order Tracking', description: 'Real-time production updates and shipping logistics for active orders.', linkText: 'Track Status Online', linkUrl: '#' },
   { icon: 'account_circle', title: 'Dealer Support', description: 'Dedicated priority assistance for our registered wholesale partners.', linkText: 'Portal Access', linkUrl: '#' }
 ];
@@ -32,7 +32,7 @@ const phoneTitle = pageData?.phoneTitle || 'Support Hotline';
 const phone = pageData?.phone || '+1 (800) 555-BADGE';
 const hours = pageData?.hours || 'Mon-Fri: 8:00 AM - 6:00 PM CST';
 const emailTitle = pageData?.emailTitle || 'General Mail';
-const email = pageData?.email || 'info@badgemaster.com';
+const email = pageData?.email || 'info@hongyu.com';
 const directionsUrl = pageData?.directionsUrl || '#';
 const mapImage = pageData?.mapImage?.node?.sourceUrl || '/demo/demo-09.png';
 
@@ -44,10 +44,10 @@ const socials = pageData?.socials?.length ? pageData.socials : [
 ];
 
 const legalTitle = pageData?.legalTitle || 'Artwork Usage & Intellectual Property';
-const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster Manufacturing, the customer represents and warrants that they possess all necessary legal rights, permissions, and licenses to reproduce the provided trademarks, logos, and designs. BadgeMaster assumes no liability for copyright or trademark infringement arising from the reproduction of customer-supplied artwork. We reserve the right to refuse orders containing imagery that violates our ethical manufacturing standards.';
+const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manufacturing, the customer represents and warrants that they possess all necessary legal rights, permissions, and licenses to reproduce the provided trademarks, logos, and designs. Hong Yu assumes no liability for copyright or trademark infringement arising from the reproduction of customer-supplied artwork. We reserve the right to refuse orders containing imagery that violates our ethical manufacturing standards.';
 ---
 
-<Layout title="Contact & Quote Request | BadgeMaster">
+<Layout title="Contact & Quote Request | Hong Yu">
     <main>
         <!-- Hero Section -->
         <section class="relative bg-inverse-surface py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
@@ -88,8 +88,8 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                     </div>
                     <form class="space-y-md quote-form" data-web3form data-w3-success="Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.">
                         <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-                        <input type="hidden" name="subject" value="New Quote Request — BadgeMaster Website" />
-                        <input type="hidden" name="from_name" value="BadgeMaster Website" />
+                        <input type="hidden" name="subject" value="New Quote Request — Hong Yu Website" />
+                        <input type="hidden" name="from_name" value="Hong Yu Website" />
                         <!-- Honeypot spam filter (hidden from humans) -->
                         <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
                         <!-- Product Details Group: Two-column focused -->

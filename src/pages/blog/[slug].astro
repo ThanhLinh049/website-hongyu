@@ -95,7 +95,7 @@ const defaultPost = {
   excerpt: '',
   featuredImage: null,
   categories: { nodes: [{ name: 'Insights', slug: 'insights' }] },
-  author: { node: { name: 'BadgeMaster' } },
+  author: { node: { name: 'Hong Yu' } },
   seo: null,
 };
 post = post || defaultPost;
@@ -111,7 +111,7 @@ const formatDate = (dateStr: string) => {
 };
 ---
 
-<Layout title={post ? `${post.title} | BadgeMaster Blog` : `Blog Post | ${slug}`} seo={post?.seo}>
+<Layout title={post ? `${post.title} | Hong Yu Blog` : `Blog Post | ${slug}`} seo={post?.seo}>
   <main class="max-w-full">
     {post ? (
       <>

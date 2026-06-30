@@ -24,7 +24,7 @@ const { footerColumn1, footerColumns, absoluteFooter } = Astro.props;
 // --- Column 1 (brand block) — single editable group, with fallbacks ---
 const c1: Column1 = footerColumn1 || {};
 const logoUrl = c1.logo?.node?.sourceUrl || '';
-const companyName = c1.companyName || 'BadgeMaster';
+const companyName = c1.companyName || 'Hong Yu';
 const description = c1.description || 'Global leader in industrial custom badge manufacturing for corporate, military, and lifestyle brands.';
 const phone = c1.phone || '';
 const email = c1.email || '';
@@ -57,7 +57,7 @@ const columns: FooterColumn[] = (footerColumns && footerColumns.length > 0) ? fo
 
 // --- Absolute footer (below the line) — copyright (year auto) + credit ---
 const currentYear = new Date().getFullYear();
-const copyrightRaw = absoluteFooter?.copyright || '© 2024 BadgeMaster Manufacturing. All rights reserved.';
+const copyrightRaw = absoluteFooter?.copyright || '© 2024 Hong Yu Manufacturing. All rights reserved.';
 const copyrightLine = copyrightRaw.replace(/\b(19|20)\d{2}\b/, String(currentYear));
 const credit = absoluteFooter?.credit || 'Design by Vareno';
 ---
