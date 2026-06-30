@@ -5,10 +5,11 @@ interface Props {
   pageData?: any;
   portfolios?: any[];
   posts?: any[];
+  categories?: any[];
   seo?: any;
 }
 
-const { pageData, portfolios = [], posts = [], seo } = Astro.props;
+const { pageData, portfolios = [], posts = [], categories = [], seo } = Astro.props;
 
 // Normalize internal links: strip any "https://domain" prefix so links stay
 // relative ("/contact"), regardless of what the client pastes into ACF URL fields.
@@ -72,12 +73,29 @@ const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0
 // 2. Fallbacks for Manufacturing Specialties (Section 3)
 const specialtiesTitle = pageData?.specialtiesTitle || 'Our Manufacturing Specialties';
 const specialtiesSubtitle = pageData?.specialtiesSubtitle || 'Engineered for durability and visual impact across all industries.';
-const specialties = (pageData?.specialties && pageData.specialties.length > 0) ? pageData.specialties : [
-  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXevhRkt0YeraaUzM1V3xQXTu-8B3EbEcw5Ga6U-pSh5YYQvzaY8NDqvoJRz7yT97-yT8PurmJz3Y_IWem9e0Ou1pdgmlrP2_meYF2hHj-9Cz_R4R-I5xbc7xYHRSidQQobCilgdYS9OM_KAXw0K5bwwxCpFQuwrn41xoEx5CbcG-y-mPJU1nNV7wC597A8TYBuD6kJgpf478oaEdar9oMjujNA1Mxu9dvKNglEHyNc5Icx9rllWv7wzMp7TXyjNc80O0jZWY5J-Qn' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex →', linkUrl: '/products#flex-deep-dive' },
-  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKS7mW3LoAZbQYOdPMsdAFxO0RAU3iNXmqX7-J6hiV-e2yI4lD-HLCoz6nWiVKMZXgeMMiAt032FtlgVXAxVIgBeQ839HrLMuBrEjngsGsnojdb32Gk2nysffLffitoVF7TkpN96d90Et4up32wdSooadkKpY1mp23nxpfIHsYEWbCm6Mynv5n9Pd9ys5q5PWV0zY6pWvHiBLoOW_Q_o3I0os45l4t3KqnL3o-kpRjpT5zHiquTaJ_B83zfhgZ7RXuqvi7Gl3Vm71s' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Stitch →', linkUrl: '/products#embroidery-deep-dive' },
-  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf3C-yh9W2g_Ohd5fCDwDWJQSAv4c6UC682WEHcXaCO_bEVNLCwTvjTAMBHQd1XrS2Er1Q0M8EvcAayNlKl2C67aqQJvqW167ZtlmTj4ZOUr4V-3tfbMCBmXyYzRaFwm_cW1qi62xLKHY7tNPLUsYR6ClTkbafMrPsrzn7oOTaJV5BQMkZYiKT_PiGQvOa9ACgyoMp-ADArS2C6rnDkb8d5ob-gpCo8iRd5I-rh_OtVdrSGNOj2dPscOzHeDnC6Y3elWOuijkmyWQ4' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC →', linkUrl: '/products#pvc-deep-dive' },
-  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEN3vdbJEbtiIkznfsO9JjF7UO9QAXY_bbWSVta2EtmwFRVcDA8gyDzk6zydJ19_Ezqdj8Wl3_vk0gR41ecQFY6z4b-JbUiM0x6SVkxOof6aNg7qTyqK1mc7FJBWDe68nwyLY5Pt7PkAMTMYtuS6l-zO3XG9pHe8ylmPB1w5Gmu-D9OW6aUUqGsuunN8ormy-0jO2BP8AwEv5-dLs4elv2XZB2IMcVgcvq_NhI84EfUaFg-5_zXpStjv2uL2DpjtPc9aGrrq2WfVHV' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal →', linkUrl: '/products#metal-deep-dive' }
+// Single source of truth: these cards now come from the product-category
+// taxonomy (the SAME data the Products page uses), so editing a category's name
+// or hero image updates both pages — no more duplicated lists. Each card links
+// to its category page; the client controls visibility/order via the category's
+// "Show on Home" toggle + order. Falls back to curated defaults when categories
+// aren't available (e.g. no backend).
+const specialtyDefaults = [
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXevhRkt0YeraaUzM1V3xQXTu-8B3EbEcw5Ga6U-pSh5YYQvzaY8NDqvoJRz7yT97-yT8PurmJz3Y_IWem9e0Ou1pdgmlrP2_meYF2hHj-9Cz_R4R-I5xbc7xYHRSidQQobCilgdYS9OM_KAXw0K5bwwxCpFQuwrn41xoEx5CbcG-y-mPJU1nNV7wC597A8TYBuD6kJgpf478oaEdar9oMjujNA1Mxu9dvKNglEHyNc5Icx9rllWv7wzMp7TXyjNc80O0jZWY5J-Qn' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex', linkUrl: '/products/flex' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKS7mW3LoAZbQYOdPMsdAFxO0RAU3iNXmqX7-J6hiV-e2yI4lD-HLCoz6nWiVKMZXgeMMiAt032FtlgVXAxVIgBeQ839HrLMuBrEjngsGsnojdb32Gk2nysffLffitoVF7TkpN96d90Et4up32wdSooadkKpY1mp23nxpfIHsYEWbCm6Mynv5n9Pd9ys5q5PWV0zY6pWvHiBLoOW_Q_o3I0os45l4t3KqnL3o-kpRjpT5zHiquTaJ_B83zfhgZ7RXuqvi7Gl3Vm71s' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Embroidery', linkUrl: '/products/embroidery' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf3C-yh9W2g_Ohd5fCDwDWJQSAv4c6UC682WEHcXaCO_bEVNLCwTvjTAMBHQd1XrS2Er1Q0M8EvcAayNlKl2C67aqQJvqW167ZtlmTj4ZOUr4V-3tfbMCBmXyYzRaFwm_cW1qi62xLKHY7tNPLUsYR6ClTkbafMrPsrzn7oOTaJV5BQMkZYiKT_PiGQvOa9ACgyoMp-ADArS2C6rnDkb8d5ob-gpCo8iRd5I-rh_OtVdrSGNOj2dPscOzHeDnC6Y3elWOuijkmyWQ4' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC', linkUrl: '/products/pvc' },
+  { image: { node: { sourceUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEN3vdbJEbtiIkznfsO9JjF7UO9QAXY_bbWSVta2EtmwFRVcDA8gyDzk6zydJ19_Ezqdj8Wl3_vk0gR41ecQFY6z4b-JbUiM0x6SVkxOof6aNg7qTyqK1mc7FJBWDe68nwyLY5Pt7PkAMTMYtuS6l-zO3XG9pHe8ylmPB1w5Gmu-D9OW6aUUqGsuunN8ormy-0jO2BP8AwEv5-dLs4elv2XZB2IMcVgcvq_NhI84EfUaFg-5_zXpStjv2uL2DpjtPc9aGrrq2WfVHV' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal', linkUrl: '/products/metal' }
 ];
+const specialtyCards = (categories || [])
+  .filter((c: any) => c?.categoryHomeFields?.featureOnHome !== false)
+  .sort((a: any, b: any) => (a?.categoryHomeFields?.homeOrder ?? 0) - (b?.categoryHomeFields?.homeOrder ?? 0))
+  .map((c: any) => ({
+    image: c?.categoryFields?.catHeroImage || null,
+    title: c?.name,
+    description: c?.categoryFields?.catTagline || '',
+    linkLabel: `Explore ${c?.name}`,
+    linkUrl: `/products/${c?.slug}`,
+  }));
+const specialties = specialtyCards.length > 0 ? specialtyCards : specialtyDefaults;
 
 // 3. Fallbacks for Advantages Bento
 const advantageTitle = pageData?.advantageTitle || 'The BadgeMaster Advantage';

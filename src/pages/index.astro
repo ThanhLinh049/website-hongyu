@@ -7,6 +7,7 @@ let pageData = null;
 let seoData = null;
 let portfolios = [];
 let posts = [];
+let categories = [];
 
 try {
   const data = await wpQuery({
@@ -133,6 +134,15 @@ try {
             }
           }
         }
+        productCategories(first: 50, where: { hideEmpty: false }) {
+          nodes {
+            name
+            slug
+            count
+            categoryFields { catTagline catHeroImage { node { sourceUrl } } }
+            categoryHomeFields { featureOnHome homeOrder }
+          }
+        }
       }
     `
   });
@@ -149,9 +159,12 @@ try {
   if (data?.posts?.nodes) {
     posts = data.posts.nodes;
   }
+  if (data?.productCategories?.nodes) {
+    categories = data.productCategories.nodes;
+  }
 } catch (e) {
   console.warn("Failed to fetch home page data from WordPress. Fallback static content will be used in components.", e);
 }
 ---
 
-<Home pageData={pageData} portfolios={portfolios} posts={posts} seo={seoData} />
+<Home pageData={pageData} portfolios={portfolios} posts={posts} categories={categories} seo={seoData} />
