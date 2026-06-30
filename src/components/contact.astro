@@ -48,10 +48,11 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
     <main>
         <!-- Hero Section -->
         <section class="relative bg-inverse-surface py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
-            <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute inset-0 pointer-events-none">
                 <img alt="Industrial Backdrop" class="w-full h-full object-cover opacity-90" src={heroBg}/>
+                <div class="absolute inset-0 bg-gradient-to-b from-inverse-surface/85 via-inverse-surface/55 to-inverse-surface/85"></div>
             </div>
-            <div class="relative max-w-container-max mx-auto px-gutter text-center text-white w-full">
+            <div class="relative z-10 max-w-container-max mx-auto px-gutter text-center text-white w-full">
                 <h1 class="font-display-lg text-display-lg mb-4 tracking-tight">{heroTitle}</h1>
                 <p class="font-body-lg text-body-lg text-surface-variant max-w-2xl mx-auto">
                     {heroDescription}
