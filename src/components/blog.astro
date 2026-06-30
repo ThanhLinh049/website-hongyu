@@ -171,12 +171,14 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                             <h3
                                 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors line-clamp-2">
                                 {post.title}</h3>
-                            <div class="mt-auto pt-md flex items-center justify-between">
-                                <div class="flex items-center gap-1.5 text-on-surface-variant">
-                                    <span class="material-symbols-outlined text-[18px]">timer</span>
-                                    <span class="text-[12px] font-medium">5 min read</span>
-                                </div>
-                                <span class="text-primary font-label-bold text-[12px]">Read More</span>
+                            {post.excerpt && (
+                                <p class="mt-sm font-body-sm text-on-surface-variant leading-relaxed line-clamp-2">{stripHtml(post.excerpt)}</p>
+                            )}
+                            <div class="mt-auto pt-md">
+                                <span class="text-primary font-label-bold text-[12px] inline-flex items-center gap-1.5 group/btn">
+                                    Read More
+                                    <span class="material-symbols-outlined text-[16px] transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+                                </span>
                             </div>
                         </div>
                     </a>
