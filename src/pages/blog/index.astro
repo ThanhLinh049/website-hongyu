@@ -1,16 +1,30 @@
 ---
 import Blog from '../../components/blog.astro';
 import { wpQuery } from '../../lib/api';
+import { SEO_FRAGMENT } from '../../lib/seo';
 
 export const prerender = false; // SSR: always shows latest posts/categories from WP
 
 let posts = [];
 let categories = [];
+let pageData = null;
+let seoData = null;
 
 try {
   const data = await wpQuery({
     query: `
       query GetAllPosts {
+        page(id: "blog", idType: URI) {
+          blogPage {
+            heroBadge
+            heroTitle
+            heroSubtitle
+            newsletterTitle
+            newsletterText
+            newsletterButton
+          }
+          ${SEO_FRAGMENT}
+        }
         posts(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
           nodes {
             title
@@ -47,9 +61,15 @@ try {
   if (data?.categories?.nodes) {
     categories = data.categories.nodes;
   }
+  if (data?.page?.blogPage) {
+    pageData = data.page.blogPage;
+  }
+  if (data?.page?.seo) {
+    seoData = data.page.seo;
+  }
 } catch (e) {
   console.warn("Failed to fetch blog posts from WordPress. Fallback content will be used.", e);
 }
 ---
 
-<Blog posts={posts} categories={categories} />
+<Blog posts={posts} categories={categories} pageData={pageData} seo={seoData} />
