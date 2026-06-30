@@ -240,12 +240,12 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                         </a>
                     </div>
                     <!-- Socials: Modern List -->
-                    <div class="bg-inverse-surface text-white p-md border-l-4 border-primary">
-                        <h3 class="font-label-bold text-label-bold mb-sm uppercase tracking-widest text-surface-variant">{socialsTitle}</h3>
+                    <div class="bg-surface border border-outline-variant p-md border-l-4 border-l-primary shadow-sm">
+                        <h3 class="font-label-bold text-label-bold mb-sm uppercase tracking-widest text-primary">{socialsTitle}</h3>
                         <div class="flex flex-col gap-sm">
                             {socials.map((s) => (
-                                <a class="flex items-center gap-sm hover:text-primary transition-colors py-2 border-b border-white/10" href={s.url || '#'} target={s.url && s.url !== '#' ? '_blank' : undefined} rel="noopener">
-                                    <span class="material-symbols-outlined">{s.icon}</span>
+                                <a class="flex items-center gap-sm text-on-surface hover:text-primary transition-colors py-2 border-b border-outline-variant/60 last:border-b-0" href={s.url || '#'} target={s.url && s.url !== '#' ? '_blank' : undefined} rel="noopener">
+                                    <span class="material-symbols-outlined text-primary">{s.icon}</span>
                                     <span class="font-body-md">{s.label}</span>
                                 </a>
                             ))}
