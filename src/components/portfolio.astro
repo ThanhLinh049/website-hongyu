@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { PORTFOLIO_PROJECTS, PORTFOLIO_CATEGORIES } from '../lib/defaults';
 
 interface Props {
   pageData?: any;
@@ -20,19 +21,7 @@ const ctaPrimaryUrl = pageData?.ctaPrimaryUrl || '/contact';
 const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Browse Products';
 const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/products';
 
-const fallbackPortfolios = [
-  { title: 'Elite Tactical Badge', slug: 'elite-tactical-badge', featuredImage: { node: { sourceUrl: '/demo/demo-05.png' } }, portfolioFields: { specs: [{ label: 'Material', value: '3D Flexible PVC' }, { label: 'Finish', value: 'Matte Non-Reflective' }] }, portfolioCategories: { nodes: [{ name: 'Flex Badges', slug: 'flex' }] } },
-  { title: 'Heritage Airline Crest', slug: 'heritage-airline-crest', featuredImage: { node: { sourceUrl: '/demo/demo-01.png' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Gold Metallic Thread' }, { label: 'Finish', value: 'High-Density Satin' }] }, portfolioCategories: { nodes: [{ name: 'Embroidery', slug: 'embroidery' }] } },
-  { title: 'Maritime Service Coin', slug: 'maritime-service-coin', featuredImage: { node: { sourceUrl: '/demo/demo-02.png' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Antique Bronze' }, { label: 'Finish', value: '3D Die-Struck Relief' }] }, portfolioCategories: { nodes: [{ name: 'Metal Products', slug: 'metal' }] } }
-];
-
-const activePortfolios = portfolios.length > 0 ? portfolios : fallbackPortfolios;
-const fallbackCats = [
-  { name: 'Flex Badges', slug: 'flex' },
-  { name: 'Embroidery', slug: 'embroidery' },
-  { name: 'PVC Patches', slug: 'pvc' },
-  { name: 'Metal Products', slug: 'metal' }
-];
+const activePortfolios = portfolios.length > 0 ? portfolios : PORTFOLIO_PROJECTS;
 // Build filter buttons from the categories that the displayed projects actually have,
 // so the filter always matches the visible cards (no dead "empty category" buttons).
 const presentMap = new Map<string, string>();
@@ -41,7 +30,7 @@ activePortfolios.forEach((p: any) => (p?.portfolioCategories?.nodes || []).forEa
 }));
 const filterCats = presentMap.size > 0
   ? [...presentMap].map(([slug, name]) => ({ slug, name }))
-  : ((categories && categories.length > 0) ? categories : fallbackCats);
+  : ((categories && categories.length > 0) ? categories : PORTFOLIO_CATEGORIES);
 const catSlugs = (p: any) => (p?.portfolioCategories?.nodes || []).map((c: any) => c.slug).join(' ');
 const catLabel = (p: any) => p?.portfolioCategories?.nodes?.[0]?.name || 'Custom';
 const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';

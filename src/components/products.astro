@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { PRODUCTS_CATEGORIES, PRODUCTS_TEXTURES, PRODUCTS_BACKINGS } from '../lib/defaults';
 
 interface Props {
   pageData?: any;
@@ -23,13 +24,7 @@ const heroSecondaryLabel = pageData?.heroSecondaryLabel || 'Schedule Consultatio
 const heroSecondaryUrl = pageData?.heroSecondaryUrl || '/contact';
 
 // Category cards (from the product-category terms)
-const fallbackCats = [
-  { name: 'Flex Badges', slug: 'flex', count: 0, categoryFields: { catTagline: 'Metallic Polymers' } },
-  { name: 'Embroidery', slug: 'embroidery', count: 0, categoryFields: { catTagline: 'High-Density Thread' } },
-  { name: 'PVC Patches', slug: 'pvc', count: 0, categoryFields: { catTagline: '3D Tactical Polymer' } },
-  { name: 'Metal Products', slug: 'metal', count: 0, categoryFields: { catTagline: 'Die-Cast Alloys' } }
-];
-const catCards = (categories && categories.length > 0) ? categories : fallbackCats;
+const catCards = (categories && categories.length > 0) ? categories : PRODUCTS_CATEGORIES;
 const catImg = (c: any) => c?.categoryFields?.catHeroImage?.node?.sourceUrl || '';
 
 // All products
@@ -49,13 +44,9 @@ const backingFacet = backings || [];
 const finishesTitle = pageData?.finishesTitle || 'Finishes & Materials';
 const finishesDescription = pageData?.finishesDescription || "Customize your product to match your brand's tactile and visual requirements. Our standard library includes over 200 finish combinations.";
 const surfaceTexturesTitle = pageData?.surfaceTexturesTitle || 'Surface Textures';
-const surfaceTextures = (pageData?.surfaceTextures && pageData.surfaceTextures.length > 0) ? pageData.surfaceTextures : [
-  { textureName: 'Matte' }, { textureName: 'Shiny' }, { textureName: 'Brushed' }, { textureName: 'Textured' }
-];
+const surfaceTextures = (pageData?.surfaceTextures && pageData.surfaceTextures.length > 0) ? pageData.surfaceTextures : PRODUCTS_TEXTURES;
 const backingTitle = pageData?.backingTitle || 'Backing Solutions';
-const backingSolutions = (pageData?.backingSolutions && pageData.backingSolutions.length > 0) ? pageData.backingSolutions : [
-  { label: 'Industrial Adhesive' }, { label: 'Velcro Hook/Loop' }, { label: 'Magnetic Clutch' }, { label: 'Safety Pin' }
-];
+const backingSolutions = (pageData?.backingSolutions && pageData.backingSolutions.length > 0) ? pageData.backingSolutions : PRODUCTS_BACKINGS;
 const labsTitle = pageData?.labsTitle || 'Material Durability Labs';
 const labsDescription = pageData?.labsDescription || 'All BadgeMaster products undergo rigorous testing in our US-based quality control labs to ensure they meet international industrial standards.';
 const labsStats = (pageData?.labsStats && pageData.labsStats.length > 0) ? pageData.labsStats : [

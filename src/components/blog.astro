@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { BLOG_POSTS } from '../lib/defaults';
 
 interface Props {
   posts?: any[];
@@ -18,42 +19,7 @@ const newsletterTitle = pageData?.newsletterTitle || 'Industrial Insights to You
 const newsletterText = pageData?.newsletterText || 'Get bi-weekly updates on manufacturing trends, material sciences, and cost-saving procurement strategies for your branding needs.';
 const newsletterButton = pageData?.newsletterButton || 'Subscribe to Insights';
 
-const fallbackPosts = [
-  {
-    title: 'How to Choose the Right Custom Badge Material for Industrial Use',
-    slug: 'how-to-choose-badge-material',
-    excerpt: 'Navigating the complexities of flex badges versus traditional metal can be challenging. We break down durability, cost-efficiency, and brand impact for high-volume corporate orders.',
-    date: '2023-10-24T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-18.png' } },
-    categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
-  },
-  {
-    title: 'Optimizing Logo Files for Flex Badge Production',
-    slug: 'optimizing-logo-files',
-    excerpt: 'Learn the essential file types and vector requirements to ensure your custom badges maintain perfect fidelity during the extrusion process.',
-    date: '2023-10-24T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-13.png' } },
-    categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
-  },
-  {
-    title: 'The Science of Durability: PVC vs. TPU Materials',
-    slug: 'pvc-vs-tpu-materials',
-    excerpt: 'A technical comparison of polymer performance under extreme heat and chemical exposure in industrial workwear environments.',
-    date: '2023-10-18T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-12.png' } },
-    categories: { nodes: [{ name: 'Manufacturing', slug: 'manufacturing' }] }
-  },
-  {
-    title: 'Reducing Lead Times for High-Volume Orders',
-    slug: 'reducing-lead-times',
-    excerpt: 'Strategies for supply chain management and proof approval to shave weeks off your custom manufacturing timeline.',
-    date: '2023-10-12T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-25.png' } },
-    categories: { nodes: [{ name: 'Ordering Guide', slug: 'ordering-guide' }] }
-  }
-];
-
-const activePosts = posts.length > 0 ? posts : fallbackPosts;
+const activePosts = posts.length > 0 ? posts : BLOG_POSTS;
 // Featured article: the post the client picked on the Blog page, else the newest.
 const pickedFeatured = pageData?.featuredPost?.nodes?.[0] || null;
 const featuredPost = pickedFeatured || activePosts[0];

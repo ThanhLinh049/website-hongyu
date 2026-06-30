@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import {
+  HOME_HERO_SLIDES, HOME_TRUST_BAR, HOME_SPECIALTIES, HOME_ADVANTAGES,
+  HOME_PROCESS, HOME_CAPABILITIES, HOME_PORTFOLIOS, HOME_POSTS,
+} from '../lib/defaults';
 
 interface Props {
   pageData?: any;
@@ -28,47 +32,10 @@ const noArrow = (s: any) =>
   typeof s === 'string' ? s.replace(/[\s←-⇿➡➔»>›]+$/u, '').trim() : s;
 
 // 1. Fallbacks for Hero Slides
-const heroSlides = pageData?.heroSlides || [
-  {
-    badgeText: 'Custom Manufacturing',
-    heading: 'Custom Badges, Patches & Metal Products Made for Your Brand',
-    subheading: 'High-precision manufacturing for elite organizations. From 3D PVC patches to premium metal badges, we deliver industrial-grade custom products globally.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-05.png' } },
-    primaryCtaLabel: 'Get Your Free Design Proof',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'Explore Materials',
-    secondaryCtaUrl: '/products'
-  },
-  {
-    badgeText: 'Flexible PVC Patches',
-    heading: 'Durable PVC Patches Built for Color, Shape & Daily Wear',
-    subheading: 'Create dimensional, weather-resistant patches with crisp edges, custom colors, and reliable backing options for uniforms, gear, and branded merchandise.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-16.png' } },
-    primaryCtaLabel: 'Request PVC Quote',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'View PVC Options',
-    secondaryCtaUrl: '/products#pvc-deep-dive'
-  },
-  {
-    badgeText: 'Premium Metal Products',
-    heading: 'Premium Metal Badges & Emblems for High-End Brand Programs',
-    subheading: 'Elevate uniforms, packaging, vehicles, and accessories with refined metal finishes, precise tooling, and production-ready quality control.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-04.png' } },
-    primaryCtaLabel: 'Start Metal Project',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'See Portfolio',
-    secondaryCtaUrl: '/portfolio'
-  }
-];
+const heroSlides = pageData?.heroSlides || HOME_HERO_SLIDES;
 
 // 1b. Hero trust bar (running strip under the banner)
-const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0) ? pageData.heroTrustBar : [
-  { icon: 'design_services', label: 'Free Proof' },
-  { icon: 'payments', label: 'No Hidden Costs' },
-  { icon: 'rocket_launch', label: 'Fast Turnaround' },
-  { icon: 'public', label: 'Worldwide Shipping' },
-  { icon: 'verified', label: 'Quality Control' }
-];
+const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0) ? pageData.heroTrustBar : HOME_TRUST_BAR;
 
 // 2. Fallbacks for Manufacturing Specialties (Section 3)
 const specialtiesTitle = pageData?.specialtiesTitle || 'Our Manufacturing Specialties';
@@ -79,12 +46,6 @@ const specialtiesSubtitle = pageData?.specialtiesSubtitle || 'Engineered for dur
 // to its category page; the client controls visibility/order via the category's
 // "Show on Home" toggle + order. Falls back to curated defaults when categories
 // aren't available (e.g. no backend).
-const specialtyDefaults = [
-  { image: { node: { sourceUrl: '/demo/demo-04.png' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex', linkUrl: '/products/flex' },
-  { image: { node: { sourceUrl: '/demo/demo-23.png' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Embroidery', linkUrl: '/products/embroidery' },
-  { image: { node: { sourceUrl: '/demo/demo-19.png' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC', linkUrl: '/products/pvc' },
-  { image: { node: { sourceUrl: '/demo/demo-14.png' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal', linkUrl: '/products/metal' }
-];
 const specialtyCards = (categories || [])
   .filter((c: any) => c?.categoryHomeFields?.featureOnHome !== false)
   .sort((a: any, b: any) => (a?.categoryHomeFields?.homeOrder ?? 0) - (b?.categoryHomeFields?.homeOrder ?? 0))
@@ -95,67 +56,22 @@ const specialtyCards = (categories || [])
     linkLabel: `Explore ${c?.name}`,
     linkUrl: `/products/${c?.slug}`,
   }));
-const specialties = specialtyCards.length > 0 ? specialtyCards : specialtyDefaults;
+const specialties = specialtyCards.length > 0 ? specialtyCards : HOME_SPECIALTIES;
 
 // 3. Fallbacks for Advantages Bento
 const advantageTitle = pageData?.advantageTitle || 'The BadgeMaster Advantage';
 const advantageSubtitle = pageData?.advantageSubtitle || 'Where precision engineering meets industrial capacity.';
-const advantageBlocks = pageData?.advantageBlocks || [
-  {
-    icon: 'precision_manufacturing',
-    title: 'Massive Production Capacity',
-    description: 'Our facilities handle orders from 50 to 500,000 units with consistent precision across the entire run. We scale with your growth.',
-    isHighlight: false,
-    stats: [
-      { value: '24/7', label: 'Manufacturing' },
-      { value: '0.01mm', label: 'Tolerance' },
-      { value: '100%', label: 'Custom' }
-    ]
-  },
-  {
-    icon: 'verified_user',
-    title: 'ISO 9001 Certified',
-    description: 'Every batch undergoes a rigorous 12-point inspection before it leaves our facility. Zero compromise on brand integrity.',
-    isHighlight: true
-  },
-  {
-    icon: 'palette',
-    title: 'Pantone Matching',
-    description: 'We ensure your brand colors are accurate to within 1% variance using professional matching systems.',
-    isHighlight: false
-  },
-  {
-    icon: 'inventory',
-    title: 'White Label Shipping',
-    description: 'For resellers and agencies, we offer fully anonymous blind shipping directly to your clients.',
-    isHighlight: false
-  },
-  {
-    icon: 'bolt',
-    title: 'Priority Rush Lane',
-    description: 'Urgent deadline? Our rush manufacturing can deliver finished custom products in as little as 5-7 business days.',
-    isHighlight: true
-  }
-];
+const advantageBlocks = pageData?.advantageBlocks || HOME_ADVANTAGES;
 
 // 4. Fallbacks for Process Steps
 const processTitle = pageData?.processTitle || 'Simple 3-Step Process';
-const processSteps = pageData?.processSteps || [
-  { icon: 'lightbulb', title: '1. Idea & Artwork', description: 'Upload a logo or simple sketch. Our design team creates your production-ready vector file for free.' },
-  { icon: 'fact_check', title: '2. Digital Proof', description: 'Review a high-resolution mock-up in 24 hours. Request unlimited revisions until it\'s perfect.' },
-  { icon: 'local_shipping', title: '3. Manufacturing', description: 'Once approved, we manufacture and ship worldwide. Track your order in real-time to your door.' }
-];
+const processSteps = pageData?.processSteps || HOME_PROCESS;
 
 // 5. Fallbacks for Technical Capabilities
 const capabilitiesTitle = pageData?.capabilitiesTitle || 'Technical Capabilities';
 const capabilitiesDescription = pageData?.capabilitiesDescription || 'Our production floor features cutting-edge CNC, laser, and textile machinery for complex custom specifications.';
 const capabilitiesImageUrl = pageData?.capabilitiesImage?.node?.sourceUrl || '/demo/demo-01.png';
-const capabilitiesList = pageData?.capabilitiesList || [
-  { title: 'Sizing', description: 'From 0.5" micro-pins to 18" large patches.' },
-  { title: 'Backing', description: 'Iron-on, Velcro, Adhesive, or Magnetic.' },
-  { title: 'Dimensions', description: 'Standard flat 2D or sculpted 3D layers.' },
-  { title: 'Materials', description: 'TPU, Silicone, Brass, Zinc, and Eco-Felt.' }
-];
+const capabilitiesList = pageData?.capabilitiesList || HOME_CAPABILITIES;
 
 // 6. Fallbacks for CTA Banner
 const ctaTitle = pageData?.ctaTitle || 'Ready to Elevate Your Brand?';
@@ -175,29 +91,7 @@ const blogCtaLabel = pageData?.blogCtaLabel || 'Browse All Articles';
 const blogCtaUrl = rel(pageData?.blogCtaUrl) || '/blog';
 
 // 7. Fallbacks for Portfolios (recent work grid)
-const defaultPortfolios = [
-  {
-    title: 'Elite Tactical Badge', slug: 'elite-tactical-badge',
-    featuredImage: { node: { sourceUrl: '/demo/demo-24.png' } },
-    portfolioCategories: { nodes: [{ name: 'Flex Badges' }] }
-  },
-  {
-    title: 'Heritage Airline Crest', slug: 'heritage-airline-crest',
-    featuredImage: { node: { sourceUrl: '/demo/demo-06.png' } },
-    portfolioCategories: { nodes: [{ name: 'Embroidery' }] }
-  },
-  {
-    title: 'Maritime Service Coin', slug: 'maritime-service-coin',
-    featuredImage: { node: { sourceUrl: '/demo/demo-08.png' } },
-    portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
-  },
-  {
-    title: 'Luxury Automotive Badge', slug: 'luxury-automotive-badge',
-    featuredImage: { node: { sourceUrl: '/demo/demo-17.png' } },
-    portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
-  }
-];
-const displayPortfolios = portfolios.length > 0 ? portfolios : defaultPortfolios;
+const displayPortfolios = portfolios.length > 0 ? portfolios : HOME_PORTFOLIOS;
 
 // "Our Recent Work" filter: category key (slug if present, else derived from name) so buttons match cards
 const catKey = (c: any) => c?.slug || (c?.name || '').toLowerCase().split(/\s+/)[0];
@@ -217,30 +111,7 @@ const recentCats = selectedRecentCats.length > 0
   : [...recentCatMap].map(([key, name]) => ({ key, name }));
 
 // 8. Fallbacks for Blog Posts
-const defaultPosts = [
-  {
-    title: 'PVC vs. Embroidery: Choosing for Performance',
-    slug: 'pvc-vs-embroidery',
-    excerpt: 'Detailed comparison of durability and design fidelity for tactical gear.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-22.png' } },
-    categories: { nodes: [{ name: 'Tech Trends' }] }
-  },
-  {
-    title: 'Understanding Bleeds & Borders for CNC Milling',
-    slug: 'understanding-bleeds-borders',
-    excerpt: 'Crucial artwork guidelines for creating metallic pins with enamel color separation.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-20.png' } },
-    categories: { nodes: [{ name: 'Ordering Guide' }] }
-  },
-  {
-    title: 'What are Flex Badges? The Modern Standard',
-    slug: 'what-are-flex-badges',
-    excerpt: 'Discover the texture, feel, and weight advantages of our patented metallic-polymer badges.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-07.png' } },
-    categories: { nodes: [{ name: 'Material Spec' }] }
-  }
-];
-const displayPosts = posts.length > 0 ? posts : defaultPosts;
+const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
 ---
 
 <Layout title="BadgeMaster | Custom Badges, Patches & Metal Products" heroHeader={true} seo={seo}>
