@@ -54,7 +54,9 @@ const fallbackPosts = [
 ];
 
 const activePosts = posts.length > 0 ? posts : fallbackPosts;
-const featuredPost = activePosts[0];
+// Featured article: the post the client picked on the Blog page, else the newest.
+const pickedFeatured = pageData?.featuredPost?.nodes?.[0] || null;
+const featuredPost = pickedFeatured || activePosts[0];
 
 // Category filter buttons: dynamic from WP, fall back to those present on posts.
 const presentMap = new Map<string, string>();
@@ -156,9 +158,9 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
         <!-- Article Grid (all posts; featured one is hidden here in the default view) -->
         <section class="max-w-container-max mx-auto px-gutter pb-xl">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md" id="blog-grid">
-                {activePosts.map((post: any, idx: number) => (
+                {activePosts.map((post: any) => (
                     <a href={`/blog/${post.slug}`}
-                        data-featured={idx === 0 ? '1' : '0'}
+                        data-featured={featuredPost && post.slug === featuredPost.slug ? '1' : '0'}
                         data-cats={catSlugs(post)}
                         data-search={searchData(post)}
                         class="blog-card bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary transition-all duration-300 group shadow-sm">

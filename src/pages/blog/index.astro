@@ -22,6 +22,18 @@ try {
             newsletterTitle
             newsletterText
             newsletterButton
+            featuredPost {
+              nodes {
+                ... on Post {
+                  title
+                  slug
+                  excerpt
+                  date
+                  featuredImage { node { sourceUrl } }
+                  categories { nodes { name slug } }
+                }
+              }
+            }
           }
           ${SEO_FRAGMENT}
         }
