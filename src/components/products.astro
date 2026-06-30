@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { PRODUCTS_CATEGORIES, PRODUCTS_TEXTURES, PRODUCTS_BACKINGS } from '../lib/defaults';
+import { PRODUCTS_CATEGORIES, PRODUCTS_TEXTURES, PRODUCTS_BACKINGS, PRODUCTS_LIST } from '../lib/defaults';
 
 interface Props {
   pageData?: any;
@@ -28,7 +28,7 @@ const catCards = (categories && categories.length > 0) ? categories : PRODUCTS_C
 const catImg = (c: any) => c?.categoryFields?.catHeroImage?.node?.sourceUrl || '';
 
 // All products
-const allProducts = products || [];
+const allProducts = (products && products.length > 0) ? products : PRODUCTS_LIST;
 const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 const prodLink = (p: any) => {
   const cslug = p?.productCategories?.nodes?.[0]?.slug;

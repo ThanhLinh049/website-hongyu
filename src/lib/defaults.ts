@@ -196,10 +196,34 @@ export const BLOG_POSTS = [
 /* --------------------------- Products page --------------------------- */
 
 export const PRODUCTS_CATEGORIES = [
-  { name: 'Flex Badges', slug: 'flex', count: 0, categoryFields: { catTagline: 'Metallic Polymers' } },
-  { name: 'Embroidery', slug: 'embroidery', count: 0, categoryFields: { catTagline: 'High-Density Thread' } },
-  { name: 'PVC Patches', slug: 'pvc', count: 0, categoryFields: { catTagline: '3D Tactical Polymer' } },
-  { name: 'Metal Products', slug: 'metal', count: 0, categoryFields: { catTagline: 'Die-Cast Alloys' } }
+  { name: 'Flex Badges', slug: 'flex', count: 3, categoryFields: { catTagline: 'Metallic Polymers', catHeroImage: { node: { sourceUrl: '/demo/demo-04.png' } } } },
+  { name: 'Embroidery', slug: 'embroidery', count: 3, categoryFields: { catTagline: 'High-Density Thread', catHeroImage: { node: { sourceUrl: '/demo/demo-23.png' } } } },
+  { name: 'PVC Patches', slug: 'pvc', count: 3, categoryFields: { catTagline: '3D Tactical Polymer', catHeroImage: { node: { sourceUrl: '/demo/demo-19.png' } } } },
+  { name: 'Metal Products', slug: 'metal', count: 3, categoryFields: { catTagline: 'Die-Cast Alloys', catHeroImage: { node: { sourceUrl: '/demo/demo-14.png' } } } }
+];
+
+// Demo product grid shown on the Products page when offline (12 items across the
+// 4 categories so the category filter has results). Links resolve to the SSR
+// product-detail fallback.
+const demoProd = (title: string, slug: string, cat: string, catSlug: string, img: string) => ({
+  title, slug, date: '2026-01-01T00:00:00',
+  featuredImage: { node: { sourceUrl: img } },
+  productCategories: { nodes: [{ name: cat, slug: catSlug }] },
+  finishes: { nodes: [] }, backings: { nodes: [] },
+});
+export const PRODUCTS_LIST = [
+  demoProd('Tactical Flex Badge', 'tactical-flex-badge', 'Flex Badges', 'flex', '/demo/demo-04.png'),
+  demoProd('Corporate Flex Emblem', 'corporate-flex-emblem', 'Flex Badges', 'flex', '/demo/demo-05.png'),
+  demoProd('Sport Team Flex Patch', 'sport-team-flex-patch', 'Flex Badges', 'flex', '/demo/demo-06.png'),
+  demoProd('Heritage Embroidered Crest', 'heritage-embroidered-crest', 'Embroidery', 'embroidery', '/demo/demo-07.png'),
+  demoProd('Military Bullion Patch', 'military-bullion-patch', 'Embroidery', 'embroidery', '/demo/demo-08.png'),
+  demoProd('Custom Logo Embroidery', 'custom-logo-embroidery', 'Embroidery', 'embroidery', '/demo/demo-09.png'),
+  demoProd('3D PVC Morale Patch', '3d-pvc-morale-patch', 'PVC Patches', 'pvc', '/demo/demo-12.png'),
+  demoProd('Glow PVC Tactical Badge', 'glow-pvc-tactical-badge', 'PVC Patches', 'pvc', '/demo/demo-13.png'),
+  demoProd('Waterproof PVC Label', 'waterproof-pvc-label', 'PVC Patches', 'pvc', '/demo/demo-16.png'),
+  demoProd('Die-Struck Lapel Pin', 'die-struck-lapel-pin', 'Metal Products', 'metal', '/demo/demo-17.png'),
+  demoProd('Antique Brass Coin', 'antique-brass-coin', 'Metal Products', 'metal', '/demo/demo-18.png'),
+  demoProd('Enamel Metal Badge', 'enamel-metal-badge', 'Metal Products', 'metal', '/demo/demo-24.png'),
 ];
 
 export const PRODUCTS_TEXTURES = [
