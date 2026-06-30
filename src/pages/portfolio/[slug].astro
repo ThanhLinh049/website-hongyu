@@ -103,7 +103,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       {mainImage && (
         <div class="max-w-6xl mx-auto px-0 sm:px-6 lg:px-8 -mt-8 relative z-10 mb-12 lg:mb-20">
           <figure class="aspect-video w-full overflow-hidden sm:rounded-2xl shadow-xl shadow-slate-200/50 bg-white border sm:border-slate-200">
-            <img src={mainImage} alt={project.title} class="w-full h-full object-cover" />
+            <img src={mainImage} alt={project.title} fetchpriority="high" decoding="async" class="w-full h-full object-cover" />
           </figure>
         </div>
       )}
@@ -153,7 +153,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                   class="group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300">
                   <div class="relative aspect-square overflow-hidden bg-surface-container-high">
                     {relImg(p) && (
-                      <img alt={p.title}
+                      <img alt={p.title} loading="lazy" decoding="async"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         src={relImg(p)} />
                     )}

@@ -90,7 +90,7 @@ const formatDate = (dateStr: string) => {
         <section class="relative bg-inverse-surface py-xl overflow-hidden">
           {post.featuredImage?.node?.sourceUrl && (
             <div class="absolute inset-0 opacity-20 pointer-events-none">
-              <img alt={post.title} class="w-full h-full object-cover" src={post.featuredImage.node.sourceUrl} />
+              <img alt={post.title} fetchpriority="high" decoding="async" class="w-full h-full object-cover" src={post.featuredImage.node.sourceUrl} />
             </div>
           )}
           <div class="relative max-w-container-max mx-auto px-gutter">

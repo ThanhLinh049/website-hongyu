@@ -99,14 +99,6 @@ body {
     min-height: 0;
 }
 
-/* Contact Quote Form Styles */
-.form-input-focus:focus {
-    border-color: #003f87;
-    ring: 2px;
-    ring-color: #003f87;
-    outline: none;
-}
-
 .nav-shadow {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }

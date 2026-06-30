@@ -73,7 +73,7 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                     <a href={`/portfolio/${item.slug}`} class="portfolio-item group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300" data-category={catSlugs(item)}>
                         <div class="relative aspect-square overflow-hidden bg-surface-container">
                             {pImg(item) && (
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.title} src={pImg(item)} />
+                                <img loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.title} src={pImg(item)} />
                             )}
                             <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-primary shadow-sm">{catLabel(item)}</span>
                         </div>

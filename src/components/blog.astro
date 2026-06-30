@@ -119,7 +119,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                     class="relative group cursor-pointer overflow-hidden rounded-xl bg-white border border-outline-variant hover:border-primary transition-all duration-300 shadow-sm block">
                     <div class="flex flex-col lg:flex-row min-h-[380px]">
                         <div class="lg:w-[60%] overflow-hidden">
-                            <img alt={featuredPost.title}
+                            <img alt={featuredPost.title} fetchpriority="high" decoding="async"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[240px]"
                                 src={featuredPost.featuredImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_V6nhAEUFxKw2NsZarGQTe_KUs1YPfg5Cu1_j0cV-Cbm2gZf06X-FZIEgx3CtzdgQhn2PdIlXfoz6ZiDOQHZe1qdyoErNo1nyyfXQG38GYPhwIAtSqKCjdPDOQdFRTcm9Jn-iDo7k7J_ds9iuDrQ9YJYGovMJrufDCei9GdNdCM1yV6uVA3xyg9bq-Tml5QJfT46Q5IhRmlSncRfjRespglJAjSkHb46Che1xdXJdU0H5phCpwr9b3mafeQGBv1eR5c1_iQGcuyGU'} />
                         </div>
@@ -156,7 +156,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                         data-search={searchData(post)}
                         class="blog-card bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary transition-all duration-300 group shadow-sm">
                         <div class="aspect-[4/3] overflow-hidden">
-                            <img alt={post.title}
+                            <img alt={post.title} loading="lazy" decoding="async"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 src={post.featuredImage?.node?.sourceUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC2o8ddDffrNQjWHo0ZmcfK8pcBcYN6I2i_5TR6uPb6_vDXshmeUT1k2ULoyTE-OuX7rshGAcNSmAkeIluKxxoP7Y7vqEGcYVOcPSTiKvhDX9hp06R2VinxaYxf-Ks8aWFaca_NIvJIPVpyb17gcWbFcA-RPSNBD7xLxPtnreBJOiTOGxF9dMqjIPuGrQF8jwGwYaWlPcbKOalMWj1eb5_RFeFKgHMrjLzSOBvpA6YhavJAHNoMfS_6cUSSLmC6jJMh7CLYUeLTgyXr'} />
                         </div>
