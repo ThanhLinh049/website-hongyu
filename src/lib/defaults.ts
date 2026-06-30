@@ -227,7 +227,10 @@ export const PRODUCTS_LIST = [
 ];
 
 export const PRODUCTS_TEXTURES = [
-  { textureName: 'Matte' }, { textureName: 'Shiny' }, { textureName: 'Brushed' }, { textureName: 'Textured' }
+  { textureName: 'Matte', swatchImage: { node: { sourceUrl: '/demo/demo-09.png' } } },
+  { textureName: 'Shiny', swatchImage: { node: { sourceUrl: '/demo/demo-12.png' } } },
+  { textureName: 'Brushed', swatchImage: { node: { sourceUrl: '/demo/demo-13.png' } } },
+  { textureName: 'Textured', swatchImage: { node: { sourceUrl: '/demo/demo-22.png' } } }
 ];
 
 export const PRODUCTS_BACKINGS = [

@@ -38,7 +38,7 @@ const meta = buildSeo({
 // 1. Define default site settings (fallbacks)
 const defaultSettings: Record<string, any> = {
   siteLogoText: "BadgeMaster",
-  siteLogoImage: null,
+  siteLogoImage: { node: { sourceUrl: "/logo.png" } },
   siteFavicon: null,
   siteTagline: "",
   headerNavigation: [
