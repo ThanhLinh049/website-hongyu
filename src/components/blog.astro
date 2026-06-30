@@ -11,6 +11,9 @@ interface Props {
 
 const { posts = [], categories = [], pageData, seo } = Astro.props;
 
+// Web3Forms access key (public by design). Set PUBLIC_WEB3FORMS_ACCESS_KEY in .env.
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+
 // Editable hero + newsletter copy (WP Blog page), with the original text as fallback.
 const heroBadge = pageData?.heroBadge || 'B2B RESOURCE HUB';
 const heroTitle = pageData?.heroTitle || 'Product Guides & Custom Manufacturing Insights';
@@ -174,15 +177,20 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                     <p class="text-primary-fixed font-body-md max-w-xl">{newsletterText}</p>
                 </div>
                 <div class="w-full lg:w-1/3 relative z-10">
-                    <form class="flex flex-col gap-base">
+                    <form class="flex flex-col gap-base" data-web3form data-w3-success="You're subscribed! Watch your inbox for our next industrial insights update.">
+                        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+                        <input type="hidden" name="subject" value="New Newsletter Subscription — BadgeMaster" />
+                        <input type="hidden" name="from_name" value="BadgeMaster Website" />
+                        <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
                         <div class="relative">
-                            <input
+                            <input name="email" required
                                 class="w-full bg-white border-0 rounded-lg px-5 py-4 text-on-background focus:ring-2 focus:ring-secondary outline-none transition-all"
                                 placeholder="Enter your work email" type="email" />
                         </div>
                         <button
-                            class="bg-[#E67E22] text-white px-8 py-4 rounded-lg font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95"
+                            class="bg-[#E67E22] text-white px-8 py-4 rounded-lg font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                             type="submit">{newsletterButton}</button>
+                        <p data-w3-status role="status" aria-live="polite" class="text-[13px] text-white text-center min-h-[1rem]"></p>
                         <p class="text-[12px] text-primary-fixed/70 text-center">Strict B2B only. No spam. <a
                                 class="underline hover:text-white" href="#">Privacy Policy</a></p>
                     </form>
@@ -193,6 +201,8 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 </Layout>
 
 <script>
+    import { initWeb3Forms } from '../lib/web3forms';
+
     // 4 per page on mobile (≤767px), 9 on tablet/desktop.
     const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 9;
 
@@ -315,5 +325,6 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
     };
 
     setupBlog();
-    document.addEventListener('astro:after-swap', setupBlog);
+    initWeb3Forms();
+    document.addEventListener('astro:after-swap', () => { setupBlog(); initWeb3Forms(); });
 </script>

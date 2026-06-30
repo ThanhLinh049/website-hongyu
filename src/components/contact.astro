@@ -7,6 +7,9 @@ interface Props {
 
 const { pageData } = Astro.props;
 
+// Web3Forms access key (public by design). Set PUBLIC_WEB3FORMS_ACCESS_KEY in .env.
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+
 const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
 const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
 const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.png';
@@ -83,13 +86,18 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                         <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">{formTitle}</h2>
                         <p class="font-body-md text-body-md text-on-surface-variant border-l-4 border-primary pl-4">{formIntro}</p>
                     </div>
-                    <form class="space-y-md quote-form">
+                    <form class="space-y-md quote-form" data-web3form data-w3-success="Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.">
+                        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+                        <input type="hidden" name="subject" value="New Quote Request — BadgeMaster Website" />
+                        <input type="hidden" name="from_name" value="BadgeMaster Website" />
+                        <!-- Honeypot spam filter (hidden from humans) -->
+                        <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
                         <!-- Product Details Group: Two-column focused -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                             <div class="space-y-md">
                                 <div class="relative">
                                     <label class="visually-hidden">Product Type</label>
-                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                    <select name="Product Type" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
                                         <option selected disabled>Product Type</option>
                                         <option>Flex Badges</option>
                                         <option>Embroidered Patches</option>
@@ -103,11 +111,11 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                                 </div>
                                 <div>
                                     <label class="visually-hidden">Dimensions (W x H)</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Dimensions (W x H)" type="text"/>
+                                    <input name="Dimensions" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Dimensions (W x H)" type="text"/>
                                 </div>
                                 <div class="relative">
                                     <label class="visually-hidden">Finish Preference</label>
-                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                    <select name="Finish" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
                                         <option selected disabled>Finish Preference</option>
                                         <option>Matte</option>
                                         <option>Glossy</option>
@@ -122,11 +130,11 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                             <div class="space-y-md">
                                 <div>
                                     <label class="visually-hidden">Estimated Quantity</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Estimated Quantity" type="number"/>
+                                    <input name="Estimated Quantity" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Estimated Quantity" type="number"/>
                                 </div>
                                 <div class="relative">
                                     <label class="visually-hidden">Backing Attachment</label>
-                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                    <select name="Backing Attachment" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
                                         <option selected disabled>Backing Attachment</option>
                                         <option>Heat Seal</option>
                                         <option>Velcro</option>
@@ -139,7 +147,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                                 </div>
                                 <div class="relative">
                                     <label class="visually-hidden">Requested Lead Time</label>
-                                    <select class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                    <select name="Requested Lead Time" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
                                         <option selected disabled>Requested Lead Time</option>
                                         <option>Standard (15-20 days)</option>
                                         <option>Expedited (10 days)</option>
@@ -158,7 +166,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                                 <span class="material-symbols-outlined text-outline text-5xl mb-sm group-hover:text-primary transition-colors">cloud_upload</span>
                                 <p class="font-headline-sm text-on-surface font-bold">Click to upload or drag &amp; drop artwork</p>
                                 <p class="font-body-sm text-on-surface-variant mt-1">SVG, AI, PDF, or high-res PNG (Max 25MB)</p>
-                                <input class="hidden" id="artwork-upload" type="file"/>
+                                <input name="attachment" class="hidden" id="artwork-upload" type="file"/>
                             </div>
                         </div>
                         <!-- Contact Info Group: Strong spacing -->
@@ -166,33 +174,34 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
                             <div class="space-y-md">
                                 <div>
                                     <label class="visually-hidden">Full Name</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Full Name" type="text"/>
+                                    <input name="name" required class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Full Name" type="text"/>
                                 </div>
                                 <div>
                                     <label class="visually-hidden">Email Address</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Email Address" type="email"/>
+                                    <input name="email" required class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Email Address" type="email"/>
                                 </div>
                             </div>
                             <div class="space-y-md">
                                 <div>
                                     <label class="visually-hidden">Company Name</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Company Name" type="text"/>
+                                    <input name="Company" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Company Name" type="text"/>
                                 </div>
                                 <div>
                                     <label class="visually-hidden">Phone Number</label>
-                                    <input class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Phone Number" type="tel"/>
+                                    <input name="Phone" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Phone Number" type="tel"/>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <label class="visually-hidden">Additional Project Notes</label>
-                            <textarea class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Additional Project Notes" rows="4"></textarea>
+                            <textarea name="message" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Additional Project Notes" rows="4"></textarea>
                         </div>
                         <div class="flex items-center gap-sm py-sm">
-                            <input class="w-5 h-5 shrink-0 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
+                            <input name="Agreed to Terms" value="Yes" required class="w-5 h-5 shrink-0 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
                             <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
                         </div>
-                        <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg" type="submit">
+                        <p data-w3-status role="status" aria-live="polite" class="font-body-sm text-body-sm"></p>
+                        <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
                             Submit Quote Request
                         </button>
                     </form>
@@ -275,7 +284,10 @@ const legalText = pageData?.legalText || 'By submitting artwork to BadgeMaster M
 </Layout>
 
 <script>
+    import { initWeb3Forms } from '../lib/web3forms';
+
     const setupContact = () => {
+        initWeb3Forms();
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
