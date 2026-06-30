@@ -8,6 +8,14 @@ body {
     color: #1c1b1b;
 }
 
+/* Always reserve the vertical scrollbar's space so centred content (the header
+   nav, hero, sections) never shifts horizontally when moving between a page
+   that scrolls and one that doesn't — keeps the nav position identical on every
+   page. */
+html {
+    scrollbar-gutter: stable;
+}
+
 .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     display: inline-block;

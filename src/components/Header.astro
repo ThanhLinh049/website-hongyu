@@ -50,21 +50,26 @@ const headerClass = transparent
 
 <header id="site-header" data-transparent={transparent ? "true" : "false"} class={headerClass}>
     <div class="flex flex-col w-full max-w-container-max mx-auto px-gutter py-4">
-        <div class="flex items-center justify-between">
-            <a href="/" class="font-headline-md text-headline-md font-bold text-white flex items-center gap-2">
+        <div class="flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4">
+            <a href="/" class="font-headline-md text-headline-md font-bold text-white flex items-center gap-2 md:justify-self-start">
                 {logoImage?.node?.sourceUrl ? (
                     <img src={logoImage.node.sourceUrl} alt={logoText} decoding="async" class="h-10 w-auto object-contain" />
                 ) : (
                     <span>{logoText}</span>
                 )}
             </a>
-            <nav class="hidden md:flex flex-1 items-center justify-center gap-md px-8">
+            <nav class="hidden md:flex items-center justify-center gap-md md:justify-self-center">
                 {navigation.map(item => {
                     const hasDropdown = item.url === "/products" && productCategories.length > 0;
                     const active = isActive(item.url) || (item.url === "/products" && cleanPath.startsWith("/products"));
+                    // Active & inactive share the SAME box (py-1 + border-b-2) so only
+                    // colour/weight change between pages — no vertical/position shift.
+                    // Note: use pt-1/pb-1 (not py-1) so this doesn't match the
+                    // global CTA-button rule a[href][class*="border"][class*="py-"].
+                    const base = "pt-1 pb-1 border-b-2 font-label-md text-label-md transition-colors whitespace-nowrap";
                     const linkClass = active
-                        ? "text-white border-b-2 border-cta-orange pb-1 font-bold font-label-md text-label-md"
-                        : "text-white/75 font-medium font-label-md text-label-md hover:text-white transition-colors py-1";
+                        ? `${base} text-white border-cta-orange font-bold`
+                        : `${base} text-white/75 border-transparent font-medium hover:text-white`;
                     if (!hasDropdown) {
                         return (
                             <a id={`nav-${item.label.toLowerCase()}`} href={item.url} class={linkClass}>{item.label}</a>
@@ -89,7 +94,7 @@ const headerClass = transparent
                     );
                 })}
             </nav>
-            <div class="flex items-center gap-md">
+            <div class="flex items-center gap-md md:justify-self-end">
                 <a href={ctaUrl} class="bg-cta-orange text-white px-md py-2 font-label-bold text-label-bold hover:brightness-110 transition-all rounded-sm shadow-sm">
                     {ctaLabel}
                 </a>
