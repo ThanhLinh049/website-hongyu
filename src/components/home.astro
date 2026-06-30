@@ -288,22 +288,21 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                     <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{specialtiesTitle}</h2>
                     <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">{specialtiesSubtitle}</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
                     {specialties.map((item: any) => (
-                        <div class="bg-white group cursor-pointer border border-outline-variant overflow-hidden hover:shadow-lg transition-shadow">
-                            <div class="h-64 overflow-hidden">
+                        <a href={item.linkUrl || '#'} class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                            <div class="h-44 overflow-hidden bg-surface-container relative">
                                 {item.image?.node?.sourceUrl && (
-                                    <img alt={item.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src={item.image.node.sourceUrl} />
+                                    <img alt={item.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={item.image.node.sourceUrl} />
                                 )}
                             </div>
-                            <div class="p-md">
-                                <h3 class="font-headline-sm text-primary mb-2">{item.title}</h3>
-                                <p class="text-body-sm text-on-surface-variant mb-md">{item.description}</p>
-                                {item.linkLabel && (
-                                    <a href={item.linkUrl} class="text-primary font-bold text-sm uppercase tracking-widest hover:underline inline-block">{item.linkLabel}</a>
-                                )}
+                            <div class="p-md text-center flex flex-col flex-grow">
+                                <h3 class="font-headline-sm mb-xs group-hover:text-primary transition-colors">{item.title}</h3>
+                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
+                                    {item.linkLabel || 'Explore'} <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                                </span>
                             </div>
-                        </div>
+                        </a>
                     ))}
                 </div>
             </div>
