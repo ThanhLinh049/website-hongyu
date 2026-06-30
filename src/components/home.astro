@@ -20,6 +20,12 @@ const rel = (u: any) => {
   return m ? (m[1] || '/') : s;
 };
 
+// Strip any trailing arrow the client may have typed into a link label (e.g.
+// "Explore Flex →"), since the markup already renders an arrow icon — avoids a
+// double arrow.
+const noArrow = (s: any) =>
+  typeof s === 'string' ? s.replace(/[\s←-⇿➡➔»>›]+$/u, '').trim() : s;
+
 // 1. Fallbacks for Hero Slides
 const heroSlides = pageData?.heroSlides || [
   {
@@ -310,7 +316,7 @@ const displayPosts = posts.length > 0 ? posts : defaultPosts;
                             <div class="p-md text-center flex flex-col flex-grow">
                                 <h3 class="font-headline-sm mb-xs group-hover:text-primary transition-colors">{item.title}</h3>
                                 <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
-                                    {item.linkLabel || 'Explore'} <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                                    {noArrow(item.linkLabel) || 'Explore'} <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
                             </div>
                         </a>
