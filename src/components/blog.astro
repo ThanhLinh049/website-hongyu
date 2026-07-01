@@ -130,7 +130,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                         data-cats={catSlugs(post)}
                         data-search={searchData(post)}
                         class="blog-card bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary transition-all duration-300 group shadow-sm">
-                        <div class="aspect-[4/3] overflow-hidden">
+                        <div class="aspect-square overflow-hidden">
                             <img alt={post.title} loading="lazy" decoding="async"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 src={post.featuredImage?.node?.sourceUrl || '/demo/demo-13.webp'} />
@@ -146,9 +146,6 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                             <h3
                                 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors line-clamp-2">
                                 {post.title}</h3>
-                            {post.excerpt && (
-                                <p class="mt-sm font-body-sm text-on-surface-variant leading-relaxed line-clamp-2">{stripHtml(post.excerpt)}</p>
-                            )}
                             <div class="mt-auto pt-md">
                                 <span class="text-primary font-label-bold text-[12px] inline-flex items-center gap-1.5 group/btn">
                                     Read More

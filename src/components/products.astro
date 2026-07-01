@@ -99,7 +99,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
                     {catCards.map((c: any) => (
                         <a class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col" href={`/products/${c.slug}`}>
-                            <div class="h-44 overflow-hidden bg-surface-container relative">
+                            <div class="aspect-square overflow-hidden bg-surface-container relative">
                                 {catImg(c) && (
                                     <img alt={c.name} loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={catImg(c)} />
                                 )}
@@ -108,10 +108,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                                 )}
                             </div>
                             <div class="p-md text-center flex flex-col flex-grow">
-                                <h3 class="font-headline-sm mb-xs group-hover:text-primary transition-colors">{c.name}</h3>
-                                {c.categoryFields?.catTagline && (
-                                    <p class="text-[12px] text-outline uppercase tracking-wider font-bold mb-md">{c.categoryFields.catTagline}</p>
-                                )}
+                                <h3 class="font-headline-sm mb-md group-hover:text-primary transition-colors">{c.name}</h3>
                                 <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
                                     View Range <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
