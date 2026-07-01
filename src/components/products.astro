@@ -67,16 +67,16 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
 <Layout title="All Products | Hong Yu Manufacturing">
     <main class="w-full">
         <!-- Hero -->
-        <section class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
+        <section id="products-hero" class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
             <div class="container max-w-container-max mx-auto px-gutter relative z-10">
-                <div class="max-w-3xl">
+                <div class="max-w-4xl">
                     <div class="flex items-center gap-sm text-white/70 mb-sm">
                         <span class="w-12 h-px bg-white/40"></span>
                         <span class="text-label-bold uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
                     </div>
-                    <h1 class="font-display-lg text-display-lg text-white mb-md leading-tight" set:html={heroTitle}></h1>
+                    <h1 class="font-display-lg text-white mb-md text-[28px] sm:text-[34px] lg:text-[44px] leading-[1.15] tracking-tight" set:html={heroTitle}></h1>
                     <p class="font-body-lg text-white/80 mb-lg max-w-xl">{heroDescription}</p>
-                    <div class="flex flex-wrap gap-md">
+                    <div class="flex flex-wrap gap-md hero-actions">
                         {hasCatalogue && (
                             <a href={heroCtaUrl} class="bg-[#E67E22] text-white px-md py-3 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all text-center">{heroCtaLabel}</a>
                         )}

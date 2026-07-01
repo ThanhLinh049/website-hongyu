@@ -546,8 +546,11 @@ img {
     }
 
     /* Hero CTA hugs its text (not full-width) and stays left-aligned with the
-       heading/subheading — overrides the generic mobile full-width button rule. */
-    #hero-slider .hero-actions a {
+       heading/subheading — overrides the generic mobile full-width button rule.
+       Applies to the home slider and the product-page heroes. */
+    #hero-slider .hero-actions a,
+    #products-hero .hero-actions a,
+    #cat-header a[class*="py-"] {
         width: auto !important;
         max-width: 100% !important;
         align-self: flex-start !important;
