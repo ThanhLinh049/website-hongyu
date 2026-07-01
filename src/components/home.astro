@@ -197,7 +197,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
                     {specialties.map((item: any) => (
                         <a href={rel(item.linkUrl) || '#'} class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
-                            <div class="h-44 overflow-hidden bg-surface-container relative">
+                            <div class=" overflow-hidden bg-surface-container relative">
                                 {item.image?.node?.sourceUrl && (
                                     <img alt={item.title} loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={item.image.node.sourceUrl} />
                                 )}

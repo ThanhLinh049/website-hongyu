@@ -7,9 +7,6 @@ interface Props {
 
 const { pageData } = Astro.props;
 
-// Web3Forms access key (public by design). Set PUBLIC_WEB3FORMS_ACCESS_KEY in .env.
-const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
-
 const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
 const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
 const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.png';
@@ -86,10 +83,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                         <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">{formTitle}</h2>
                         <p class="font-body-md text-body-md text-on-surface-variant border-l-4 border-primary pl-4">{formIntro}</p>
                     </div>
-                    <form class="space-y-md quote-form" data-web3form data-w3-success="Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.">
-                        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-                        <input type="hidden" name="subject" value="New Quote Request — Hong Yu Website" />
-                        <input type="hidden" name="from_name" value="Hong Yu Website" />
+                    <form class="space-y-md quote-form" action="/api/contact" method="POST" data-ajax-form data-success="Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.">
                         <!-- Honeypot spam filter (hidden from humans) -->
                         <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
                         <!-- Product Details Group: Two-column focused -->
@@ -200,7 +194,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                             <input name="Agreed to Terms" value="Yes" required class="w-5 h-5 shrink-0 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
                             <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
                         </div>
-                        <p data-w3-status role="status" aria-live="polite" class="font-body-sm text-body-sm"></p>
+                        <p data-form-status role="status" aria-live="polite" class="font-body-sm text-body-sm"></p>
                         <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
                             Submit Quote Request
                         </button>
@@ -284,10 +278,10 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
 </Layout>
 
 <script>
-    import { initWeb3Forms } from '../lib/web3forms';
+    import { initForms } from '../lib/forms';
 
     const setupContact = () => {
-        initWeb3Forms();
+        initForms();
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
