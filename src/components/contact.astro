@@ -9,7 +9,7 @@ const { pageData } = Astro.props;
 
 const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
 const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
-const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.png';
+const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.webp';
 
 const supportCards = pageData?.supportCards?.length ? pageData.supportCards : [
   { icon: 'hub', title: 'Sales Inquiry', description: 'Discuss large-scale procurement and contract pricing with our account team.', linkText: 'sales@hongyu.com', linkUrl: 'mailto:sales@hongyu.com' },
@@ -31,7 +31,7 @@ const hours = pageData?.hours || 'Mon-Fri: 8:00 AM - 6:00 PM CST';
 const emailTitle = pageData?.emailTitle || 'General Mail';
 const email = pageData?.email || 'info@hongyu.com';
 const directionsUrl = pageData?.directionsUrl || '#';
-const mapImage = pageData?.mapImage?.node?.sourceUrl || '/demo/demo-09.png';
+const mapImage = pageData?.mapImage?.node?.sourceUrl || '/demo/demo-09.webp';
 
 // Socials
 const socialsTitle = pageData?.socialsTitle || 'Follow Our Process';

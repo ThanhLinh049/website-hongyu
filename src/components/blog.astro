@@ -96,7 +96,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                         <div class="lg:w-[60%] overflow-hidden">
                             <img alt={featuredPost.title} fetchpriority="high" decoding="async"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[240px]"
-                                src={featuredPost.featuredImage?.node?.sourceUrl || '/demo/demo-18.png'} />
+                                src={featuredPost.featuredImage?.node?.sourceUrl || '/demo/demo-18.webp'} />
                         </div>
                         <div class="lg:w-[40%] p-xl flex flex-col justify-center">
                             <div class="text-tertiary font-label-bold mb-base uppercase tracking-[0.2em] text-xs">Featured
@@ -133,7 +133,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                         <div class="aspect-[4/3] overflow-hidden">
                             <img alt={post.title} loading="lazy" decoding="async"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                src={post.featuredImage?.node?.sourceUrl || '/demo/demo-13.png'} />
+                                src={post.featuredImage?.node?.sourceUrl || '/demo/demo-13.webp'} />
                         </div>
                         <div class="p-md flex flex-col flex-grow">
                             <div class="flex items-center gap-base mb-sm">

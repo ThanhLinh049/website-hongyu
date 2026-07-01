@@ -15,7 +15,7 @@ export const HOME_HERO_SLIDES = [
     badgeText: 'Custom Manufacturing',
     heading: 'Custom Badges, Patches & Metal Products Made for Your Brand',
     subheading: 'High-precision manufacturing for elite organizations. From 3D PVC patches to premium metal badges, we deliver industrial-grade custom products globally.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-05.png' } },
+    backgroundImage: { node: { sourceUrl: '/demo/demo-05.webp' } },
     primaryCtaLabel: 'Get Your Free Design Proof',
     primaryCtaUrl: '/contact',
     secondaryCtaLabel: 'Explore Materials',
@@ -25,7 +25,7 @@ export const HOME_HERO_SLIDES = [
     badgeText: 'Flexible PVC Patches',
     heading: 'Durable PVC Patches Built for Color, Shape & Daily Wear',
     subheading: 'Create dimensional, weather-resistant patches with crisp edges, custom colors, and reliable backing options for uniforms, gear, and branded merchandise.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-16.png' } },
+    backgroundImage: { node: { sourceUrl: '/demo/demo-16.webp' } },
     primaryCtaLabel: 'Request PVC Quote',
     primaryCtaUrl: '/contact',
     secondaryCtaLabel: 'View PVC Options',
@@ -35,7 +35,7 @@ export const HOME_HERO_SLIDES = [
     badgeText: 'Premium Metal Products',
     heading: 'Premium Metal Badges & Emblems for High-End Brand Programs',
     subheading: 'Elevate uniforms, packaging, vehicles, and accessories with refined metal finishes, precise tooling, and production-ready quality control.',
-    backgroundImage: { node: { sourceUrl: '/demo/demo-04.png' } },
+    backgroundImage: { node: { sourceUrl: '/demo/demo-04.webp' } },
     primaryCtaLabel: 'Start Metal Project',
     primaryCtaUrl: '/contact',
     secondaryCtaLabel: 'See Portfolio',
@@ -52,10 +52,10 @@ export const HOME_TRUST_BAR = [
 ];
 
 export const HOME_SPECIALTIES = [
-  { image: { node: { sourceUrl: '/demo/demo-04.png' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex', linkUrl: '/products/flex' },
-  { image: { node: { sourceUrl: '/demo/demo-23.png' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Embroidery', linkUrl: '/products/embroidery' },
-  { image: { node: { sourceUrl: '/demo/demo-19.png' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC', linkUrl: '/products/pvc' },
-  { image: { node: { sourceUrl: '/demo/demo-14.png' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal', linkUrl: '/products/metal' }
+  { image: { node: { sourceUrl: '/demo/demo-04.webp' } }, title: 'Flex Badges', description: 'High-resolution textured finish with 4-way stretch material.', linkLabel: 'Explore Flex', linkUrl: '/products/flex' },
+  { image: { node: { sourceUrl: '/demo/demo-23.webp' } }, title: 'Embroidery', description: 'Classic premium stitch quality with up to 12 vibrant colors.', linkLabel: 'Explore Embroidery', linkUrl: '/products/embroidery' },
+  { image: { node: { sourceUrl: '/demo/demo-19.webp' } }, title: 'PVC Patches', description: 'Tactical-grade 3D layering, 100% waterproof and fade resistant.', linkLabel: 'Explore PVC', linkUrl: '/products/pvc' },
+  { image: { node: { sourceUrl: '/demo/demo-14.webp' } }, title: 'Metal Products', description: 'Die-struck lapel pins and badges with custom metal finishes.', linkLabel: 'Explore Metal', linkUrl: '/products/metal' }
 ];
 
 export const HOME_ADVANTAGES = [
@@ -112,22 +112,22 @@ export const HOME_CAPABILITIES = [
 export const HOME_PORTFOLIOS = [
   {
     title: 'Elite Tactical Badge', slug: 'elite-tactical-badge',
-    featuredImage: { node: { sourceUrl: '/demo/demo-24.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-24.webp' } },
     portfolioCategories: { nodes: [{ name: 'Flex Badges' }] }
   },
   {
     title: 'Heritage Airline Crest', slug: 'heritage-airline-crest',
-    featuredImage: { node: { sourceUrl: '/demo/demo-06.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-06.webp' } },
     portfolioCategories: { nodes: [{ name: 'Embroidery' }] }
   },
   {
     title: 'Maritime Service Coin', slug: 'maritime-service-coin',
-    featuredImage: { node: { sourceUrl: '/demo/demo-08.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-08.webp' } },
     portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
   },
   {
     title: 'Luxury Automotive Badge', slug: 'luxury-automotive-badge',
-    featuredImage: { node: { sourceUrl: '/demo/demo-17.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-17.webp' } },
     portfolioCategories: { nodes: [{ name: 'Metal Products' }] }
   }
 ];
@@ -137,21 +137,21 @@ export const HOME_POSTS = [
     title: 'PVC vs. Embroidery: Choosing for Performance',
     slug: 'pvc-vs-embroidery',
     excerpt: 'Detailed comparison of durability and design fidelity for tactical gear.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-22.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-22.webp' } },
     categories: { nodes: [{ name: 'Tech Trends' }] }
   },
   {
     title: 'Understanding Bleeds & Borders for CNC Milling',
     slug: 'understanding-bleeds-borders',
     excerpt: 'Crucial artwork guidelines for creating metallic pins with enamel color separation.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-20.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-20.webp' } },
     categories: { nodes: [{ name: 'Ordering Guide' }] }
   },
   {
     title: 'What are Flex Badges? The Modern Standard',
     slug: 'what-are-flex-badges',
     excerpt: 'Discover the texture, feel, and weight advantages of our patented metallic-polymer badges.',
-    featuredImage: { node: { sourceUrl: '/demo/demo-07.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-07.webp' } },
     categories: { nodes: [{ name: 'Material Spec' }] }
   }
 ];
@@ -164,7 +164,7 @@ export const BLOG_POSTS = [
     slug: 'how-to-choose-badge-material',
     excerpt: 'Navigating the complexities of flex badges versus traditional metal can be challenging. We break down durability, cost-efficiency, and brand impact for high-volume corporate orders.',
     date: '2023-10-24T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-18.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-18.webp' } },
     categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
   },
   {
@@ -172,7 +172,7 @@ export const BLOG_POSTS = [
     slug: 'optimizing-logo-files',
     excerpt: 'Learn the essential file types and vector requirements to ensure your custom badges maintain perfect fidelity during the extrusion process.',
     date: '2023-10-24T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-13.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-13.webp' } },
     categories: { nodes: [{ name: 'Design Tips', slug: 'design-tips' }] }
   },
   {
@@ -180,7 +180,7 @@ export const BLOG_POSTS = [
     slug: 'pvc-vs-tpu-materials',
     excerpt: 'A technical comparison of polymer performance under extreme heat and chemical exposure in industrial workwear environments.',
     date: '2023-10-18T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-12.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-12.webp' } },
     categories: { nodes: [{ name: 'Manufacturing', slug: 'manufacturing' }] }
   },
   {
@@ -188,7 +188,7 @@ export const BLOG_POSTS = [
     slug: 'reducing-lead-times',
     excerpt: 'Strategies for supply chain management and proof approval to shave weeks off your custom manufacturing timeline.',
     date: '2023-10-12T00:00:00',
-    featuredImage: { node: { sourceUrl: '/demo/demo-25.png' } },
+    featuredImage: { node: { sourceUrl: '/demo/demo-25.webp' } },
     categories: { nodes: [{ name: 'Ordering Guide', slug: 'ordering-guide' }] }
   }
 ];
@@ -196,10 +196,10 @@ export const BLOG_POSTS = [
 /* --------------------------- Products page --------------------------- */
 
 export const PRODUCTS_CATEGORIES = [
-  { name: 'Flex Badges', slug: 'flex', count: 3, categoryFields: { catTagline: 'Metallic Polymers', catHeroImage: { node: { sourceUrl: '/demo/demo-04.png' } } } },
-  { name: 'Embroidery', slug: 'embroidery', count: 3, categoryFields: { catTagline: 'High-Density Thread', catHeroImage: { node: { sourceUrl: '/demo/demo-23.png' } } } },
-  { name: 'PVC Patches', slug: 'pvc', count: 3, categoryFields: { catTagline: '3D Tactical Polymer', catHeroImage: { node: { sourceUrl: '/demo/demo-19.png' } } } },
-  { name: 'Metal Products', slug: 'metal', count: 3, categoryFields: { catTagline: 'Die-Cast Alloys', catHeroImage: { node: { sourceUrl: '/demo/demo-14.png' } } } }
+  { name: 'Flex Badges', slug: 'flex', count: 3, categoryFields: { catTagline: 'Metallic Polymers', catHeroImage: { node: { sourceUrl: '/demo/demo-04.webp' } } } },
+  { name: 'Embroidery', slug: 'embroidery', count: 3, categoryFields: { catTagline: 'High-Density Thread', catHeroImage: { node: { sourceUrl: '/demo/demo-23.webp' } } } },
+  { name: 'PVC Patches', slug: 'pvc', count: 3, categoryFields: { catTagline: '3D Tactical Polymer', catHeroImage: { node: { sourceUrl: '/demo/demo-19.webp' } } } },
+  { name: 'Metal Products', slug: 'metal', count: 3, categoryFields: { catTagline: 'Die-Cast Alloys', catHeroImage: { node: { sourceUrl: '/demo/demo-14.webp' } } } }
 ];
 
 // Demo product grid shown on the Products page when offline (12 items across the
@@ -212,25 +212,25 @@ const demoProd = (title: string, slug: string, cat: string, catSlug: string, img
   finishes: { nodes: [] }, backings: { nodes: [] },
 });
 export const PRODUCTS_LIST = [
-  demoProd('Tactical Flex Badge', 'tactical-flex-badge', 'Flex Badges', 'flex', '/demo/demo-04.png'),
-  demoProd('Corporate Flex Emblem', 'corporate-flex-emblem', 'Flex Badges', 'flex', '/demo/demo-05.png'),
-  demoProd('Sport Team Flex Patch', 'sport-team-flex-patch', 'Flex Badges', 'flex', '/demo/demo-06.png'),
-  demoProd('Heritage Embroidered Crest', 'heritage-embroidered-crest', 'Embroidery', 'embroidery', '/demo/demo-07.png'),
-  demoProd('Military Bullion Patch', 'military-bullion-patch', 'Embroidery', 'embroidery', '/demo/demo-08.png'),
-  demoProd('Custom Logo Embroidery', 'custom-logo-embroidery', 'Embroidery', 'embroidery', '/demo/demo-09.png'),
-  demoProd('3D PVC Morale Patch', '3d-pvc-morale-patch', 'PVC Patches', 'pvc', '/demo/demo-12.png'),
-  demoProd('Glow PVC Tactical Badge', 'glow-pvc-tactical-badge', 'PVC Patches', 'pvc', '/demo/demo-13.png'),
-  demoProd('Waterproof PVC Label', 'waterproof-pvc-label', 'PVC Patches', 'pvc', '/demo/demo-16.png'),
-  demoProd('Die-Struck Lapel Pin', 'die-struck-lapel-pin', 'Metal Products', 'metal', '/demo/demo-17.png'),
-  demoProd('Antique Brass Coin', 'antique-brass-coin', 'Metal Products', 'metal', '/demo/demo-18.png'),
-  demoProd('Enamel Metal Badge', 'enamel-metal-badge', 'Metal Products', 'metal', '/demo/demo-24.png'),
+  demoProd('Tactical Flex Badge', 'tactical-flex-badge', 'Flex Badges', 'flex', '/demo/demo-04.webp'),
+  demoProd('Corporate Flex Emblem', 'corporate-flex-emblem', 'Flex Badges', 'flex', '/demo/demo-05.webp'),
+  demoProd('Sport Team Flex Patch', 'sport-team-flex-patch', 'Flex Badges', 'flex', '/demo/demo-06.webp'),
+  demoProd('Heritage Embroidered Crest', 'heritage-embroidered-crest', 'Embroidery', 'embroidery', '/demo/demo-07.webp'),
+  demoProd('Military Bullion Patch', 'military-bullion-patch', 'Embroidery', 'embroidery', '/demo/demo-08.webp'),
+  demoProd('Custom Logo Embroidery', 'custom-logo-embroidery', 'Embroidery', 'embroidery', '/demo/demo-09.webp'),
+  demoProd('3D PVC Morale Patch', '3d-pvc-morale-patch', 'PVC Patches', 'pvc', '/demo/demo-12.webp'),
+  demoProd('Glow PVC Tactical Badge', 'glow-pvc-tactical-badge', 'PVC Patches', 'pvc', '/demo/demo-13.webp'),
+  demoProd('Waterproof PVC Label', 'waterproof-pvc-label', 'PVC Patches', 'pvc', '/demo/demo-16.webp'),
+  demoProd('Die-Struck Lapel Pin', 'die-struck-lapel-pin', 'Metal Products', 'metal', '/demo/demo-17.webp'),
+  demoProd('Antique Brass Coin', 'antique-brass-coin', 'Metal Products', 'metal', '/demo/demo-18.webp'),
+  demoProd('Enamel Metal Badge', 'enamel-metal-badge', 'Metal Products', 'metal', '/demo/demo-24.webp'),
 ];
 
 export const PRODUCTS_TEXTURES = [
-  { textureName: 'Matte', swatchImage: { node: { sourceUrl: '/demo/demo-09.png' } } },
-  { textureName: 'Shiny', swatchImage: { node: { sourceUrl: '/demo/demo-12.png' } } },
-  { textureName: 'Brushed', swatchImage: { node: { sourceUrl: '/demo/demo-13.png' } } },
-  { textureName: 'Textured', swatchImage: { node: { sourceUrl: '/demo/demo-22.png' } } }
+  { textureName: 'Matte', swatchImage: { node: { sourceUrl: '/demo/demo-09.webp' } } },
+  { textureName: 'Shiny', swatchImage: { node: { sourceUrl: '/demo/demo-12.webp' } } },
+  { textureName: 'Brushed', swatchImage: { node: { sourceUrl: '/demo/demo-13.webp' } } },
+  { textureName: 'Textured', swatchImage: { node: { sourceUrl: '/demo/demo-22.webp' } } }
 ];
 
 export const PRODUCTS_BACKINGS = [
@@ -240,9 +240,9 @@ export const PRODUCTS_BACKINGS = [
 /* --------------------------- Portfolio page -------------------------- */
 
 export const PORTFOLIO_PROJECTS = [
-  { title: 'Elite Tactical Badge', slug: 'elite-tactical-badge', featuredImage: { node: { sourceUrl: '/demo/demo-05.png' } }, portfolioFields: { specs: [{ label: 'Material', value: '3D Flexible PVC' }, { label: 'Finish', value: 'Matte Non-Reflective' }] }, portfolioCategories: { nodes: [{ name: 'Flex Badges', slug: 'flex' }] } },
-  { title: 'Heritage Airline Crest', slug: 'heritage-airline-crest', featuredImage: { node: { sourceUrl: '/demo/demo-01.png' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Gold Metallic Thread' }, { label: 'Finish', value: 'High-Density Satin' }] }, portfolioCategories: { nodes: [{ name: 'Embroidery', slug: 'embroidery' }] } },
-  { title: 'Maritime Service Coin', slug: 'maritime-service-coin', featuredImage: { node: { sourceUrl: '/demo/demo-02.png' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Antique Bronze' }, { label: 'Finish', value: '3D Die-Struck Relief' }] }, portfolioCategories: { nodes: [{ name: 'Metal Products', slug: 'metal' }] } }
+  { title: 'Elite Tactical Badge', slug: 'elite-tactical-badge', featuredImage: { node: { sourceUrl: '/demo/demo-05.webp' } }, portfolioFields: { specs: [{ label: 'Material', value: '3D Flexible PVC' }, { label: 'Finish', value: 'Matte Non-Reflective' }] }, portfolioCategories: { nodes: [{ name: 'Flex Badges', slug: 'flex' }] } },
+  { title: 'Heritage Airline Crest', slug: 'heritage-airline-crest', featuredImage: { node: { sourceUrl: '/demo/demo-01.webp' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Gold Metallic Thread' }, { label: 'Finish', value: 'High-Density Satin' }] }, portfolioCategories: { nodes: [{ name: 'Embroidery', slug: 'embroidery' }] } },
+  { title: 'Maritime Service Coin', slug: 'maritime-service-coin', featuredImage: { node: { sourceUrl: '/demo/demo-02.webp' } }, portfolioFields: { specs: [{ label: 'Material', value: 'Antique Bronze' }, { label: 'Finish', value: '3D Die-Struck Relief' }] }, portfolioCategories: { nodes: [{ name: 'Metal Products', slug: 'metal' }] } }
 ];
 
 export const PORTFOLIO_CATEGORIES = [
