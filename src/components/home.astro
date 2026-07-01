@@ -34,6 +34,12 @@ const noArrow = (s: any) =>
 // 1. Fallbacks for Hero Slides
 const heroSlides = pageData?.heroSlides || HOME_HERO_SLIDES;
 
+// Single shared hero button — the SAME button shows on all slides. Configured
+// once (Home page → Hero Button in WP admin); sensible fallback keeps a working
+// CTA to /contact even when left blank.
+const heroCtaLabel = pageData?.heroCtaLabel || 'Request a Quote';
+const heroCtaUrl = rel(pageData?.heroCtaUrl) || '/contact';
+
 // 1b. Hero trust bar (running strip under the banner)
 const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0) ? pageData.heroTrustBar : HOME_TRUST_BAR;
 
@@ -125,29 +131,21 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                     )}
                     <div class="hero-overlay"></div>
                     <div class="relative z-10 max-w-container-max mx-auto px-gutter min-h-[560px] md:min-h-[640px] flex items-center">
-                        <div class="max-w-3xl py-xl hero-content">
+                        <div class="max-w-4xl py-xl hero-content">
                             <p class="font-label-bold text-label-bold text-cta-orange uppercase tracking-widest mb-sm">
                                 {slide.badgeText}
                             </p>
-                            <h1 class="font-display-lg text-display-lg text-white mb-md lg:text-[56px] leading-[1.1]">
+                            <h1 class="font-display-lg text-white mb-md text-[28px] sm:text-[34px] lg:text-[44px] leading-[1.15] tracking-tight line-clamp-2">
                                 {slide.heading}
                             </h1>
                             <p class="font-body-lg text-body-lg text-white/85 mb-xl max-w-2xl">
                                 {slide.subheading}
                             </p>
                             <div class="flex flex-wrap gap-md mb-lg hero-actions">
-                                {slide.primaryCtaLabel && (
-                                    <a href={rel(slide.primaryCtaUrl)}
-                                        class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:opacity-95 transition-all text-center">
-                                        {slide.primaryCtaLabel}
-                                    </a>
-                                )}
-                                {slide.secondaryCtaLabel && (
-                                    <a href={rel(slide.secondaryCtaUrl)}
-                                        class="inline-block bg-white text-primary px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:bg-white/90 transition-all text-center">
-                                        {slide.secondaryCtaLabel}
-                                    </a>
-                                )}
+                                <a href={heroCtaUrl}
+                                    class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:opacity-95 transition-all text-center">
+                                    {heroCtaLabel}
+                                </a>
                             </div>
                         </div>
                     </div>

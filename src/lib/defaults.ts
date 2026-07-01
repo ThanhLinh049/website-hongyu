@@ -16,30 +16,18 @@ export const HOME_HERO_SLIDES = [
     heading: 'Custom Badges, Patches & Metal Products Made for Your Brand',
     subheading: 'High-precision manufacturing for elite organizations. From 3D PVC patches to premium metal badges, we deliver industrial-grade custom products globally.',
     backgroundImage: { node: { sourceUrl: '/demo/demo-05.webp' } },
-    primaryCtaLabel: 'Get Your Free Design Proof',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'Explore Materials',
-    secondaryCtaUrl: '/products'
   },
   {
     badgeText: 'Flexible PVC Patches',
     heading: 'Durable PVC Patches Built for Color, Shape & Daily Wear',
     subheading: 'Create dimensional, weather-resistant patches with crisp edges, custom colors, and reliable backing options for uniforms, gear, and branded merchandise.',
     backgroundImage: { node: { sourceUrl: '/demo/demo-16.webp' } },
-    primaryCtaLabel: 'Request PVC Quote',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'View PVC Options',
-    secondaryCtaUrl: '/products#pvc-deep-dive'
   },
   {
     badgeText: 'Premium Metal Products',
     heading: 'Premium Metal Badges & Emblems for High-End Brand Programs',
     subheading: 'Elevate uniforms, packaging, vehicles, and accessories with refined metal finishes, precise tooling, and production-ready quality control.',
     backgroundImage: { node: { sourceUrl: '/demo/demo-04.webp' } },
-    primaryCtaLabel: 'Start Metal Project',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'See Portfolio',
-    secondaryCtaUrl: '/portfolio'
   }
 ];
 
