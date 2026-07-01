@@ -84,8 +84,6 @@ const ctaTitle = pageData?.ctaTitle || 'Ready to Elevate Your Brand?';
 const ctaText = pageData?.ctaText || 'Upload your artwork and receive a free digital proof with detailed material recommendations in 24 hours.';
 const ctaBtnLabel = pageData?.ctaBtnLabel || 'Start Free Design Proof';
 const ctaBtnUrl = rel(pageData?.ctaBtnUrl) || '/contact';
-const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Contact Sales Team';
-const ctaSecondaryUrl = rel(pageData?.ctaSecondaryUrl) || '/contact';
 
 // Section headings + CTAs (Recent Work & Insights)
 const portfolioSectionTitle = pageData?.portfolioSectionTitle || 'Our Recent Work';
@@ -390,14 +388,10 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             <div class="max-w-container-max mx-auto px-gutter">
                 <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{ctaTitle}</h2>
                 <p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">{ctaText}</p>
-                <div class="flex flex-col md:flex-row justify-center items-center gap-md">
+                <div class="flex justify-center items-center gap-md">
                     <a href={ctaBtnUrl}
-                        class="w-full max-w-xs md:w-auto md:max-w-none bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
+                        class="w-full max-w-xs md:w-auto bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
                         {ctaBtnLabel}
-                    </a>
-                    <a href={ctaSecondaryUrl}
-                        class="w-full max-w-xs md:w-auto md:max-w-none bg-primary text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
-                        {ctaSecondaryLabel}
                     </a>
                 </div>
             </div>
