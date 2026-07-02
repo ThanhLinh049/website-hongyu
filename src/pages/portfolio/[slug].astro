@@ -108,7 +108,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                 {cat.name}
               </span>
             )}
-            <h1 class="font-display-lg text-display-lg text-on-surface leading-[1.1] mb-6">
+            <h1 class="font-display-lg text-on-surface mb-6 text-[22px] sm:text-[28px] lg:text-[40px] leading-[1.15] tracking-tight">
               {project.title}
             </h1>
           </div>
@@ -166,7 +166,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               {related.slice(0, 4).map((p: any) => (
                 <a href={`/portfolio/${p.slug}`}
-                  class="group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300">
+                  class="card-lift group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:border-primary/30">
                   <div class="relative aspect-square overflow-hidden bg-surface-container-high">
                     {relImg(p) && (
                       <img alt={p.title} loading="lazy" decoding="async"
@@ -193,7 +193,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       <section class="mt-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-primary rounded-3xl overflow-hidden relative shadow-2xl">
           <div class="relative z-10 px-6 py-16 md:py-20 text-center text-white">
-            <h2 class="font-display-lg text-display-lg mb-4">Ready to start your project?</h2>
+            <h2 class="font-headline-lg text-headline-lg mb-4">Ready to start your project?</h2>
             <p class="text-primary-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
               Our design team is ready to translate your brand vision into a physical masterpiece. Get a free digital proof today.
             </p>

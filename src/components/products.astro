@@ -8,9 +8,10 @@ interface Props {
   products?: any[];
   finishes?: any[];
   backings?: any[];
+  seo?: any;
 }
 
-const { pageData, categories = [], products = [], finishes = [], backings = [] } = Astro.props;
+const { pageData, categories = [], products = [], finishes = [], backings = [], seo } = Astro.props;
 
 // Hero
 const heroEyebrow = pageData?.heroEyebrow || 'B2B Industrial Manufacturing';
@@ -22,6 +23,12 @@ const heroCtaUrl = pageData?.heroCtaUrl || '';
 const hasCatalogue = !!heroCtaLabel && !!heroCtaUrl && heroCtaUrl !== '#';
 const heroSecondaryLabel = pageData?.heroSecondaryLabel || 'Schedule Consultation';
 const heroSecondaryUrl = pageData?.heroSecondaryUrl || '/contact';
+const heroImage = pageData?.heroImage?.node?.sourceUrl || '';
+
+// Section headings (client-editable via WP)
+const categoriesTitle = pageData?.categoriesTitle || 'Explore Our Product Ranges';
+const categoriesSubtitle = pageData?.categoriesSubtitle || 'Choose a category to view its full catalogue, technical specifications, and finishes.';
+const allProductsTitle = pageData?.allProductsTitle || 'All Products';
 
 // Category cards (from the product-category terms)
 const catCards = (categories && categories.length > 0) ? categories : PRODUCTS_CATEGORIES;
@@ -64,17 +71,22 @@ const ctaSecondaryLabel = pageData?.ctaSecondaryLabel || 'Request Free Sample Ki
 const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
 ---
 
-<Layout title="All Products | Hong Yu Manufacturing">
+<Layout title="All Products | Hong Yu Manufacturing" seo={seo} description={heroDescription}>
     <main class="w-full">
-        <!-- Hero -->
+        <!-- Hero (image banner, left-aligned — consistent with the Showcase & Blog pages) -->
         <section id="products-hero" class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
+            {heroImage && (
+                <div class="absolute inset-0 pointer-events-none">
+                    <img alt={heroEyebrow} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroImage} />
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/40"></div>
+                </div>
+            )}
             <div class="container max-w-container-max mx-auto px-gutter relative z-10">
-                <div class="max-w-4xl">
-                    <div class="flex items-center gap-sm text-white/70 mb-sm">
-                        <span class="w-12 h-px bg-white/40"></span>
-                        <span class="text-label-bold uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
+                <div class="max-w-3xl">
+                    <div class="flex items-center gap-sm mb-sm">
+                        <span class="font-label-bold text-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
                     </div>
-                    <h1 class="font-display-lg text-white mb-md text-[28px] sm:text-[34px] lg:text-[44px] leading-[1.15] tracking-tight" set:html={heroTitle}></h1>
+                    <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight" set:html={heroTitle}></h1>
                     <p class="font-body-lg text-white/80 mb-lg max-w-xl">{heroDescription}</p>
                     <div class="flex flex-wrap gap-md hero-actions">
                         {hasCatalogue && (
@@ -86,19 +98,18 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                     </div>
                 </div>
             </div>
-            <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-[-20deg] translate-x-1/2"></div>
         </section>
 
         <!-- Browse by category -->
         <section class="py-xl bg-surface-container-low border-b border-outline-variant">
             <div class="container max-w-container-max mx-auto px-gutter">
                 <div class="mb-lg text-center max-w-2xl mx-auto">
-                    <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">Explore Our Product Ranges</h2>
-                    <p class="text-on-surface-variant font-body-md">Choose a category to view its full catalogue, technical specifications, and finishes.</p>
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{categoriesTitle}</h2>
+                    {categoriesSubtitle && (<p class="text-on-surface-variant font-body-md">{categoriesSubtitle}</p>)}
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-gutter">
                     {catCards.map((c: any) => (
-                        <a class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col" href={`/products/${c.slug}`}>
+                        <a class="group card-lift bg-white border border-outline-variant hover:border-primary overflow-hidden flex flex-col" href={`/products/${c.slug}`}>
                             <div class="aspect-square overflow-hidden bg-surface-container relative">
                                 {catImg(c) && (
                                     <img alt={c.name} loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={catImg(c)} />
@@ -107,10 +118,10 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                                     <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-primary shadow-sm">{c.count} items</span>
                                 )}
                             </div>
-                            <div class="p-md text-center flex flex-col flex-grow">
-                                <h3 class="font-headline-sm mb-md group-hover:text-primary transition-colors">{c.name}</h3>
-                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
-                                    View Range <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                            <div class="p-3 sm:p-md text-center flex flex-col flex-grow">
+                                <h3 class="font-headline-sm text-sm sm:text-base mb-xs group-hover:text-primary transition-colors">{c.name}</h3>
+                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-[11px] sm:text-sm uppercase tracking-wide group-hover:text-primary transition-colors">
+                                    View Range <span class="material-symbols-outlined text-[15px] sm:text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
                             </div>
                         </a>
@@ -123,53 +134,58 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
         <section class="py-xl">
             <div class="container max-w-container-max mx-auto px-gutter">
                 <div class="mb-lg">
-                    <h2 class="font-headline-lg text-headline-lg text-primary">All Products</h2>
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{allProductsTitle}</h2>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-md lg:gap-xl">
-                    <!-- Sidebar (sticky) -->
-                    <aside class="w-full lg:w-72 flex-shrink-0 lg:sticky lg:top-[96px] self-start space-y-md">
-                        <div>
-                            <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Quick Search</h4>
-                            <div class="relative">
-                                <input id="prod-search" type="text" placeholder="SKU or Name..." class="w-full pl-base pr-xl py-2 bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
-                                <span class="material-symbols-outlined absolute right-base top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-md lg:gap-gutter items-start">
+                    <!-- Sidebar: 1 of 4 equal columns (sticky). Search + filters as one clear panel, split by a divider. -->
+                    <aside class="lg:col-span-1 lg:sticky lg:top-[96px]">
+                        <div class="bg-white border border-outline-variant rounded-lg divide-y divide-outline-variant overflow-hidden">
+                            <!-- Search -->
+                            <div class="p-md">
+                                <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Quick Search</h4>
+                                <div class="relative">
+                                    <input id="prod-search" type="text" placeholder="SKU or Name..." class="w-full pl-3 pr-9 py-2 rounded bg-surface-container-low border border-outline-variant focus:bg-white focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
+                                    <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span>
+                                </div>
+                            </div>
+                            <!-- Filters -->
+                            <div class="p-md space-y-md">
+                                {finishFacet.length > 0 && (
+                                    <div>
+                                        <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Finish</h4>
+                                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-x-md gap-y-xs">
+                                            {finishFacet.map((f: any) => (
+                                                <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+                                                    <input type="checkbox" class="facet-finish accent-primary w-4 h-4" value={f.slug} />
+                                                    {f.name}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {backingFacet.length > 0 && (
+                                    <div>
+                                        <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Backing</h4>
+                                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-x-md gap-y-xs">
+                                            {backingFacet.map((b: any) => (
+                                                <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+                                                    <input type="checkbox" class="facet-backing accent-primary w-4 h-4" value={b.slug} />
+                                                    {b.name}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                <button id="reset-filters" type="button" class="w-full py-2 rounded bg-surface-container text-label-bold uppercase text-[11px] tracking-widest hover:bg-outline-variant transition-colors">Reset All Filters</button>
                             </div>
                         </div>
-                        {finishFacet.length > 0 && (
-                            <div>
-                                <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Finish</h4>
-                                <div class="grid grid-cols-2 lg:grid-cols-1 gap-x-md gap-y-xs">
-                                    {finishFacet.map((f: any) => (
-                                        <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
-                                            <input type="checkbox" class="facet-finish accent-primary w-4 h-4" value={f.slug} />
-                                            {f.name}
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        {backingFacet.length > 0 && (
-                            <div>
-                                <h4 class="font-label-bold text-primary text-[11px] uppercase tracking-widest mb-sm">Backing</h4>
-                                <div class="grid grid-cols-2 lg:grid-cols-1 gap-x-md gap-y-xs">
-                                    {backingFacet.map((b: any) => (
-                                        <label class="flex items-center gap-sm text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
-                                            <input type="checkbox" class="facet-backing accent-primary w-4 h-4" value={b.slug} />
-                                            {b.name}
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        <button id="reset-filters" type="button" class="w-full py-sm bg-surface-container text-label-bold uppercase text-[11px] tracking-widest hover:bg-outline-variant transition-colors">Reset All Filters</button>
                     </aside>
 
-                    <!-- Grid column -->
-                    <div class="flex-1">
+                    <!-- Grid column: spans 3 of 4 columns, 3-up card grid (each card = same width as the filter) -->
+                    <div class="lg:col-span-3">
                         <div class="flex items-center justify-between mb-lg border-b border-outline-variant pb-base">
                             <p class="text-sm text-outline">Showing <span id="shown-count" class="text-on-background font-bold">0</span> of <span id="total-count" class="text-on-background font-bold">{allProducts.length}</span> products</p>
                             <div class="flex items-center gap-xs">
-                                <span class="text-[12px] font-bold text-outline uppercase hidden sm:inline">Sort</span>
                                 <select id="prod-sort" aria-label="Sort products" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
                                     <option value="" disabled selected hidden>Sort by</option>
                                     <option value="default">Featured</option>
@@ -182,7 +198,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                             <div id="prod-grid" class="grid grid-cols-2 md:grid-cols-3 gap-md">
                                 {allProducts.map((p: any) => (
                                     <a href={prodLink(p)}
-                                        class="product-card bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all duration-300 group overflow-hidden flex flex-col"
+                                        class="product-card card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col"
                                         data-name={(p.title || '').toLowerCase()} data-date={p.date || ''} data-finish={prodFinishes(p)} data-backing={prodBackings(p)}>
                                         <div class="aspect-square bg-surface-container relative overflow-hidden">
                                             {prodImg(p) && (<img loading="lazy" decoding="async" src={prodImg(p)} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
@@ -266,13 +282,13 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
         <!-- Final CTA -->
         <section class="py-xl bg-primary text-white text-center">
             <div class="container max-w-container-max mx-auto px-gutter">
-                <h2 class="font-display-lg text-display-lg mb-md">{ctaTitle}</h2>
+                <h2 class="font-headline-lg text-headline-lg mb-md">{ctaTitle}</h2>
                 <p class="font-body-lg text-white/70 mb-xl max-w-2xl mx-auto">{ctaText}</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-md">
                     {ctaPrimaryLabel && (
                         <a href={ctaPrimaryUrl} class="inline-block bg-[#E67E22] text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg hover:shadow-2xl transition-all sm:w-auto text-center font-black">{ctaPrimaryLabel}</a>
                     )}
-                    {ctaSecondaryLabel && (
+                    {ctaSecondaryLabel && ctaSecondaryUrl !== ctaPrimaryUrl && (
                         <a href={ctaSecondaryUrl} class="inline-block border border-white/30 hover:bg-white/10 text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg transition-all sm:w-auto text-center font-black">{ctaSecondaryLabel}</a>
                     )}
                 </div>

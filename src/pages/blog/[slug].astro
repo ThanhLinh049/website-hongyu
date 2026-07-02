@@ -1,39 +1,9 @@
 ---
+export const prerender = false; // SSR: renders any post slug live from WP — consistent with portfolio & product detail; new posts appear instantly (ISR) with no rebuild.
 import Layout from '../../layouts/Layout.astro';
 import { wpQuery } from '../../lib/api';
 import { SEO_FRAGMENT } from '../../lib/seo';
 import { buildToc } from '../../lib/toc';
-
-export async function getStaticPaths() {
-  let paths = [];
-  try {
-    const data = await wpQuery({
-      query: `
-        query GetAllSlugs {
-          posts(first: 100) {
-            nodes {
-              slug
-            }
-          }
-        }
-      `
-    });
-    if (data?.posts?.nodes) {
-      paths = data.posts.nodes.map((post: any) => ({
-        params: { slug: post.slug }
-      }));
-    }
-  } catch (e) {
-    console.warn("Failed to fetch post slugs for static paths.", e);
-  }
-
-  // Always include at least hello-world as fallback
-  if (paths.length === 0) {
-    paths = [{ params: { slug: 'hello-world' } }];
-  }
-
-  return paths;
-}
 
 const { slug } = Astro.params;
 
@@ -135,7 +105,7 @@ const formatDate = (dateStr: string) => {
                   {post.categories.nodes[0].name}
                 </span>
               )}
-              <h1 class="font-display-lg text-display-lg text-white mb-md leading-tight">{post.title}</h1>
+              <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[28px] lg:text-[40px] leading-[1.15] tracking-tight">{post.title}</h1>
               <div class="flex items-center gap-lg text-white/60 font-body-sm">
                 {post.author?.node?.name && (
                   <div class="flex items-center gap-2">

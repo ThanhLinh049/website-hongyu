@@ -116,26 +116,25 @@ function shell(opts: {
 </html>`;
 }
 
-/** Contact / quote-request email. */
+/** Contact / quote-request email.
+ * The quote form is builder-driven (fields are configured in WP admin), so we
+ * render EVERY submitted field generically — using each field's label as the
+ * row label — in the order the visitor filled them. Internal/technical keys are
+ * skipped. */
 export function renderContactEmail(fields: Record<string, any>, siteUrl?: string) {
-  const ordered: EmailField[] = [
-    { label: 'Name', value: fields.name },
-    { label: 'Email', value: fields.email },
-    { label: 'Company', value: fields.Company ?? fields.company },
-    { label: 'Phone', value: fields.Phone ?? fields.phone },
-    { label: 'Product Type', value: fields['Product Type'] },
-    { label: 'Estimated Quantity', value: fields['Estimated Quantity'] },
-    { label: 'Dimensions', value: fields.Dimensions },
-    { label: 'Finish', value: fields.Finish },
-    { label: 'Backing Attachment', value: fields['Backing Attachment'] },
-    { label: 'Requested Lead Time', value: fields['Requested Lead Time'] },
-    { label: 'Project Notes', value: fields.message },
-    { label: 'Agreed to Terms', value: fields['Agreed to Terms'] },
-  ];
+  const skip = new Set(['botcheck', 'attachment']);
+  const ordered: EmailField[] = Object.entries(fields)
+    .filter(([k]) => !skip.has(k))
+    .map(([label, value]) => ({ label, value }));
+  // Best-effort "who" for the subject line: the first field whose label mentions "name".
+  const nameEntry = Object.entries(fields).find(
+    ([k, v]) => /name/i.test(k) && String(v ?? '').trim() !== '',
+  );
+  const who = nameEntry ? String(nameEntry[1]) : 'Hong Yu Website';
   const heading = 'New Quote Request';
-  const intro = `You have a new manufacturing quote request from ${fields.name || 'a website visitor'}.`;
+  const intro = `You have a new manufacturing quote request from ${who}.`;
   return {
-    subject: `New Quote Request — ${fields.name || 'Hong Yu Website'}`,
+    subject: `New Quote Request — ${who}`,
     html: shell({ preheader: intro, heading, intro, fields: ordered, siteUrl }),
     text: `${heading}\n${intro}\n\n${rowsText(ordered)}`,
   };

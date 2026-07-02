@@ -1,10 +1,12 @@
 ---
 import Products from '../components/products.astro';
 import { wpQuery } from '../lib/api';
+import { SEO_FRAGMENT } from '../lib/seo';
 
 export const prerender = false; // SSR: always shows latest products/categories from WP
 
 let pageData = null;
+let seoData = null;
 let categories = [];
 let products = [];
 let finishes = [];
@@ -23,6 +25,10 @@ try {
             heroCtaUrl
             heroSecondaryLabel
             heroSecondaryUrl
+            heroImage { node { sourceUrl } }
+            categoriesTitle
+            categoriesSubtitle
+            allProductsTitle
             finishesTitle
             finishesDescription
             surfaceTexturesTitle
@@ -39,6 +45,7 @@ try {
             ctaSecondaryLabel
             ctaSecondaryUrl
           }
+          ${SEO_FRAGMENT}
         }
         productCategories(first: 50, where: { hideEmpty: false }) {
           nodes {
@@ -68,6 +75,7 @@ try {
     `
   });
   if (data?.page?.productsPage) pageData = data.page.productsPage;
+  if (data?.page?.seo) seoData = data.page.seo;
   if (data?.productCategories?.nodes) categories = data.productCategories.nodes;
   if (data?.products?.nodes) products = data.products.nodes;
   if (data?.finishes?.nodes) finishes = data.finishes.nodes;
@@ -77,4 +85,4 @@ try {
 }
 ---
 
-<Products pageData={pageData} categories={categories} products={products} finishes={finishes} backings={backings} />
+<Products pageData={pageData} categories={categories} products={products} finishes={finishes} backings={backings} seo={seoData} />

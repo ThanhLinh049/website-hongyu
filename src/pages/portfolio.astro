@@ -1,10 +1,12 @@
 ---
 import Portfolio from '../components/portfolio.astro';
 import { wpQuery } from '../lib/api';
+import { SEO_FRAGMENT } from '../lib/seo';
 
 export const prerender = false; // SSR: always shows latest projects from WP
 
 let pageData = null;
+let seoData = null;
 let portfolios = [];
 let categories = [];
 
@@ -17,6 +19,7 @@ try {
             heroEyebrow
             heroTitle
             heroDescription
+            heroImage { node { sourceUrl } }
             ctaTitle
             ctaText
             ctaPrimaryLabel
@@ -24,6 +27,7 @@ try {
             ctaSecondaryLabel
             ctaSecondaryUrl
           }
+          ${SEO_FRAGMENT}
         }
         portfolios(first: 100) {
           nodes {
@@ -42,6 +46,7 @@ try {
   });
 
   if (data?.page?.portfolioPage) pageData = data.page.portfolioPage;
+  if (data?.page?.seo) seoData = data.page.seo;
   if (data?.portfolios?.nodes) portfolios = data.portfolios.nodes;
   if (data?.portfolioCategories?.nodes) categories = data.portfolioCategories.nodes;
 } catch (e) {
@@ -49,4 +54,4 @@ try {
 }
 ---
 
-<Portfolio pageData={pageData} portfolios={portfolios} categories={categories} />
+<Portfolio pageData={pageData} portfolios={portfolios} categories={categories} seo={seoData} />

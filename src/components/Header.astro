@@ -95,12 +95,12 @@ const headerClass = transparent
                 })}
             </nav>
             <div class="flex items-center gap-md md:justify-self-end">
-                <a href={ctaUrl} class="bg-cta-orange text-white px-md py-2 font-label-bold text-label-bold hover:brightness-110 transition-all rounded-sm shadow-sm">
+                <a href={ctaUrl} class="inline-flex items-center justify-center bg-cta-orange text-white rounded-sm shadow-sm hover:brightness-110 transition-all font-label-bold font-semibold tracking-[0.05em] min-h-[29px] px-[13px] py-[6px] text-[11px] leading-[14px] md:min-h-[36px] md:px-4 md:py-2 md:text-[14px] md:leading-4">
                     {ctaLabel}
                 </a>
-                <!-- Hamburger Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-cta-orange focus:outline-none flex items-center justify-center p-2 transition-colors" aria-label="Toggle Menu">
-                    <span class="material-symbols-outlined text-[28px]">menu</span>
+                <!-- Hamburger Menu Button (mobile only; white rounded box) -->
+                <button id="mobile-menu-btn" class="md:hidden shrink-0 w-[35px] h-[35px] flex items-center justify-center rounded-lg bg-white text-primary border border-[#c2c6d4] shadow-[0_8px_24px_rgba(0,26,64,0.08)] hover:text-cta-orange focus:outline-none transition-colors" aria-label="Toggle Menu">
+                    <span class="material-symbols-outlined text-[22px]" aria-hidden="true">menu</span>
                 </button>
             </div>
         </div>

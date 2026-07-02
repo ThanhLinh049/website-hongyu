@@ -40,16 +40,10 @@ try {
             }
             specialtiesTitle
             specialtiesSubtitle
-            specialties {
-              image {
-                node {
-                  sourceUrl
-                }
+            specialtyCategories {
+              nodes {
+                slug
               }
-              title
-              description
-              linkLabel
-              linkUrl
             }
             advantageTitle
             advantageSubtitle
@@ -112,7 +106,7 @@ try {
             portfolioCategories { nodes { name slug } }
           }
         }
-        posts(first: 3) {
+        posts(first: 12) {
           nodes {
             title
             slug
@@ -136,7 +130,6 @@ try {
             slug
             count
             categoryFields { catTagline catHeroImage { node { sourceUrl } } }
-            categoryHomeFields { featureOnHome homeOrder }
           }
         }
       }

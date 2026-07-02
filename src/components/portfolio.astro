@@ -6,14 +6,16 @@ interface Props {
   pageData?: any;
   portfolios?: any[];
   categories?: any[];
+  seo?: any;
 }
 
-const { pageData = null, portfolios = [], categories = [] } = Astro.props;
+const { pageData = null, portfolios = [], categories = [], seo } = Astro.props;
 
 // Hero + CTA copy from ACF (page #29), with safe fallbacks to current content.
 const heroEyebrow = pageData?.heroEyebrow || '';
 const heroTitle = pageData?.heroTitle || 'Our Project Showcase';
 const heroDescription = pageData?.heroDescription || 'A curated gallery of precision-engineered projects we have delivered for global brands and tactical units.';
+const heroImage = pageData?.heroImage?.node?.sourceUrl || '';
 const ctaTitle = pageData?.ctaTitle || 'Ready to start your project?';
 const ctaText = pageData?.ctaText || 'Our design team is ready to translate your brand vision into a physical masterpiece. Get a free digital proof today.';
 const ctaPrimaryLabel = pageData?.ctaPrimaryLabel || 'Request Free Design Proof';
@@ -36,21 +38,34 @@ const catLabel = (p: any) => p?.portfolioCategories?.nodes?.[0]?.name || 'Custom
 const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 ---
 
-<Layout title="Showcase | Hong Yu Manufacturing">
+<Layout title="Showcase | Hong Yu Manufacturing" seo={seo} description={heroDescription}>
     <main>
-        <!-- Hero Section -->
-        <section class="bg-surface-container-low py-xl flex items-center min-h-[260px] md:min-h-[504px] border-b border-outline-variant">
-            <div class="max-w-container-max mx-auto px-gutter text-center w-full">
-                {heroEyebrow && (
-                    <p class="font-label-md text-label-md uppercase tracking-widest text-cta-orange font-bold mb-sm">{heroEyebrow}</p>
-                )}
-                <h1 class="font-display-lg text-display-lg mb-md text-on-surface">{heroTitle}</h1>
-                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-lg">{heroDescription}</p>
-                <!-- Filter Tabs -->
-                <div class="flex md:flex-wrap justify-start md:justify-center items-center gap-sm pt-md overflow-x-auto hide-scrollbar md:overflow-visible" id="portfolio-filters">
-                    <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm bg-primary text-white font-bold rounded-full" data-filter="all">All Projects</button>
+        <!-- Hero Section (image banner, left-aligned to match other pages) -->
+        <section id="portfolio-hero" class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[420px] overflow-hidden">
+            {heroImage && (
+                <div class="absolute inset-0 pointer-events-none">
+                    <img alt={heroTitle} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroImage} />
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/40"></div>
+                </div>
+            )}
+            <div class="relative z-10 max-w-container-max mx-auto px-gutter w-full">
+                <div class="max-w-3xl">
+                    {heroEyebrow && (
+                        <p class="font-label-md text-label-md uppercase tracking-widest text-cta-orange font-bold mb-sm">{heroEyebrow}</p>
+                    )}
+                    <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{heroTitle}</h1>
+                    <p class="font-body-lg text-body-lg text-white/80 max-w-2xl">{heroDescription}</p>
+                </div>
+            </div>
+        </section>
+        <!-- Filter bar (below hero — sticky, consistent with the Blog page) -->
+        <section class="bg-white border-b border-outline-variant sticky top-[68px] z-40">
+            <div class="max-w-container-max mx-auto px-gutter py-md flex items-center gap-md">
+                <span class="font-label-bold text-on-surface whitespace-nowrap hidden sm:inline">FILTER:</span>
+                <div class="flex items-center gap-sm overflow-x-auto hide-scrollbar" id="portfolio-filters">
+                    <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm rounded-full border border-primary bg-primary text-white font-semibold transition-colors" data-filter="all">All Projects</button>
                     {filterCats.map((c: any) => (
-                        <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm border border-outline-variant hover:bg-surface-container-high transition-colors font-medium rounded-full" data-filter={c.slug}>{c.name}</button>
+                        <button class="shrink-0 whitespace-nowrap px-4 py-2 text-sm rounded-full border border-outline-variant hover:bg-surface-container-high font-semibold transition-colors" data-filter={c.slug}>{c.name}</button>
                     ))}
                 </div>
             </div>
@@ -59,7 +74,7 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <section class="py-xl max-w-container-max mx-auto px-gutter">
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-gutter" id="portfolio-grid">
                 {activePortfolios.map((item: any) => (
-                    <a href={`/portfolio/${item.slug}`} class="portfolio-item group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300" data-category={catSlugs(item)}>
+                    <a href={`/portfolio/${item.slug}`} class="portfolio-item card-lift group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:border-primary/40" data-category={catSlugs(item)}>
                         <div class="relative aspect-square overflow-hidden bg-surface-container">
                             {pImg(item) && (
                                 <img loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.title} src={pImg(item)} />
@@ -84,13 +99,13 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <section class="py-xl bg-primary text-white overflow-hidden relative">
             <div class="absolute inset-0 opacity-10 industrial-grid"></div>
             <div class="max-w-container-max mx-auto px-gutter relative z-10 text-center">
-                <h2 class="font-display-lg text-display-lg mb-md">{ctaTitle}</h2>
+                <h2 class="font-headline-lg text-headline-lg mb-md">{ctaTitle}</h2>
                 <p class="font-body-lg text-body-lg mb-lg max-w-xl mx-auto opacity-90">{ctaText}</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-md">
                     {ctaPrimaryLabel && ctaPrimaryUrl && (
                         <a href={ctaPrimaryUrl} class="inline-block px-lg py-3 bg-[#E67E22] text-white font-bold uppercase tracking-wider hover:brightness-110 shadow-lg transition-all text-center font-black">{ctaPrimaryLabel}</a>
                     )}
-                    {ctaSecondaryLabel && ctaSecondaryUrl && (
+                    {ctaSecondaryLabel && ctaSecondaryUrl && ctaSecondaryUrl !== ctaPrimaryUrl && (
                         <a href={ctaSecondaryUrl} class="inline-block px-lg py-3 border border-white/30 text-white font-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center font-black">{ctaSecondaryLabel}</a>
                     )}
                 </div>
@@ -183,9 +198,9 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             };
 
             buttons.forEach(btn => btn.addEventListener('click', () => {
-                buttons.forEach(b => { b.classList.remove('bg-primary', 'text-white', 'font-bold'); b.classList.add('hover:bg-surface-container-high', 'font-medium'); });
-                btn.classList.add('bg-primary', 'text-white', 'font-bold');
-                btn.classList.remove('hover:bg-surface-container-high', 'font-medium');
+                buttons.forEach(b => { b.classList.remove('bg-primary', 'text-white', 'border-primary'); b.classList.add('border-outline-variant', 'hover:bg-surface-container-high'); });
+                btn.classList.add('bg-primary', 'text-white', 'border-primary');
+                btn.classList.remove('border-outline-variant', 'hover:bg-surface-container-high');
                 filter = btn.getAttribute('data-filter') || 'all';
                 page = 1;
                 render();

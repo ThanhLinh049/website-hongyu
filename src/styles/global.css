@@ -111,7 +111,63 @@ html {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-a[href][class*="bg-cta-orange"],
+/* Soft "lift" interaction for cards so they don't feel rigid: a gentle rise +
+   brand-navy shadow on hover, and a quick press-down on tap (works on mobile). */
+.card-lift {
+    transition: transform 0.35s cubic-bezier(0.22, 0.68, 0.28, 1),
+        box-shadow 0.35s ease, border-color 0.3s ease;
+    will-change: transform;
+}
+.card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 34px -14px rgba(0, 63, 135, 0.32);
+}
+.card-lift:active {
+    transform: translateY(-2px);
+    transition-duration: 0.1s;
+}
+@media (prefers-reduced-motion: reduce) {
+    .card-lift {
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .card-lift:hover,
+    .card-lift:active {
+        transform: none;
+    }
+}
+
+/* Bento (Advantage) cards: nudge the icon up a touch when the card is hovered. */
+.bento-grid .material-symbols-outlined {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+.bento-grid .card-lift:hover .material-symbols-outlined {
+    transform: scale(1.12) translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+    .bento-grid .card-lift:hover .material-symbols-outlined {
+        transform: none;
+    }
+}
+
+/* Reusable button base (opt-in). Reproduces the uniform button size the site
+   uses. Applied via the `btn` class in markup so Tailwind utilities can still
+   override it when a one-off size is needed — no !important, no broad matching. */
+@layer components {
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 40px;
+        padding: 10px 20px;
+        font-size: 14px;
+        line-height: 16px;
+    }
+}
+
+main a[href][class*="bg-cta-orange"],
+footer a[href][class*="bg-cta-orange"],
 a[href][class*="bg-[#E67E22]"],
 a[href][class*="bg-primary"],
 a[href][class*="bg-white"][class*="text-primary"],
@@ -120,10 +176,10 @@ a[href][class*="w-full"][class*="py-"][class*="text-center"],
 button:not(#mobile-menu-btn):not(#mobile-menu-close):not(.faq-toggle):not([class*="w-10"])[class*="py-"],
 button:not(#mobile-menu-btn):not(#mobile-menu-close):not(.faq-toggle):not([class*="w-10"])[class*="px-"] {
     min-height: 40px;
-    padding: 10px 20px !important;
-    font-size: 14px !important;
-    line-height: 16px !important;
-    display: inline-flex !important;
+    padding: 10px 20px;
+    font-size: 14px;
+    line-height: 16px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -131,10 +187,8 @@ button:not(#mobile-menu-btn):not(#mobile-menu-close):not(.faq-toggle):not([class
 
 /* Width controls handled by Tailwind utilities */
 
-header a[href][class*="bg-cta-orange"] {
-    min-height: 36px;
-    padding: 8px 16px !important;
-}
+/* Header CTA + hamburger + drawer are styled entirely with Tailwind in
+   Header.astro / Layout.astro — no global overrides needed here. */
 
 .design-file-upload {
     padding: 14px 16px !important;
@@ -462,10 +516,6 @@ img {
         gap: 12px !important;
     }
 
-    header a[class*="bg-cta-orange"] {
-        display: none !important;
-    }
-
     .max-w-xs,
     .max-w-sm,
     .max-w-md,
@@ -579,44 +629,11 @@ img {
         display: none !important;
     }
 
-    #mobile-menu-content {
-        width: min(88vw, 360px) !important;
-        max-width: 88vw !important;
-    }
+    /* Drawer width, hamburger box and close button are Tailwind-styled in
+       Header.astro / Layout.astro (moved out of global CSS). */
 
-    #mobile-menu-btn {
-        width: 44px;
-        height: 44px;
-        color: #003f87 !important;
-        background-color: #ffffff;
-        border: 1px solid #c2c6d4;
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(0, 26, 64, 0.08);
-        flex: 0 0 auto;
-    }
-
-    #mobile-menu-close {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        background-color: #f0eded;
-    }
-
-    #mobile-menu-content nav {
-        gap: 6px !important;
-    }
-
-    #mobile-menu-content nav a {
-        border-radius: 8px;
-        padding: 12px 14px !important;
-        color: #424752;
-    }
-
-    #mobile-menu-content nav a:hover,
-    #mobile-menu-content nav a[class~="text-primary"] {
-        background-color: #d7e2ff;
-        color: #003f87 !important;
-    }
+    /* Drawer nav styling is handled inline via Tailwind on the links themselves
+       (see Layout.astro) so it is not force-overridden here. */
 
     main > section {
         scroll-margin-top: 72px;

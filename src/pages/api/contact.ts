@@ -46,9 +46,16 @@ export const POST: APIRoute = async ({ request, url }) => {
   // Honeypot — pretend success so bots get no signal.
   if (fields.botcheck) return json({ success: true, message: 'Thank you.' });
 
-  if (!fields.name || !fields.email) {
-    return json({ success: false, message: 'Name and email are required.' }, 400);
+  // Find a valid email among the submitted values to use as reply-to; require
+  // at least one so the team can always respond to the enquiry.
+  const emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const emailEntry = Object.entries(fields).find(
+    ([k, v]) => k !== 'botcheck' && typeof v === 'string' && emailRe.test(v.trim()),
+  );
+  if (!emailEntry) {
+    return json({ success: false, message: 'A valid email address is required.' }, 400);
   }
+  const replyTo = String(emailEntry[1]).trim();
 
   if (!apiKey) {
     return json(
@@ -63,7 +70,7 @@ export const POST: APIRoute = async ({ request, url }) => {
   const payload: Record<string, any> = {
     from,
     to: [to],
-    reply_to: fields.email,
+    reply_to: replyTo,
     subject,
     html,
     text,

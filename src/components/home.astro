@@ -46,15 +46,17 @@ const heroTrustBar = (pageData?.heroTrustBar && pageData.heroTrustBar.length > 0
 // 2. Fallbacks for Manufacturing Specialties (Section 3)
 const specialtiesTitle = pageData?.specialtiesTitle || 'Our Manufacturing Specialties';
 const specialtiesSubtitle = pageData?.specialtiesSubtitle || 'Engineered for durability and visual impact across all industries.';
-// Single source of truth: these cards now come from the product-category
-// taxonomy (the SAME data the Products page uses), so editing a category's name
-// or hero image updates both pages — no more duplicated lists. Each card links
-// to its category page; the client controls visibility/order via the category's
-// "Show on Home" toggle + order. Falls back to curated defaults when categories
-// aren't available (e.g. no backend).
+// Single source of truth: these cards come from the product-category taxonomy
+// (the SAME data the Products page uses), so editing a category's name or hero
+// image updates both pages — no duplicated lists. The client chooses which
+// categories appear here by ticking them in Home → Specialties → "Featured
+// Product Categories". Leaving all unticked shows every category. Falls back to
+// curated defaults when categories aren't available (e.g. no backend).
+const featuredSlugs = (pageData?.specialtyCategories?.nodes || [])
+  .map((n: any) => n?.slug)
+  .filter(Boolean);
 const specialtyCards = (categories || [])
-  .filter((c: any) => c?.categoryHomeFields?.featureOnHome !== false)
-  .sort((a: any, b: any) => (a?.categoryHomeFields?.homeOrder ?? 0) - (b?.categoryHomeFields?.homeOrder ?? 0))
+  .filter((c: any) => featuredSlugs.length === 0 || featuredSlugs.includes(c?.slug))
   .map((c: any) => ({
     image: c?.categoryFields?.catHeroImage || null,
     title: c?.name,
@@ -125,7 +127,10 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             {heroSlides.map((slide: any, idx: number) => (
                 <div class={idx === 0 ? "hero-slide is-active" : "hero-slide"} data-hero-slide>
                     {slide.backgroundImage?.node?.sourceUrl && (
-                        <img alt={slide.heading} class="hero-bg" fetchpriority="high" decoding="async" src={slide.backgroundImage.node.sourceUrl} />
+                        <img alt={slide.heading} class="hero-bg" decoding="async"
+                            fetchpriority={idx === 0 ? "high" : undefined}
+                            loading={idx === 0 ? "eager" : "lazy"}
+                            src={slide.backgroundImage.node.sourceUrl} />
                     )}
                     <div class="hero-overlay"></div>
                     <div class="relative z-10 max-w-container-max mx-auto px-gutter min-h-[560px] md:min-h-[640px] flex items-center">
@@ -133,7 +138,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                             <p class="font-label-bold text-label-bold text-cta-orange uppercase tracking-widest mb-sm">
                                 {slide.badgeText}
                             </p>
-                            <h1 class="font-display-lg text-white mb-md text-[28px] sm:text-[34px] lg:text-[44px] leading-[1.15] tracking-tight line-clamp-2">
+                            <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight line-clamp-2">
                                 {slide.heading}
                             </h1>
                             <p class="font-body-lg text-body-lg text-white/85 mb-xl max-w-2xl">
@@ -186,22 +191,22 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <!-- Section 3: Specialties (Dynamic) -->
         <section class="py-xl bg-surface">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="mb-xl text-center">
+                <div class="mb-lg text-center">
                     <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{specialtiesTitle}</h2>
                     <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">{specialtiesSubtitle}</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-gutter">
                     {specialties.map((item: any) => (
-                        <a href={rel(item.linkUrl) || '#'} class="group bg-white border border-outline-variant hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+                        <a href={rel(item.linkUrl) || '#'} class="group card-lift bg-white border border-outline-variant hover:border-primary overflow-hidden flex flex-col">
                             <div class="aspect-square overflow-hidden bg-surface-container relative">
                                 {item.image?.node?.sourceUrl && (
                                     <img alt={item.title} loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={item.image.node.sourceUrl} />
                                 )}
                             </div>
-                            <div class="p-md text-center flex flex-col flex-grow">
-                                <h3 class="font-headline-sm mb-xs group-hover:text-primary transition-colors">{item.title}</h3>
-                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-sm uppercase tracking-wider group-hover:text-primary transition-colors">
-                                    {noArrow(item.linkLabel) || 'Explore'} <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+                            <div class="p-3 sm:p-md text-center flex flex-col flex-grow">
+                                <h3 class="font-headline-sm text-sm sm:text-base mb-xs group-hover:text-primary transition-colors">{item.title}</h3>
+                                <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-[11px] sm:text-sm uppercase tracking-wide group-hover:text-primary transition-colors">
+                                    {noArrow(item.linkLabel) || 'Explore'} <span class="material-symbols-outlined text-[15px] sm:text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
                             </div>
                         </a>
@@ -213,12 +218,12 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <!-- Section 4: Why Choose Us (Bento Grid) -->
         <section class="py-xl bg-surface-container-low">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="mb-xl text-center md:text-left">
-                    <h2 class="font-headline-lg text-headline-lg text-primary">{advantageTitle}</h2>
+                <div class="mb-lg text-center md:text-left">
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{advantageTitle}</h2>
                     <p class="font-body-md text-on-surface-variant">{advantageSubtitle}</p>
                 </div>
                 <div class="bento-grid">
-                    <div class="col-span-12 md:col-span-8 bg-white p-lg border border-outline-variant rounded-xl flex flex-col justify-between">
+                    <div class="col-span-12 md:col-span-8 bg-white p-lg border border-outline-variant rounded-xl flex flex-col justify-between card-lift hover:border-primary/40">
                         <div>
                             <span class="material-symbols-outlined text-primary text-4xl mb-md">{advantageBlocks?.[0]?.icon || 'precision_manufacturing'}</span>
                             <h3 class="font-headline-md text-primary mb-sm">{advantageBlocks?.[0]?.title || 'Massive Production Capacity'}</h3>
@@ -233,22 +238,22 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                             ))}
                         </div>
                     </div>
-                    <div class="col-span-12 md:col-span-4 bg-primary p-lg rounded-xl text-white">
+                    <div class="col-span-12 md:col-span-4 bg-primary p-lg rounded-xl text-white card-lift">
                         <span class="material-symbols-outlined text-4xl mb-md">{advantageBlocks?.[1]?.icon || 'verified_user'}</span>
                         <h3 class="font-headline-sm mb-md">{advantageBlocks?.[1]?.title || 'ISO 9001 Certified'}</h3>
                         <p class="text-body-md opacity-90 leading-relaxed">{advantageBlocks?.[1]?.description || 'Every batch undergoes a rigorous 12-point inspection before it leaves our facility. Zero compromise on brand integrity.'}</p>
                     </div>
-                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl">
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl card-lift hover:border-primary/40">
                         <span class="material-symbols-outlined text-primary text-3xl mb-md">{advantageBlocks?.[2]?.icon || 'palette'}</span>
                         <h3 class="font-headline-sm text-primary mb-sm">{advantageBlocks?.[2]?.title || 'Pantone Matching'}</h3>
                         <p class="text-body-sm text-on-surface-variant">{advantageBlocks?.[2]?.description || 'We ensure your brand colors are accurate to within 1% variance using professional matching systems.'}</p>
                     </div>
-                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl">
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-lg border border-outline-variant rounded-xl card-lift hover:border-primary/40">
                         <span class="material-symbols-outlined text-primary text-3xl mb-md">{advantageBlocks?.[3]?.icon || 'inventory'}</span>
                         <h3 class="font-headline-sm text-primary mb-sm">{advantageBlocks?.[3]?.title || 'White Label Shipping'}</h3>
                         <p class="text-body-sm text-on-surface-variant">{advantageBlocks?.[3]?.description || 'For resellers and agencies, we offer fully anonymous blind shipping directly to your clients.'}</p>
                     </div>
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 bg-cta-orange p-lg rounded-xl text-white">
+                    <div class="col-span-12 md:col-span-12 lg:col-span-4 bg-cta-orange p-lg rounded-xl text-white card-lift">
                         <span class="material-symbols-outlined text-3xl mb-md">{advantageBlocks?.[4]?.icon || 'bolt'}</span>
                         <h3 class="font-headline-sm mb-sm">{advantageBlocks?.[4]?.title || 'Priority Rush Lane'}</h3>
                         <p class="text-body-sm opacity-90">{advantageBlocks?.[4]?.description || 'Urgent deadline? Our rush manufacturing can deliver finished custom products in as little as 5-7 business days.'}</p>
@@ -260,7 +265,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <!-- Section 5: Ordering Process (Dynamic) -->
         <section class="py-xl bg-white overflow-hidden">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="text-center mb-xl">
+                <div class="text-center mb-lg">
                     <h2 class="font-headline-lg text-headline-lg text-primary">{processTitle}</h2>
                 </div>
                 <div class="relative flex flex-col md:flex-row justify-between items-start gap-xl">
@@ -286,7 +291,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                     <img alt={capabilitiesTitle} loading="lazy" decoding="async" class="w-full h-full object-cover" src={capabilitiesImageUrl} />
                 </div>
                 <div>
-                    <h2 class="font-headline-lg mb-md">{capabilitiesTitle}</h2>
+                    <h2 class="font-headline-lg text-headline-lg mb-md">{capabilitiesTitle}</h2>
                     <p class="text-body-lg opacity-80 mb-xl">{capabilitiesDescription}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-md gap-x-xl">
                         {capabilitiesList.map((item: any) => (
@@ -308,9 +313,9 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <!-- Section 7: Portfolio Preview (Dynamic) -->
         <section class="py-xl bg-surface">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-xl gap-md">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
                     <div class="w-full md:w-auto">
-                        <h2 class="font-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
+                        <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
                         {portfolioSectionSubtitle && (
                             <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{portfolioSectionSubtitle}</p>
                         )}
@@ -329,7 +334,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                     {displayPortfolios.map((item: any) => (
                         <a href={`/portfolio/${item.slug}`}
                             data-category={recentCardCats(item)}
-                            class="recent-card group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300">
+                            class="recent-card card-lift group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:border-primary/40">
                             <div class="relative aspect-square overflow-hidden bg-surface-container-high">
                                 {item.featuredImage?.node?.sourceUrl && (
                                     <img alt={item.title} loading="lazy" decoding="async"
@@ -356,28 +361,33 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <!-- Section 8: Blog Preview (Dynamic) -->
         <section class="py-xl bg-white">
             <div class="max-w-container-max mx-auto px-gutter">
-                <div class="flex justify-between items-end mb-xl">
-                    <h2 class="font-headline-lg text-primary">{blogSectionTitle}</h2>
+                <div class="flex justify-between items-end mb-lg">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{blogSectionTitle}</h2>
                     <a class="text-primary font-label-bold" href={blogCtaUrl}>{blogCtaLabel}</a>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                    {displayPosts.map((item: any) => (
-                        <div class="flex flex-col h-full border border-outline-variant rounded-lg overflow-hidden group">
+                <!-- Slider at every size: swipe or auto-advance through up to 12
+                     articles. 1 card per view on mobile, 2 on tablet, 3 on desktop. -->
+                <div id="blog-slider"
+                    class="flex overflow-x-auto snap-x snap-mandatory gap-gutter hide-scrollbar pb-1">
+                    {displayPosts.slice(0, 12).map((item: any) => (
+                        <a href={`/blog/${item.slug}`}
+                            class="blog-slide snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex flex-col bg-white border border-outline-variant rounded-lg overflow-hidden group card-lift hover:border-primary">
                             <div class="aspect-square overflow-hidden">
-                                {item.featuredImage?.node?.sourceUrl && (
+                                {item.featuredImage?.node?.sourceUrl ? (
                                     <img alt={item.title} loading="lazy" decoding="async"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         src={item.featuredImage.node.sourceUrl} />
+                                ) : (
+                                    <div class="w-full h-full flex items-center justify-center bg-surface-container-low text-outline">
+                                        <span class="material-symbols-outlined text-5xl">image</span>
+                                    </div>
                                 )}
                             </div>
                             <div class="p-md flex flex-col flex-grow">
-                                <span class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">
-                                    {item.categories?.nodes?.[0]?.name || 'Insights'}
-                                </span>
-                                <h3 class="font-headline-sm text-on-surface mb-3 flex-grow">{item.title}</h3>
-                                <a class="text-primary font-bold text-sm mt-auto" href={`/blog/${item.slug}`}>Read More →</a>
+                                <h3 class="font-headline-sm text-on-surface mb-3 flex-grow line-clamp-2">{item.title}</h3>
+                                <span class="text-primary font-bold text-sm mt-auto">Read More →</span>
                             </div>
-                        </div>
+                        </a>
                     ))}
                 </div>
             </div>
@@ -581,9 +591,49 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             render();
         };
 
+        // Blog preview: on mobile it's a swipeable, auto-advancing slider (one
+        // article at a time). Autoplay pauses while the user swipes and when the
+        // section is off-screen, then resumes. On sm+ it's a static grid.
+        const setupBlogSlider = () => {
+            const slider = document.getElementById('blog-slider');
+            if (!slider) return;
+            const slides = Array.from(slider.querySelectorAll<HTMLElement>('.blog-slide'));
+            if (slides.length < 2) return;
+            const slideLeft = (s: HTMLElement) => s.getBoundingClientRect().left - slider.getBoundingClientRect().left + slider.scrollLeft;
+
+            // Track the nearest slide so autoplay knows where to go next.
+            let current = 0, scrollT: any;
+            slider.addEventListener('scroll', () => {
+                clearTimeout(scrollT);
+                scrollT = setTimeout(() => {
+                    let best = 0, bestD = Infinity;
+                    slides.forEach((s, idx) => { const d = Math.abs(slideLeft(s) - slider.scrollLeft); if (d < bestD) { bestD = d; best = idx; } });
+                    current = best;
+                }, 90);
+            }, { passive: true });
+
+            let timer: any = null, paused = false, resumeT: any;
+            const advance = () => {
+                if (paused) return;
+                current = (current + 1) % slides.length;
+                slider.scrollTo({ left: slideLeft(slides[current]), behavior: 'smooth' });
+            };
+            const start = () => { stop(); timer = setInterval(advance, 4500); };
+            const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+            const pauseThenResume = () => { paused = true; stop(); clearTimeout(resumeT); resumeT = setTimeout(() => { paused = false; start(); }, 6000); };
+            ['pointerdown', 'touchstart', 'wheel'].forEach(ev => slider.addEventListener(ev, pauseThenResume, { passive: true }));
+
+            if ('IntersectionObserver' in window) {
+                new IntersectionObserver((entries) => {
+                    entries.forEach(e => (e.isIntersecting ? start() : stop()));
+                }, { threshold: 0.25 }).observe(slider);
+            } else { start(); }
+        };
+
         setupSlider();
         setupScrollReveal();
         setupRecentFilter();
-        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); });
+        setupBlogSlider();
+        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); setupBlogSlider(); });
     </script>
 </Layout>

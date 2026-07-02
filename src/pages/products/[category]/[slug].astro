@@ -16,7 +16,7 @@ try {
           title
           slug
           content
-          productFields { shortDescription }
+          productFields { specs { specName specValue } }
           featuredImage { node { sourceUrl } }
           productGallery { gallery { nodes { sourceUrl } } }
           productCategories { nodes { name slug } }
@@ -45,7 +45,7 @@ const defaultProduct = {
   title: 'Custom Metal Badge',
   slug: slug || 'sample-product',
   content: '<p>This is sample product content, shown when the product catalog is unavailable so the page layout stays intact.</p>',
-  productFields: { shortDescription: 'Premium die-struck metal badge with custom plating and color fill — built to your specification.' },
+  productFields: { specs: [] },
   featuredImage: null,
   productGallery: { gallery: { nodes: [] } },
   productCategories: { nodes: [{ name: 'Metal', slug: category || 'metal' }] },
@@ -53,7 +53,7 @@ const defaultProduct = {
 };
 product = product || defaultProduct;
 
-const shortDesc = product?.productFields?.shortDescription || '';
+const specs = (product?.productFields?.specs || []).filter((s: any) => s?.specName || s?.specValue);
 const mainImage = product?.featuredImage?.node?.sourceUrl || '';
 const galleryUrls: string[] = product
   ? [mainImage, ...((product.productGallery?.gallery?.nodes || []).map((n: any) => n.sourceUrl).filter(Boolean))]
@@ -69,7 +69,7 @@ const related = product
   : [];
 
 const seoTitle = product?.seo?.title || (product ? `${product.title} | Products` : 'Product not found');
-const seoDesc = product?.seo?.description || shortDesc || '';
+const seoDesc = product?.seo?.description || '';
 const seoImage = product?.seo?.openGraph?.image?.url || mainImage;
 const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 ---
@@ -91,10 +91,10 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       <section class="py-xl bg-white">
         <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-md lg:gap-xl items-start">
           <!-- Gallery -->
-          <div class="lg:col-span-7">
-            <div class="aspect-square bg-surface border border-outline-variant overflow-hidden">
+          <div class="lg:col-span-6">
+            <div class="w-full h-[340px] sm:h-[430px] lg:h-[500px] bg-surface border border-outline-variant overflow-hidden">
               {mainImage
-                ? <img id="detail-main-image" src={mainImage} alt={product.title} fetchpriority="high" decoding="async" class="w-full h-full object-cover" />
+                ? <img id="detail-main-image" src={mainImage} alt={product.title} fetchpriority="high" decoding="async" class="w-full h-full object-contain" />
                 : <div class="w-full h-full flex items-center justify-center text-outline"><span class="material-symbols-outlined text-7xl">image</span></div>}
             </div>
             {galleryUrls.length > 1 && (
@@ -110,12 +110,39 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
           </div>
 
           <!-- Buy-box (sticky) -->
-          <div class="lg:col-span-5">
+          <div class="lg:col-span-6">
             <div class="lg:sticky lg:top-[100px]">
-              {cat && (<a href={base} class="inline-block border border-primary/30 text-primary text-[11px] font-bold uppercase tracking-widest px-sm py-xs mb-md hover:bg-primary hover:text-white transition-colors">{cat.name}</a>)}
-              <h1 class="font-display-lg text-primary leading-tight mb-md text-[26px] sm:text-[32px] lg:text-[40px] tracking-tight">{product.title}</h1>
-              {shortDesc && (
-                <div class="font-body-md text-on-surface-variant mb-lg whitespace-pre-line leading-relaxed border-t border-outline-variant pt-md">{shortDesc}</div>
+              <h1 class="font-display-lg text-primary leading-tight mb-md text-[22px] sm:text-[28px] lg:text-[40px] tracking-tight">{product.title}</h1>
+
+              {specs.length > 0 && (
+                <div class="mb-lg border-t border-outline-variant pt-md">
+                  <h2 class="font-label-bold text-[13px] uppercase tracking-widest text-primary mb-sm">Specifications</h2>
+                  <dl class="text-body-sm">
+                    {specs.slice(0, 6).map((s: any) => (
+                      <div class="flex items-baseline gap-md py-2 border-b border-outline-variant/40">
+                        <dt class="w-32 shrink-0 font-bold text-on-surface">{s.specName}</dt>
+                        <dd class="text-on-surface-variant">{s.specValue}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {specs.length > 6 && (
+                    <details class="group">
+                      <summary class="mt-sm inline-flex items-center gap-1 text-primary font-bold text-[13px] cursor-pointer list-none select-none hover:underline [&::-webkit-details-marker]:hidden">
+                        <span class="[details[open]_&]:hidden">Show all {specs.length} specifications</span>
+                        <span class="hidden [details[open]_&]:inline">Show fewer</span>
+                        <span class="material-symbols-outlined text-[18px] transition-transform [details[open]_&]:rotate-180">expand_more</span>
+                      </summary>
+                      <dl class="text-body-sm">
+                        {specs.slice(6).map((s: any) => (
+                          <div class="flex items-baseline gap-md py-2 border-b border-outline-variant/40">
+                            <dt class="w-32 shrink-0 font-bold text-on-surface">{s.specName}</dt>
+                            <dd class="text-on-surface-variant">{s.specValue}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </details>
+                  )}
+                </div>
               )}
 
               <a href="/contact" class="block w-full text-center bg-cta-orange text-white px-lg py-4 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all mb-sm">Request Quote</a>
@@ -128,10 +155,10 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         </div>
       </section>
 
-      <!-- Detailed description (editor content) -->
+      <!-- Detailed description (full width) -->
       {product.content && (
         <section class="py-xl bg-surface-container-low border-y border-outline-variant">
-          <div class="max-w-3xl mx-auto px-gutter">
+          <div class="max-w-container-max mx-auto px-gutter">
             <h2 class="font-headline-lg text-primary mb-lg">Product Details</h2>
             <article class="prose prose-lg max-w-none
               prose-headings:text-primary prose-headings:font-bold
@@ -150,7 +177,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             <h2 class="font-headline-lg text-primary mb-lg">Related Products</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
               {related.map((p: any) => (
-                <a href={`${base}/${p.slug}`} class="bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all group overflow-hidden flex flex-col">
+                <a href={`${base}/${p.slug}`} class="card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col">
                   <div class="aspect-square bg-surface relative overflow-hidden">
                     {relImg(p) && <img src={relImg(p)} alt={p.title} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                   </div>

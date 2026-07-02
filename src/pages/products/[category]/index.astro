@@ -74,7 +74,7 @@ const base = `/products/${cat?.slug}`;
         <div class="max-w-container-max mx-auto px-gutter py-lg flex flex-col sm:flex-row sm:items-end sm:justify-between gap-md">
           <div class="max-w-2xl">
             {cf.catTagline && (<span class="block text-cta-orange uppercase tracking-[0.2em] text-[11px] font-bold mb-xs">{cf.catTagline}</span>)}
-            <h1 class="font-headline-lg text-headline-lg text-primary">{cat.name}</h1>
+            <h1 class="font-headline-lg text-[24px] sm:text-headline-lg text-primary">{cat.name}</h1>
             {cf.catIntro && (<p class="font-body-md text-on-surface-variant mt-sm">{cf.catIntro}</p>)}
           </div>
           <a href="/contact" class="shrink-0 inline-block bg-cta-orange text-white px-md py-2.5 font-label-bold uppercase tracking-wider text-sm hover:brightness-110 transition-all text-center">Request Quote</a>
@@ -111,7 +111,7 @@ const base = `/products/${cat?.slug}`;
             <div id="cat-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
               {products.map((p: any) => (
                 <a href={`${base}/${p.slug}`}
-                  class="product-card bg-white border border-outline-variant hover:shadow-lg hover:border-primary transition-all duration-300 group overflow-hidden flex flex-col"
+                  class="product-card card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col"
                   data-name={(p.title || '').toLowerCase()} data-date={p.date || ''}>
                   <div class="aspect-square bg-surface-container relative overflow-hidden">
                     {prodImg(p) && (<img src={prodImg(p)} loading="lazy" decoding="async" alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
@@ -203,7 +203,7 @@ const base = `/products/${cat?.slug}`;
     <main class="w-full">
       <section class="max-w-container-max mx-auto px-gutter py-xl text-center">
         <span class="material-symbols-outlined text-outline text-7xl mb-md block">category</span>
-        <h1 class="font-display-lg text-display-lg text-primary mb-md">Category not found</h1>
+        <h1 class="font-display-lg text-primary mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">Category not found</h1>
         <p class="text-on-surface-variant font-body-lg mb-lg">The category "{category}" doesn't exist.</p>
         <a href="/products" class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
       </section>

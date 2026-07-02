@@ -3,9 +3,10 @@ import Layout from '../layouts/Layout.astro';
 
 interface Props {
   pageData?: any;
+  seo?: any;
 }
 
-const { pageData } = Astro.props;
+const { pageData, seo } = Astro.props;
 
 const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
 const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
@@ -21,6 +22,33 @@ const supportCards = pageData?.supportCards?.length ? pageData.supportCards : [
 // Quote form copy
 const formTitle = pageData?.formTitle || 'Request a Manufacturing Quote';
 const formIntro = pageData?.formIntro || 'Provide your technical specifications below. Our engineering team will review and provide a digital proof within 24 hours.';
+
+// ACF select fields (support-card / social icons) arrive as arrays in GraphQL;
+// normalise to a single value.
+const one = (v: any) => (Array.isArray(v) ? v[0] : v);
+
+// --- Quote form (fixed set of fields, hardcoded on purpose) ---
+// The form is intentionally NOT editable in WP — it's defined here for
+// reliability and a clean admin. Submissions still email via /api/contact
+// (Resend). Each input's `name` is its label, which the email lists automatically.
+const formFields = [
+  { label: 'Product Type', type: 'select', width: 'half', required: false, placeholder: '', options: ['Flex Badges', 'Embroidered Patches', 'PVC 3D Patches', 'Metal Hardware', 'Woven Labels'] },
+  { label: 'Estimated Quantity', type: 'number', width: 'half', required: false, placeholder: 'Estimated Quantity', options: [] },
+  { label: 'Dimensions (W x H)', type: 'text', width: 'half', required: false, placeholder: 'Dimensions (W x H)', options: [] },
+  { label: 'Backing Attachment', type: 'select', width: 'half', required: false, placeholder: '', options: ['Heat Seal', 'Velcro', 'Adhesive', 'Plain'] },
+  { label: 'Finish Preference', type: 'select', width: 'half', required: false, placeholder: '', options: ['Matte', 'Glossy', 'Metallic', 'Textured'] },
+  { label: 'Requested Lead Time', type: 'select', width: 'half', required: false, placeholder: '', options: ['Standard (15-20 days)', 'Expedited (10 days)', 'Rush (5-7 days)'] },
+  { label: 'Full Name', type: 'text', width: 'half', required: true, placeholder: 'Full Name', options: [] },
+  { label: 'Email Address', type: 'email', width: 'half', required: true, placeholder: 'Email Address', options: [] },
+  { label: 'Company Name', type: 'text', width: 'half', required: false, placeholder: 'Company Name', options: [] },
+  { label: 'Phone Number', type: 'tel', width: 'half', required: false, placeholder: 'Phone Number', options: [] },
+  { label: 'Additional Project Notes', type: 'textarea', width: 'full', required: false, placeholder: 'Additional Project Notes', options: [] },
+];
+const submitButtonText = 'Submit Quote Request';
+const successMessage = 'Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.';
+const uploadEnabled = true;
+const uploadTitle = 'Click to upload or drag & drop artwork';
+const uploadHint = 'SVG, AI, PDF, or high-res PNG (Max 25MB)';
 
 // Direct contact sidebar
 const hqTitle = pageData?.hqTitle || 'Manufacturing HQ';
@@ -44,7 +72,7 @@ const legalTitle = pageData?.legalTitle || 'Artwork Usage & Intellectual Propert
 const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manufacturing, the customer represents and warrants that they possess all necessary legal rights, permissions, and licenses to reproduce the provided trademarks, logos, and designs. Hong Yu assumes no liability for copyright or trademark infringement arising from the reproduction of customer-supplied artwork. We reserve the right to refuse orders containing imagery that violates our ethical manufacturing standards.';
 ---
 
-<Layout title="Contact & Quote Request | Hong Yu">
+<Layout title="Contact & Quote Request | Hong Yu" seo={seo} description={heroDescription}>
     <main>
         <!-- Hero Section -->
         <section class="relative bg-inverse-surface py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
@@ -52,20 +80,22 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                 <img alt="Industrial Backdrop" fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroBg}/>
                 <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
             </div>
-            <div class="relative z-10 max-w-container-max mx-auto px-gutter text-center text-white w-full">
-                <h1 class="font-display-lg text-display-lg mb-4 tracking-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]">{heroTitle}</h1>
-                <p class="font-body-lg text-body-lg text-white/90 max-w-2xl mx-auto [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
-                    {heroDescription}
-                </p>
+            <div class="relative z-10 max-w-container-max mx-auto px-gutter text-white w-full">
+                <div class="max-w-3xl">
+                    <h1 class="font-display-lg mb-4 text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]">{heroTitle}</h1>
+                    <p class="font-body-lg text-body-lg text-white/90 max-w-2xl [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                        {heroDescription}
+                    </p>
+                </div>
             </div>
         </section>
         <!-- Support Cards - Exactly 4 -->
         <section class="py-xl max-w-container-max mx-auto px-gutter">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
                 {supportCards.map((card: any) => (
-                    <div class="bg-white border border-outline-variant p-md hover:shadow-lg transition-all cursor-pointer group">
+                    <div class="card-lift bg-white border border-outline-variant p-md hover:border-primary cursor-pointer group">
                         <div class="flex flex-col items-start gap-sm">
-                            <span class="material-symbols-outlined text-primary text-4xl">{card.icon}</span>
+                            <span class="material-symbols-outlined text-primary text-4xl">{one(card.icon)}</span>
                             <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">{card.title}</h3>
                             <p class="font-body-sm text-body-sm text-on-surface-variant">{card.description}</p>
                             <a href={card.linkUrl || '#'} class="text-primary font-label-bold text-label-bold group-hover:translate-x-1 transition-transform border-b border-primary/20 pb-0.5">{card.linkText}</a>
@@ -83,120 +113,50 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                         <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">{formTitle}</h2>
                         <p class="font-body-md text-body-md text-on-surface-variant border-l-4 border-primary pl-4">{formIntro}</p>
                     </div>
-                    <form class="space-y-md quote-form" action="/api/contact" method="POST" data-ajax-form data-success="Thank you! Your quote request has been received. Our engineering team will reply with a digital proof within 24 hours.">
+                    <form class="space-y-md quote-form" action="/api/contact" method="POST" data-ajax-form data-success={successMessage}>
                         <!-- Honeypot spam filter (hidden from humans) -->
                         <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
-                        <!-- Product Details Group: Two-column focused -->
+                        <!-- Fields below are fully editable in WP admin → Contact Page → Quote Form.
+                             Half-width fields pair up on desktop; full-width fields span the whole row. -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                            <div class="space-y-md">
-                                <div class="relative">
-                                    <label class="visually-hidden">Product Type</label>
-                                    <select name="Product Type" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
-                                        <option selected disabled>Product Type</option>
-                                        <option>Flex Badges</option>
-                                        <option>Embroidered Patches</option>
-                                        <option>PVC 3D Patches</option>
-                                        <option>Metal Hardware</option>
-                                        <option>Woven Labels</option>
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
-                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
-                                    </div>
+                            {formFields.map((f: any) => (
+                                <div class={f.width === 'full' ? 'md:col-span-2' : ''}>
+                                    <label class="visually-hidden" for={`ff-${f.label}`}>{f.label}</label>
+                                    {f.type === 'textarea' ? (
+                                        <textarea id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} placeholder={f.placeholder || f.label} rows="4" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"></textarea>
+                                    ) : f.type === 'select' ? (
+                                        <div class="relative">
+                                            <select id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                                <option value="" selected disabled>{f.placeholder || f.label}</option>
+                                                {f.options.map((o: string) => (<option>{o}</option>))}
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
+                                                <span class="material-symbols-outlined text-[20px]" aria-hidden="true">expand_more</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <input id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} placeholder={f.placeholder || f.label} type={f.type} class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                                    )}
                                 </div>
-                                <div>
-                                    <label class="visually-hidden">Dimensions (W x H)</label>
-                                    <input name="Dimensions" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Dimensions (W x H)" type="text"/>
-                                </div>
-                                <div class="relative">
-                                    <label class="visually-hidden">Finish Preference</label>
-                                    <select name="Finish" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
-                                        <option selected disabled>Finish Preference</option>
-                                        <option>Matte</option>
-                                        <option>Glossy</option>
-                                        <option>Metallic</option>
-                                        <option>Textured</option>
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
-                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="space-y-md">
-                                <div>
-                                    <label class="visually-hidden">Estimated Quantity</label>
-                                    <input name="Estimated Quantity" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Estimated Quantity" type="number"/>
-                                </div>
-                                <div class="relative">
-                                    <label class="visually-hidden">Backing Attachment</label>
-                                    <select name="Backing Attachment" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
-                                        <option selected disabled>Backing Attachment</option>
-                                        <option>Heat Seal</option>
-                                        <option>Velcro</option>
-                                        <option>Adhesive</option>
-                                        <option>Plain</option>
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
-                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
-                                    </div>
-                                </div>
-                                <div class="relative">
-                                    <label class="visually-hidden">Requested Lead Time</label>
-                                    <select name="Requested Lead Time" class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
-                                        <option selected disabled>Requested Lead Time</option>
-                                        <option>Standard (15-20 days)</option>
-                                        <option>Expedited (10 days)</option>
-                                        <option>Rush (5-7 days)</option>
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant">
-                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
-                        <!-- Artwork Upload: Large & Clean -->
-                        <div class="py-md">
-                            <label class="visually-hidden">Design Files</label>
-                            <div class="border-2 border-dashed border-outline-variant p-lg text-center bg-surface-container-lowest hover:border-primary hover:bg-primary-container/5 transition-all group cursor-pointer design-file-upload">
-                                <span class="material-symbols-outlined text-outline text-5xl mb-sm group-hover:text-primary transition-colors">cloud_upload</span>
-                                <p class="font-headline-sm text-on-surface font-bold">Click to upload or drag &amp; drop artwork</p>
-                                <p class="font-body-sm text-on-surface-variant mt-1">SVG, AI, PDF, or high-res PNG (Max 25MB)</p>
-                                <input name="attachment" class="hidden" id="artwork-upload" type="file"/>
-                            </div>
-                        </div>
-                        <!-- Contact Info Group: Strong spacing -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-md pt-md border-t border-outline-variant">
-                            <div class="space-y-md">
-                                <div>
-                                    <label class="visually-hidden">Full Name</label>
-                                    <input name="name" required class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Full Name" type="text"/>
-                                </div>
-                                <div>
-                                    <label class="visually-hidden">Email Address</label>
-                                    <input name="email" required class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Email Address" type="email"/>
+                        {uploadEnabled && (
+                            <div class="py-md">
+                                <div class="border-2 border-dashed border-outline-variant p-lg text-center bg-surface-container-lowest hover:border-primary hover:bg-primary-container/5 transition-all group cursor-pointer design-file-upload">
+                                    <span class="material-symbols-outlined text-outline text-5xl mb-sm group-hover:text-primary transition-colors" aria-hidden="true">cloud_upload</span>
+                                    <p class="font-headline-sm text-on-surface font-bold">{uploadTitle}</p>
+                                    <p class="font-body-sm text-on-surface-variant mt-1">{uploadHint}</p>
+                                    <input name="attachment" aria-label="Design files upload" class="hidden" id="artwork-upload" type="file"/>
                                 </div>
                             </div>
-                            <div class="space-y-md">
-                                <div>
-                                    <label class="visually-hidden">Company Name</label>
-                                    <input name="Company" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Company Name" type="text"/>
-                                </div>
-                                <div>
-                                    <label class="visually-hidden">Phone Number</label>
-                                    <input name="Phone" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Phone Number" type="tel"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="visually-hidden">Additional Project Notes</label>
-                            <textarea name="message" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Additional Project Notes" rows="4"></textarea>
-                        </div>
+                        )}
                         <div class="flex items-center gap-sm py-sm">
                             <input name="Agreed to Terms" value="Yes" required class="w-5 h-5 shrink-0 text-primary border-outline-variant focus:ring-primary rounded-sm" id="legal" type="checkbox"/>
                             <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
                         </div>
                         <p data-form-status role="status" aria-live="polite" class="font-body-sm text-body-sm"></p>
-                        <button class="bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
-                            Submit Quote Request
+                        <button class="w-full bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
+                            {submitButtonText}
                         </button>
                     </form>
                 </div>
@@ -249,7 +209,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                         <div class="flex flex-col gap-sm">
                             {socials.map((s: any) => (
                                 <a class="flex items-center gap-sm text-on-surface hover:text-primary transition-colors py-2 border-b border-outline-variant/60 last:border-b-0" href={s.url || '#'} target={s.url && s.url !== '#' ? '_blank' : undefined} rel="noopener">
-                                    <span class="material-symbols-outlined text-primary shrink-0">{s.icon}</span>
+                                    <span class="material-symbols-outlined text-primary shrink-0">{one(s.icon)}</span>
                                     <span class="font-body-md">{s.label}</span>
                                 </a>
                             ))}

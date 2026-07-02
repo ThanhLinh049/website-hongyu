@@ -1,10 +1,12 @@
 ---
 import Contact from '../components/contact.astro';
 import { wpQuery } from '../lib/api';
+import { SEO_FRAGMENT } from '../lib/seo';
 
 export const prerender = false; // SSR: always shows latest Contact content from WP
 
 let pageData = null;
+let seoData = null;
 
 try {
   const data = await wpQuery({
@@ -42,6 +44,7 @@ try {
             legalTitle
             legalText
           }
+          ${SEO_FRAGMENT}
         }
       }
     `
@@ -50,9 +53,12 @@ try {
   if (data?.page?.contactPage) {
     pageData = data.page.contactPage;
   }
+  if (data?.page?.seo) {
+    seoData = data.page.seo;
+  }
 } catch (e) {
   console.warn("Failed to fetch contact page data from WordPress. Fallback content will be used.", e);
 }
 ---
 
-<Contact pageData={pageData} />
+<Contact pageData={pageData} seo={seoData} />

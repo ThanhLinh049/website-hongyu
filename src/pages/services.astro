@@ -1,10 +1,12 @@
 ---
 import Services from '../components/services.astro';
 import { wpQuery } from '../lib/api';
+import { SEO_FRAGMENT } from '../lib/seo';
 
 export const prerender = false; // SSR: always shows latest Services content from WP
 
 let pageData = null;
+let seoData = null;
 
 try {
   const data = await wpQuery({
@@ -61,6 +63,7 @@ try {
             ctaSecondaryText
             ctaNote
           }
+          ${SEO_FRAGMENT}
         }
       }
     `
@@ -69,9 +72,12 @@ try {
   if (data?.page?.servicesPage) {
     pageData = data.page.servicesPage;
   }
+  if (data?.page?.seo) {
+    seoData = data.page.seo;
+  }
 } catch (e) {
   console.warn("Failed to fetch services page data from WordPress. Fallback content will be used.", e);
 }
 ---
 
-<Services pageData={pageData} />
+<Services pageData={pageData} seo={seoData} />

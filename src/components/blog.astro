@@ -15,14 +15,12 @@ const { posts = [], categories = [], pageData, seo } = Astro.props;
 const heroBadge = pageData?.heroBadge || 'B2B RESOURCE HUB';
 const heroTitle = pageData?.heroTitle || 'Product Guides & Custom Manufacturing Insights';
 const heroSubtitle = pageData?.heroSubtitle || 'Expert advice on materials, manufacturing techniques, and design best-practices for high-performance industrial branding.';
+const heroImage = pageData?.heroImage?.node?.sourceUrl || '';
 const newsletterTitle = pageData?.newsletterTitle || 'Industrial Insights to Your Inbox';
 const newsletterText = pageData?.newsletterText || 'Get bi-weekly updates on manufacturing trends, material sciences, and cost-saving procurement strategies for your branding needs.';
 const newsletterButton = pageData?.newsletterButton || 'Subscribe to Insights';
 
 const activePosts = posts.length > 0 ? posts : BLOG_POSTS;
-// Featured article: the post the client picked on the Blog page, else the newest.
-const pickedFeatured = pageData?.featuredPost?.nodes?.[0] || null;
-const featuredPost = pickedFeatured || activePosts[0];
 
 // Category filter buttons: dynamic from WP, fall back to those present on posts.
 const presentMap = new Map<string, string>();
@@ -53,16 +51,22 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 <Layout title="Blog | Hong Yu Manufacturing Insights" seo={seo}>
     <main class="max-w-full">
         <!-- Hero Section -->
-        <section class="bg-surface-container-low py-xl flex items-center min-h-[260px] md:min-h-[504px]">
-            <div class="max-w-container-max mx-auto px-gutter w-full">
+        <section class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[420px] overflow-hidden">
+            {heroImage && (
+                <div class="absolute inset-0 pointer-events-none">
+                    <img alt={heroTitle} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroImage} />
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/40"></div>
+                </div>
+            )}
+            <div class="relative z-10 max-w-container-max mx-auto px-gutter w-full">
                 <div class="max-w-3xl">
                     <div
-                        class="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed-variant px-4 py-1.5 rounded-full mb-md">
+                        class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white px-4 py-1.5 rounded-full mb-md">
                         <span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
                         <span class="font-label-bold text-xs">{heroBadge}</span>
                     </div>
-                    <h1 class="font-display-lg text-display-lg text-primary mb-md">{heroTitle}</h1>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">{heroSubtitle}</p>
+                    <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{heroTitle}</h1>
+                    <p class="font-body-lg text-body-lg text-white/80">{heroSubtitle}</p>
                 </div>
             </div>
         </section>
@@ -73,7 +77,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                     <span class="font-label-bold text-on-surface whitespace-nowrap hidden sm:inline">CATEGORIES:</span>
                     <div class="flex gap-sm" id="blog-filters">
                         <button data-filter="all"
-                            class="blog-filter-btn px-5 py-2 rounded-full bg-primary text-on-primary font-label-md transition-all whitespace-nowrap">All Posts</button>
+                            class="blog-filter-btn px-5 py-2 rounded-full border border-primary bg-primary text-on-primary font-label-md transition-all whitespace-nowrap">All Posts</button>
                         {filterCats.map((c: any) => (
                             <button data-filter={c.slug}
                                 class="blog-filter-btn px-5 py-2 rounded-full border border-outline-variant hover:border-primary text-on-surface-variant font-label-md transition-all whitespace-nowrap">{c.name}</button>
@@ -87,53 +91,24 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                 </div>
             </div>
         </section>
-        <!-- Featured Article (First Post) -->
-        {featuredPost && (
-            <section id="blog-featured" class="max-w-container-max mx-auto px-gutter py-xl">
-                <a href={`/blog/${featuredPost.slug}`}
-                    class="relative group cursor-pointer overflow-hidden rounded-xl bg-white border border-outline-variant hover:border-primary transition-all duration-300 shadow-sm block">
-                    <div class="flex flex-col lg:flex-row min-h-[380px]">
-                        <div class="lg:w-[60%] overflow-hidden">
-                            <img alt={featuredPost.title} fetchpriority="high" decoding="async"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 min-h-[240px]"
-                                src={featuredPost.featuredImage?.node?.sourceUrl || '/demo/demo-18.webp'} />
-                        </div>
-                        <div class="lg:w-[40%] p-xl flex flex-col justify-center">
-                            <div class="text-tertiary font-label-bold mb-base uppercase tracking-[0.2em] text-xs">Featured
-                                Guide</div>
-                            <h2 class="font-headline-lg text-headline-lg text-primary mb-md leading-tight">{featuredPost.title}</h2>
-                            <p class="font-body-lg text-on-surface-variant mb-lg leading-relaxed line-clamp-3">
-                                {stripHtml(featuredPost.excerpt)}
-                            </p>
-                            <div class="mt-auto flex items-center justify-between">
-                                <div class="flex items-center gap-2 text-on-surface-variant">
-                                    <span class="material-symbols-outlined text-[20px]">schedule</span>
-                                    <span class="font-label-md">{formatDate(featuredPost.date)}</span>
-                                </div>
-                                <span class="text-primary font-label-bold inline-flex items-center gap-2 group/btn">
-                                    Read Full Article
-                                    <span
-                                        class="material-symbols-outlined transition-transform group-hover/btn:translate-x-2">arrow_forward</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </section>
-        )}
-        <!-- Article Grid (all posts; featured one is hidden here in the default view) -->
-        <section class="max-w-container-max mx-auto px-gutter pb-xl">
+        <!-- Article Grid (all posts, 12 per page with pagination) -->
+        <section class="max-w-container-max mx-auto px-gutter py-xl">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md" id="blog-grid">
                 {activePosts.map((post: any) => (
                     <a href={`/blog/${post.slug}`}
-                        data-featured={featuredPost && post.slug === featuredPost.slug ? '1' : '0'}
                         data-cats={catSlugs(post)}
                         data-search={searchData(post)}
-                        class="blog-card bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary transition-all duration-300 group shadow-sm">
+                        class="blog-card card-lift bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:border-primary group shadow-sm">
                         <div class="aspect-square overflow-hidden">
-                            <img alt={post.title} loading="lazy" decoding="async"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                src={post.featuredImage?.node?.sourceUrl || '/demo/demo-13.webp'} />
+                            {post.featuredImage?.node?.sourceUrl ? (
+                                <img alt={post.title} loading="lazy" decoding="async"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    src={post.featuredImage.node.sourceUrl} />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center bg-surface-container-low text-outline">
+                                    <span class="material-symbols-outlined text-5xl">image</span>
+                                </div>
+                            )}
                         </div>
                         <div class="p-md flex flex-col flex-grow">
                             <div class="flex items-center gap-base mb-sm">
@@ -174,7 +149,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                     <form class="flex flex-col gap-base" action="/api/newsletter" method="POST" data-ajax-form data-success="You're subscribed! Watch your inbox for our next industrial insights update.">
                         <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
                         <div class="relative">
-                            <input name="email" required
+                            <input name="email" required aria-label="Work email address"
                                 class="w-full bg-white border-0 rounded-lg px-5 py-4 text-on-background focus:ring-2 focus:ring-secondary outline-none transition-all"
                                 placeholder="Enter your work email" type="email" />
                         </div>
@@ -182,8 +157,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                             class="bg-[#E67E22] text-white px-8 py-4 rounded-lg font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                             type="submit">{newsletterButton}</button>
                         <p data-form-status role="status" aria-live="polite" class="text-[13px] text-white text-center min-h-[1rem]"></p>
-                        <p class="text-[12px] text-primary-fixed/70 text-center">Strict B2B only. No spam. <a
-                                class="underline hover:text-white" href="#">Privacy Policy</a></p>
+                        <p class="text-[12px] text-primary-fixed/70 text-center">Strict B2B only. No spam.</p>
                     </form>
                 </div>
             </div>
@@ -194,8 +168,8 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 <script>
     import { initForms } from '../lib/forms';
 
-    // 4 per page on mobile (≤767px), 9 on tablet/desktop.
-    const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 9;
+    // 12 posts per page (all breakpoints).
+    const perPage = () => 12;
 
     // Page-number list with ellipsis: 1 … 4 5 [6] 7 8 … 20
     const pageList = (current: number, total: number): (number | string)[] => {
@@ -213,7 +187,6 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
     const setupBlog = () => {
         const filterWrap = document.getElementById('blog-filters');
         const grid = document.getElementById('blog-grid');
-        const featured = document.getElementById('blog-featured');
         const empty = document.getElementById('blog-empty');
         const pager = document.getElementById('blog-pagination');
         const search = document.getElementById('blog-search') as HTMLInputElement | null;
@@ -237,14 +210,8 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
         const render = () => {
             const PER_PAGE = perPage();
             const def = isDefault();
-            // Default view shows the featured block; once filtering/searching, it collapses to a normal card.
-            if (featured) featured.style.display = def ? '' : 'none';
 
-            const visible = cards.filter(c => {
-                if (!matches(c)) return false;
-                if (def && c.getAttribute('data-featured') === '1') return false; // shown in the featured block instead
-                return true;
-            });
+            const visible = cards.filter(c => matches(c));
 
             const totalPages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
             if (page > totalPages) page = totalPages;
@@ -293,11 +260,11 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 
         buttons.forEach(btn => btn.addEventListener('click', () => {
             buttons.forEach(b => {
-                b.classList.remove('bg-primary', 'text-on-primary');
-                b.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+                b.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+                b.classList.add('border-outline-variant', 'text-on-surface-variant');
             });
-            btn.classList.add('bg-primary', 'text-on-primary');
-            btn.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+            btn.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+            btn.classList.remove('border-outline-variant', 'text-on-surface-variant');
             filter = btn.getAttribute('data-filter') || 'all';
             page = 1;
             render();
