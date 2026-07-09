@@ -86,19 +86,19 @@ const base = `/products/${cat?.slug}`;
         <div class="max-w-container-max mx-auto px-gutter">
           <!-- Toolbar: category select + search + sort -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-md mb-lg border-b border-outline-variant pb-base">
-            <p class="text-sm text-outline">Showing <span id="shown-count" class="text-on-background font-bold">0</span> of <span id="total-count" class="text-on-background font-bold">{products.length}</span> products</p>
-            <div class="flex items-center gap-sm flex-wrap">
-              <div class="relative">
-                <input id="cat-search" type="text" placeholder="Search by name..." class="w-40 sm:w-52 pl-base pr-xl py-2 bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
-                <span class="material-symbols-outlined absolute right-base top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+            <p class="text-sm text-outline shrink-0">Showing <span id="shown-count" class="text-on-background font-bold">0</span> of <span id="total-count" class="text-on-background font-bold">{products.length}</span> products</p>
+            <div class="grid grid-cols-2 gap-sm sm:flex sm:items-center sm:flex-nowrap min-w-0">
+              <div class="relative col-span-2 sm:col-span-1 sm:shrink">
+                <input id="cat-search" type="text" placeholder="Search by name..." class="w-full sm:w-40 md:w-52 pl-base pr-xl py-2 bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-sm" />
+                <span class="material-symbols-outlined absolute right-base top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span>
               </div>
               {allCats.length > 1 && (
-                <select id="cat-switch" aria-label="Switch category" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
+                <select id="cat-switch" aria-label="Switch category" class="w-full sm:w-auto shrink-0 text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
                   <option value="" disabled selected hidden>Category</option>
                   {allCats.map((c: any) => (<option value={c.slug}>{c.name}</option>))}
                 </select>
               )}
-              <select id="cat-sort" aria-label="Sort products" class="text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary">
+              <select id="cat-sort" aria-label="Sort products" class:list={['w-full sm:w-auto shrink-0 text-sm font-bold bg-white border border-outline-variant px-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-primary', allCats.length > 1 ? '' : 'col-span-2 sm:col-span-1']}>
                 <option value="" disabled selected hidden>Sort by</option>
                 <option value="default">Featured</option>
                 <option value="az">Name (A-Z)</option>
