@@ -64,11 +64,15 @@ function shell(opts: {
 }): string {
   const year = 2026;
   const site = (opts.siteUrl || '').replace(/\/$/, '');
+  // Absolute URL to the email logo (PNG — WebP is unreliable in mail clients).
+  // Served from the frontend's /public. Falls back to a text wordmark when the
+  // site origin is unknown (e.g. some local runs).
+  const logoUrl = site ? `${site}/logo-email.png` : '';
   const siteLine = site
     ? `<a href="${escapeHtml(site)}" style="color:${NAVY};text-decoration:none;">${escapeHtml(
         site.replace(/^https?:\/\//, ''),
       )}</a>`
-    : 'Hong Yu';
+    : 'Hong Yu Emblem';
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -81,9 +85,15 @@ function shell(opts: {
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid ${LINE};border-radius:12px;overflow:hidden;">
         <!-- Header -->
-        <tr><td style="background:${NAVY};background-image:linear-gradient(135deg,${NAVY},${NAVY_DARK});padding:26px 24px;">
-          <div style="font:800 24px/1 Arial,Helvetica,sans-serif;letter-spacing:.12em;color:#ffffff;">HONG YU</div>
-          <div style="font:600 11px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#bcd3f5;padding-top:6px;">Custom Badges &middot; Patches &middot; Metal Products</div>
+        <tr><td align="center" style="background:${NAVY};background-image:linear-gradient(135deg,${NAVY},${NAVY_DARK});padding:28px 24px 24px 24px;text-align:center;">
+          ${
+            logoUrl
+              ? `<img src="${escapeHtml(
+                  logoUrl,
+                )}" width="150" alt="Hong Yu Emblem" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;width:150px;max-width:150px;height:auto;" />`
+              : `<div style="font:800 24px/1 Arial,Helvetica,sans-serif;letter-spacing:.12em;color:#ffffff;">HONG YU EMBLEM</div>`
+          }
+          <div style="font:600 11px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#bcd3f5;padding-top:12px;">Custom Badges &middot; Patches &middot; Metal Products</div>
         </td></tr>
         <tr><td style="height:4px;background:${ORANGE};font-size:0;line-height:0;">&nbsp;</td></tr>
         <!-- Intro -->
@@ -106,7 +116,7 @@ function shell(opts: {
             This message was sent from the ${siteLine} website. Reply directly to respond to the sender.
           </div>
           <div style="font:400 11px/1.6 Arial,Helvetica,sans-serif;color:#9ca3af;padding-top:8px;">
-            &copy; ${year} Hong Yu. All rights reserved.
+            &copy; ${year} Hong Yu Emblem. All rights reserved.
           </div>
         </td></tr>
       </table>
@@ -130,7 +140,7 @@ export function renderContactEmail(fields: Record<string, any>, siteUrl?: string
   const nameEntry = Object.entries(fields).find(
     ([k, v]) => /name/i.test(k) && String(v ?? '').trim() !== '',
   );
-  const who = nameEntry ? String(nameEntry[1]) : 'Hong Yu Website';
+  const who = nameEntry ? String(nameEntry[1]) : 'Hong Yu Emblem Website';
   const heading = 'New Quote Request';
   const intro = `You have a new manufacturing quote request from ${who}.`;
   return {
@@ -144,9 +154,9 @@ export function renderContactEmail(fields: Record<string, any>, siteUrl?: string
 export function renderNewsletterEmail(fields: Record<string, any>, siteUrl?: string) {
   const ordered: EmailField[] = [{ label: 'Subscriber Email', value: fields.email }];
   const heading = 'New Newsletter Subscriber';
-  const intro = 'Someone just subscribed to Hong Yu industrial insights from the website.';
+  const intro = 'Someone just subscribed to Hong Yu Emblem industrial insights from the website.';
   return {
-    subject: 'New Newsletter Subscriber — Hong Yu',
+    subject: 'New Newsletter Subscriber — Hong Yu Emblem',
     html: shell({ preheader: intro, heading, intro, fields: ordered, siteUrl }),
     text: `${heading}\n${intro}\n\n${rowsText(ordered)}`,
   };

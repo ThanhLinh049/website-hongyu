@@ -26,3 +26,6 @@ Thumbs.db
 
 # WordPress/CMS backend artifacts (không thuộc frontend deploy)
 acf-import.zip
+
+# Bản nén dự án (không đẩy lên git)
+hongyu.zip

@@ -314,15 +314,15 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
         <section class="py-xl bg-surface">
             <div class="max-w-container-max mx-auto px-gutter">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
-                    <div class="w-full md:w-auto">
+                    <div class="w-full md:w-auto min-w-0">
                         <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
                         {portfolioSectionSubtitle && (
                             <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{portfolioSectionSubtitle}</p>
                         )}
-                        <div id="recent-filters" class="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-                            <button type="button" data-filter="all" class="recent-filter text-primary font-bold border-b-2 border-primary whitespace-nowrap">All Projects</button>
+                        <div id="recent-filters" class="flex gap-4 sm:gap-6 overflow-x-auto pb-2 hide-scrollbar min-w-0 max-w-full">
+                            <button type="button" data-filter="all" class="recent-filter shrink-0 text-primary font-bold border-b-2 border-primary whitespace-nowrap pb-px">All Projects</button>
                             {recentCats.map((c: any) => (
-                                <button type="button" data-filter={c.key} class="recent-filter text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
+                                <button type="button" data-filter={c.key} class="recent-filter shrink-0 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
                             ))}
                         </div>
                     </div>
