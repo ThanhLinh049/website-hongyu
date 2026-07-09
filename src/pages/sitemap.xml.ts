@@ -40,8 +40,7 @@ export const GET: APIRoute = async ({ site, url }) => {
       if (c?.slug) entries.push({ loc: `${origin}/products/${c.slug}`, priority: '0.7' });
     }
     for (const p of data?.products?.nodes || []) {
-      const cat = p?.productCategories?.nodes?.[0]?.slug;
-      if (p?.slug && cat) entries.push({ loc: `${origin}/products/${cat}/${p.slug}`, lastmod: lastmod(p.modified), priority: '0.6' });
+      if (p?.slug) entries.push({ loc: `${origin}/products/${p.slug}`, lastmod: lastmod(p.modified), priority: '0.6' });
     }
     for (const p of data?.portfolios?.nodes || []) {
       if (p?.slug) entries.push({ loc: `${origin}/portfolio/${p.slug}`, lastmod: lastmod(p.modified), priority: '0.6' });

@@ -18,8 +18,6 @@ const heroTag = pageData?.heroTag || 'Services';
 const heroTitle = pageData?.heroTitle || 'Precision Custom Manufacturing Services';
 const heroDescription = pageData?.heroDescription || 'From initial blueprint to final assembly, we provide end-to-end industrial branding solutions. Our facility handles complex geometries, specialized materials, and high-volume rollouts with ISO-certified accuracy.';
 const heroBgUrl = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-06.webp';
-const heroCtaPrimaryText = pageData?.heroCtaPrimaryText || 'Start Your Project';
-const heroCtaSecondaryText = pageData?.heroCtaSecondaryText || 'Download Technical Guide';
 
 // 2. Capabilities fallbacks
 const capabilitiesTitle = pageData?.capabilitiesTitle || 'Our Core Service Capabilities';
@@ -95,14 +93,9 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                     <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">
                         {heroTitle}
                     </h1>
-                    <p class="font-body-lg text-body-lg text-white/80 mb-lg max-w-2xl">
+                    <p class="font-body-lg text-body-lg text-white/80 max-w-2xl">
                         {heroDescription}
                     </p>
-                    <div class="flex flex-wrap gap-md">
-                        <a href="/contact" class="bg-cta-orange text-white px-lg py-3 rounded-lg font-label-bold text-label-bold hover:brightness-110 transition-all shadow-lg text-center">
-                            {heroCtaPrimaryText}
-                        </a>
-                    </div>
                 </div>
             </div>
         </section>

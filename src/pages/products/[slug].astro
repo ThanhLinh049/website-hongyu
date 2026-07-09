@@ -1,29 +1,27 @@
 ---
-// Static: every product is prerendered at build (deploy), once per category it
-// belongs to (so any linked /products/<cat>/<slug> URL resolves). New/edited
-// products go live only on the next Deploy. See getStaticPaths below.
-import Layout from '../../../layouts/Layout.astro';
-import { wpQuery, fetchAllNodes, rewriteHtmlMedia } from '../../../lib/api';
-import { SEO_FRAGMENT } from '../../../lib/seo';
+// Static product detail at a FLAT URL: /products/<slug> (no category segment).
+// Prerendered at build (one page per product). The category still exists as a
+// browsing/filter page at /products/<category> — see [category]/index.astro —
+// but it is no longer part of the product's own URL. Category slugs and product
+// slugs share the /products/* namespace; because getStaticPaths emits concrete,
+// non-overlapping paths, the two dynamic routes don't collide at build time.
+import Layout from '../../layouts/Layout.astro';
+import { wpQuery, fetchAllNodes, rewriteHtmlMedia } from '../../lib/api';
+import { SEO_FRAGMENT } from '../../lib/seo';
 
 export async function getStaticPaths() {
-  const nodes = await fetchAllNodes('products', 'slug productCategories { nodes { slug } }');
-  const paths: { params: { category: string; slug: string } }[] = [];
+  const nodes = await fetchAllNodes('products', 'slug');
   const seen = new Set<string>();
+  const paths: { params: { slug: string } }[] = [];
   for (const p of nodes) {
-    if (!p?.slug) continue;
-    for (const c of p.productCategories?.nodes || []) {
-      if (!c?.slug) continue;
-      const key = `${c.slug}/${p.slug}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      paths.push({ params: { category: c.slug, slug: p.slug } });
-    }
+    if (!p?.slug || seen.has(p.slug)) continue;
+    seen.add(p.slug);
+    paths.push({ params: { slug: p.slug } });
   }
   return paths;
 }
 
-const { category, slug } = Astro.params;
+const { slug } = Astro.params;
 
 let product: any = null;
 let all: any[] = [];
@@ -67,7 +65,7 @@ const defaultProduct = {
   productFields: { specs: [] },
   featuredImage: null,
   productGallery: { gallery: { nodes: [] } },
-  productCategories: { nodes: [{ name: 'Metal', slug: category || 'metal' }] },
+  productCategories: { nodes: [{ name: 'Metal', slug: 'metal' }] },
   seo: null,
 };
 product = product || defaultProduct;
@@ -78,13 +76,13 @@ const galleryUrls: string[] = product
   ? [mainImage, ...((product.productGallery?.gallery?.nodes || []).map((n: any) => n.sourceUrl).filter(Boolean))]
       .filter((v, i, a) => v && a.indexOf(v) === i)
   : [];
-// Prefer the category from the URL; fall back to the product's first category.
+// Category is shown in the breadcrumb (links to its filter page) but is NOT in
+// this page's URL. Use the product's first category for that link + "related".
 const cats = product?.productCategories?.nodes || [];
-const cat = cats.find((c: any) => c.slug === category) || cats[0];
-const catSlug = cat?.slug || category;
-const base = `/products/${catSlug}`;
+const cat = cats[0];
+const catSlug = cat?.slug;
 const related = product
-  ? (all || []).filter((p: any) => p.slug !== product.slug && (p.productCategories?.nodes || []).some((c: any) => c.slug === catSlug)).slice(0, 4)
+  ? (all || []).filter((p: any) => p.slug !== product.slug && catSlug && (p.productCategories?.nodes || []).some((c: any) => c.slug === catSlug)).slice(0, 4)
   : [];
 
 const seoTitle = product?.seo?.title || (product ? `${product.title} | Products` : 'Product not found');
@@ -101,7 +99,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <div class="max-w-container-max mx-auto px-gutter py-sm text-[12px] text-on-surface-variant flex flex-wrap items-center gap-xs">
           <a href="/" class="hover:text-primary">Home</a><span>/</span>
           <a href="/products" class="hover:text-primary">Products</a>
-          {cat && (<><span>/</span><a href={base} class="hover:text-primary font-bold text-primary">{cat.name}</a></>)}
+          {cat && (<><span>/</span><a href={`/products/${cat.slug}`} class="hover:text-primary font-bold text-primary">{cat.name}</a></>)}
           <span>/</span><span class="text-on-surface font-medium truncate max-w-[200px]">{product.title}</span>
         </div>
       </nav>
@@ -196,7 +194,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             <h2 class="font-headline-lg text-primary mb-lg">Related Products</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
               {related.map((p: any) => (
-                <a href={`${base}/${p.slug}`} class="card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col">
+                <a href={`/products/${p.slug}`} class="card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col">
                   <div class="aspect-square bg-surface relative overflow-hidden">
                     {relImg(p) && <img src={relImg(p)} alt={p.title} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                   </div>

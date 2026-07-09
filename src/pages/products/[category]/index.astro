@@ -56,7 +56,6 @@ const specs = (cf.technicalSpecs || []).filter((s: any) => s.specName || s.specV
 const benefits = (cf.benefits || []).filter((b: any) => b.text);
 const faqs = (cf.faqs || []).filter((f: any) => f.question);
 const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
-const base = `/products/${cat?.slug}`;
 ---
 
 <Layout title={cat ? `${cat.name} | Products | Hong Yu` : 'Category not found'} description={cf.catIntro || ''}>
@@ -71,17 +70,19 @@ const base = `/products/${cat?.slug}`;
         </div>
       </nav>
 
-      <!-- Compact category header (sub-page style: light, low profile) -->
-      <header id="cat-header" class="bg-surface-container-low border-b border-outline-variant">
-        <div class="max-w-container-max mx-auto px-gutter py-lg flex flex-col sm:flex-row sm:items-end sm:justify-between gap-md">
-          <div class="max-w-2xl">
-            {cf.catTagline && (<span class="block text-cta-orange uppercase tracking-[0.2em] text-[11px] font-bold mb-xs">{cf.catTagline}</span>)}
-            <h1 class="font-headline-lg text-[24px] sm:text-headline-lg text-primary">{cat.name}</h1>
-            {cf.catIntro && (<p class="font-body-md text-on-surface-variant mt-sm">{cf.catIntro}</p>)}
+      <!-- Category banner — same height standard as the services hero
+           (min-h-[260px] md:min-h-[504px]); solid navy, no image. The product
+           filter/sort toolbar is a separate section below, so the banner height
+           never merges with the filter. -->
+      <section class="relative py-xl flex items-center min-h-[260px] md:min-h-[504px] bg-primary overflow-hidden">
+        <div class="relative z-10 w-full max-w-container-max mx-auto px-gutter">
+          <div class="max-w-3xl">
+            {cf.catTagline && (<span class="block font-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px] mb-sm">{cf.catTagline}</span>)}
+            <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{cat.name}</h1>
+            {cf.catIntro && (<p class="font-body-lg text-body-lg text-white/80 max-w-2xl">{cf.catIntro}</p>)}
           </div>
-          <a href="/contact" class="shrink-0 inline-block bg-cta-orange text-white px-md py-2.5 font-label-bold uppercase tracking-wider text-sm hover:brightness-110 transition-all text-center">Request Quote</a>
         </div>
-      </header>
+      </section>
 
       <!-- Catalogue: category switcher + toolbar + grid -->
       <section class="py-xl">
@@ -112,7 +113,7 @@ const base = `/products/${cat?.slug}`;
           {products.length > 0 ? (
             <div id="cat-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
               {products.map((p: any) => (
-                <a href={`${base}/${p.slug}`}
+                <a href={`/products/${p.slug}`}
                   class="product-card card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col"
                   data-name={(p.title || '').toLowerCase()} data-date={p.date || ''}>
                   <div class="aspect-square bg-surface-container relative overflow-hidden">

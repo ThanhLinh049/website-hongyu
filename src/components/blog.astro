@@ -51,7 +51,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
 <Layout title="Blog | Hong Yu Manufacturing Insights" seo={seo}>
     <main class="max-w-full">
         <!-- Hero Section -->
-        <section class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[420px] overflow-hidden">
+        <section class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
             {heroImage && (
                 <div class="absolute inset-0 pointer-events-none">
                     <img alt={heroTitle} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroImage} />
@@ -60,11 +60,11 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
             )}
             <div class="relative z-10 max-w-container-max mx-auto px-gutter w-full">
                 <div class="max-w-3xl">
-                    <div
-                        class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white px-4 py-1.5 rounded-full mb-md">
-                        <span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
-                        <span class="font-label-bold text-xs">{heroBadge}</span>
-                    </div>
+                    {heroBadge && (
+                        <div class="flex items-center gap-sm mb-sm">
+                            <span class="font-label-bold text-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px]">{heroBadge}</span>
+                        </div>
+                    )}
                     <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{heroTitle}</h1>
                     <p class="font-body-lg text-body-lg text-white/80">{heroSubtitle}</p>
                 </div>

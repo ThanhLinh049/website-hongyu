@@ -41,7 +41,7 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 <Layout title="Showcase | Hong Yu Manufacturing" seo={seo} description={heroDescription}>
     <main>
         <!-- Hero Section (image banner, left-aligned to match other pages) -->
-        <section id="portfolio-hero" class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[420px] overflow-hidden">
+        <section id="portfolio-hero" class="relative bg-primary py-xl flex items-center min-h-[260px] md:min-h-[504px] overflow-hidden">
             {heroImage && (
                 <div class="absolute inset-0 pointer-events-none">
                     <img alt={heroTitle} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={heroImage} />
@@ -51,7 +51,9 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             <div class="relative z-10 max-w-container-max mx-auto px-gutter w-full">
                 <div class="max-w-3xl">
                     {heroEyebrow && (
-                        <p class="font-label-md text-label-md uppercase tracking-widest text-cta-orange font-bold mb-sm">{heroEyebrow}</p>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <span class="font-label-bold text-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
+                        </div>
                     )}
                     <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{heroTitle}</h1>
                     <p class="font-body-lg text-body-lg text-white/80 max-w-2xl">{heroDescription}</p>

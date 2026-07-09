@@ -21,8 +21,6 @@ const heroCtaLabel = pageData?.heroCtaLabel || 'Download Full Catalogue';
 const heroCtaUrl = pageData?.heroCtaUrl || '';
 // Only show the catalogue button when a real link/PDF is set (avoid a dead "#" link).
 const hasCatalogue = !!heroCtaLabel && !!heroCtaUrl && heroCtaUrl !== '#';
-const heroSecondaryLabel = pageData?.heroSecondaryLabel || 'Schedule Consultation';
-const heroSecondaryUrl = pageData?.heroSecondaryUrl || '/contact';
 const heroImage = pageData?.heroImage?.node?.sourceUrl || '';
 
 // Section headings (client-editable via WP)
@@ -38,8 +36,7 @@ const catImg = (c: any) => c?.categoryFields?.catHeroImage?.node?.sourceUrl || '
 const allProducts = (products && products.length > 0) ? products : PRODUCTS_LIST;
 const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
 const prodLink = (p: any) => {
-  const cslug = p?.productCategories?.nodes?.[0]?.slug;
-  return cslug ? `/products/${cslug}/${p.slug}` : `/products/${p.slug}`;
+  return `/products/${p.slug}`;
 };
 const prodFinishes = (p: any) => (p?.finishes?.nodes || []).map((x: any) => x.slug).join(' ');
 const prodBackings = (p: any) => (p?.backings?.nodes || []).map((x: any) => x.slug).join(' ');
@@ -88,14 +85,11 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                     </div>
                     <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight" set:html={heroTitle}></h1>
                     <p class="font-body-lg text-white/80 mb-lg max-w-xl">{heroDescription}</p>
-                    <div class="flex flex-wrap gap-md hero-actions">
-                        {hasCatalogue && (
+                    {hasCatalogue && (
+                        <div class="flex flex-wrap gap-md hero-actions">
                             <a href={heroCtaUrl} class="bg-[#E67E22] text-white px-md py-3 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all text-center">{heroCtaLabel}</a>
-                        )}
-                        {heroSecondaryLabel && (
-                            <a href={heroSecondaryUrl} class="border border-white/30 bg-white/5 backdrop-blur-sm text-white px-md py-3 font-label-bold uppercase tracking-wider hover:bg-white/10 transition-all text-center">{heroSecondaryLabel}</a>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

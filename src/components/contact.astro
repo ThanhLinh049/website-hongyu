@@ -8,6 +8,7 @@ interface Props {
 
 const { pageData, seo } = Astro.props;
 
+const heroEyebrow = pageData?.heroEyebrow || '';
 const heroTitle = pageData?.heroTitle || 'Contact Us for Custom Badges & Patches';
 const heroDescription = pageData?.heroDescription || 'Partner with the industry leader in high-fidelity branding solutions. From fleet identification to luxury uniform branding, we deliver precision at scale.';
 const heroBg = pageData?.heroBg?.node?.sourceUrl || '/demo/demo-02.webp';
@@ -82,6 +83,11 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
             </div>
             <div class="relative z-10 max-w-container-max mx-auto px-gutter text-white w-full">
                 <div class="max-w-3xl">
+                    {heroEyebrow && (
+                        <div class="flex items-center gap-sm mb-sm">
+                            <span class="font-label-bold text-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px]">{heroEyebrow}</span>
+                        </div>
+                    )}
                     <h1 class="font-display-lg mb-4 text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]">{heroTitle}</h1>
                     <p class="font-body-lg text-body-lg text-white/90 max-w-2xl [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                         {heroDescription}
