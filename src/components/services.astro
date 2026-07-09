@@ -198,26 +198,23 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
             </div>
         </section>
 
-        <!-- Service FAQ Accordion -->
-        <section class="py-xl bg-background">
-            <div class="max-w-container-max mx-auto px-gutter">
-                <div class="text-center mb-xl">
-                    <h2 class="font-headline-lg text-headline-lg">{faqTitle}</h2>
-                    <p class="text-on-surface-variant mt-xs">{faqSubtitle}</p>
+        <!-- Service FAQ (same pattern as the product-category FAQ: native
+             details/summary in a narrow readable column, no JS needed) -->
+        <section class="py-xl bg-surface-container-low border-t border-outline-variant">
+            <div class="max-w-3xl mx-auto px-gutter">
+                <div class="text-center mb-lg">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{faqTitle}</h2>
+                    {faqSubtitle && (<p class="font-body-md text-on-surface-variant mt-xs">{faqSubtitle}</p>)}
                 </div>
-                <div class="space-y-md">
+                <div class="space-y-sm">
                     {faqList.map((item: any) => (
-                        <div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm">
-                            <button class="faq-toggle flex items-center justify-between w-full text-left py-sm px-md group">
-                                <span class="font-headline-sm text-headline-sm text-primary">{item.question}</span>
-                                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-transform duration-300">expand_more</span>
-                            </button>
-                            <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                                <div class="px-md pb-sm font-body-md text-on-surface-variant border-t border-outline-variant/30 pt-sm leading-relaxed">
-                                    {item.answer}
-                                </div>
-                            </div>
-                        </div>
+                        <details class="group bg-white border border-outline-variant rounded-lg">
+                            <summary class="flex items-center justify-between gap-md cursor-pointer p-md font-headline-sm text-sm text-primary list-none">
+                                {item.question}
+                                <span class="material-symbols-outlined shrink-0 text-outline transition-transform group-open:rotate-180">expand_more</span>
+                            </summary>
+                            <p class="px-md pb-md text-on-surface-variant font-body-md leading-relaxed">{item.answer}</p>
+                        </details>
                     ))}
                 </div>
             </div>
@@ -238,44 +235,3 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
         </section>
     </main>
 </Layout>
-
-<script>
-    const setupFaq = () => {
-        document.querySelectorAll('.faq-toggle').forEach(btn => {
-            // Remove existing listener to avoid double binding if re-run
-            const clone = btn.cloneNode(true);
-            btn.parentNode?.replaceChild(clone, btn);
-        });
-        
-        document.querySelectorAll('.faq-toggle').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const content = btn.nextElementSibling as HTMLElement | null;
-                const icon = btn.querySelector('.material-symbols-outlined') as HTMLElement | null;
-
-                if (content && icon) {
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = '';
-                        icon.style.transform = 'rotate(0deg)';
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        icon.style.transform = 'rotate(180deg)';
-                    }
-                }
-            });
-        });
-
-        // Initialize first FAQ as open
-        const firstFaq = document.querySelector('.faq-toggle') as HTMLElement | null;
-        if (firstFaq) {
-            const content = firstFaq.nextElementSibling as HTMLElement | null;
-            const icon = firstFaq.querySelector('.material-symbols-outlined') as HTMLElement | null;
-            if (content && icon) {
-                content.style.maxHeight = content.scrollHeight + "px";
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
-    };
-
-    setupFaq();
-    document.addEventListener('astro:after-swap', setupFaq);
-</script>
