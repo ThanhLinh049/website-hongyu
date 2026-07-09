@@ -3,8 +3,6 @@ import Contact from '../components/contact.astro';
 import { wpQuery } from '../lib/api';
 import { SEO_FRAGMENT } from '../lib/seo';
 
-export const prerender = false; // SSR: always shows latest Contact content from WP
-
 let pageData = null;
 let seoData = null;
 

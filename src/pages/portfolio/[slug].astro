@@ -1,8 +1,14 @@
 ---
-export const prerender = false; // SSR: renders any project slug live from WP
+// Static: every portfolio project is prerendered at build (deploy). New/edited
+// projects go live only on the next Deploy. See getStaticPaths below.
 import Layout from '../../layouts/Layout.astro';
-import { wpQuery } from '../../lib/api';
+import { wpQuery, fetchAllNodes, rewriteHtmlMedia } from '../../lib/api';
 import { SEO_FRAGMENT } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const nodes = await fetchAllNodes('portfolios', 'slug');
+  return nodes.filter((n: any) => n?.slug).map((n: any) => ({ params: { slug: n.slug } }));
+}
 
 const { slug } = Astro.params;
 
@@ -152,7 +158,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
             prose-img:rounded-xl prose-img:shadow-md
             prose-strong:text-slate-900 prose-li:text-slate-600">
-            <Fragment set:html={project.content} />
+            <Fragment set:html={rewriteHtmlMedia(project.content)} />
           </article>
         </div>
       )}

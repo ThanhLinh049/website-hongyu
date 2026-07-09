@@ -53,6 +53,21 @@ export function mediaUrl(u: any): any {
   return u;
 }
 
+// Rewrite WordPress upload URLs embedded INSIDE an HTML string (e.g. a post's
+// `content` from the editor) through mediaUrl() — the same normalization
+// normalizeMedia() applies to `sourceUrl` fields, but for URLs baked into
+// markup. Editor-inserted <img>/<a> carry absolute WP URLs, and if the CMS DB
+// was never search-replaced they can still be "http://localhost/hongyu/...";
+// this turns them into same-origin /media paths so nothing leaks a WP/localhost
+// host into the page. Returns the input unchanged when there's nothing to fix.
+export function rewriteHtmlMedia(html: any): any {
+  if (!html || typeof html !== 'string') return html;
+  return html.replace(
+    /https?:\/\/[^\s"'<>)]+?\/wp-content\/uploads\/[^\s"'<>)]+/g,
+    (m) => mediaUrl(m),
+  );
+}
+
 // Walk a GraphQL response and rewrite every "sourceUrl" through mediaUrl(), so
 // all pages get portable, domain-independent image paths with no per-component
 // changes. Mutates and returns the same object.
@@ -104,4 +119,41 @@ export async function wpQuery({ query, variables = {} }: GraphQLRequest) {
     console.error('Fetch error from WP API:', error);
     throw error;
   }
+}
+
+// Enumerate EVERY node of a paginated WPGraphQL connection by following cursors
+// 100 at a time. Used by getStaticPaths() to list all pages to prerender at
+// build — WPGraphQL caps `first` at 100, so a single query would silently miss
+// items past the first page. Returns [] on any failure so the build still
+// succeeds (that route just prerenders no dynamic pages instead of crashing).
+//
+//   field:     connection root, e.g. "posts" | "products" | "productCategories"
+//   selection: fields to pull per node, e.g. "slug productCategories { nodes { slug } }"
+//   where:     optional extra args, e.g. 'where: { hideEmpty: false }'
+export async function fetchAllNodes(
+  field: string,
+  selection: string,
+  where = '',
+): Promise<any[]> {
+  const out: any[] = [];
+  let after: string | null = null;
+  try {
+    // Hard cap (200 pages × 100 = 20k) so a malformed pageInfo can't loop forever.
+    for (let i = 0; i < 200; i++) {
+      const args =
+        `first: 100, after: ${after ? JSON.stringify(after) : 'null'}` +
+        (where ? `, ${where}` : '');
+      const data: any = await wpQuery({
+        query: `{ ${field}(${args}) { pageInfo { hasNextPage endCursor } nodes { ${selection} } } }`,
+      });
+      const conn = data?.[field];
+      if (!conn) break;
+      out.push(...(conn.nodes || []));
+      if (!conn.pageInfo?.hasNextPage) break;
+      after = conn.pageInfo.endCursor;
+    }
+  } catch (e) {
+    console.warn(`[fetchAllNodes] ${field} pagination failed`, e);
+  }
+  return out;
 }

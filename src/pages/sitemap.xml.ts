@@ -4,7 +4,9 @@ import { wpQuery } from '../lib/api';
 // Dynamic XML sitemap built from live WordPress content. Lists the static
 // routes plus every product, product category, portfolio project and blog post,
 // using the frontend's own origin (configured `site` on deploy, else request).
-export const prerender = false;
+// Static: regenerated at build (deploy), consistent with the rest of the site.
+// Requires PUBLIC_SITE_URL so absolute URLs point at the real domain.
+export const prerender = true;
 
 const STATIC_PATHS = ['/', '/products', '/portfolio', '/services', '/blog', '/contact'];
 

@@ -1,9 +1,15 @@
 ---
-export const prerender = false; // SSR: renders any post slug live from WP — consistent with portfolio & product detail; new posts appear instantly (ISR) with no rebuild.
+// Static: every blog post is prerendered at build (deploy). New/edited posts go
+// live only on the next Deploy — never automatically. See getStaticPaths below.
 import Layout from '../../layouts/Layout.astro';
-import { wpQuery } from '../../lib/api';
+import { wpQuery, fetchAllNodes, rewriteHtmlMedia } from '../../lib/api';
 import { SEO_FRAGMENT } from '../../lib/seo';
 import { buildToc } from '../../lib/toc';
+
+export async function getStaticPaths() {
+  const nodes = await fetchAllNodes('posts', 'slug');
+  return nodes.filter((n: any) => n?.slug).map((n: any) => ({ params: { slug: n.slug } }));
+}
 
 const { slug } = Astro.params;
 
@@ -71,7 +77,7 @@ const defaultPost = {
 post = post || defaultPost;
 
 // Auto table of contents: add ids to h2/h3 in the post body and collect them.
-const { html: contentHtml, toc } = buildToc(post?.content || '');
+const { html: contentHtml, toc } = buildToc(rewriteHtmlMedia(post?.content || ''));
 
 const formatDate = (dateStr: string) => {
   try {

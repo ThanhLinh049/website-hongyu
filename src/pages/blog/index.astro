@@ -3,8 +3,6 @@ import Blog from '../../components/blog.astro';
 import { wpQuery } from '../../lib/api';
 import { SEO_FRAGMENT } from '../../lib/seo';
 
-export const prerender = false; // SSR: always shows latest posts/categories from WP
-
 let posts = [];
 let categories = [];
 let pageData = null;

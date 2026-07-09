@@ -74,6 +74,15 @@ function scrub(value: any, wp: string, site: string): any {
 // Drop the Person entirely and re-point anything that referenced it at the
 // Organization, so the remaining graph stays a valid rich result.
 function sanitizeJsonLd(raw: string, origin?: string): string {
+  // Rank Math's `jsonLd { raw }` arrives WRAPPED in its <script type="application/
+  // ld+json"> tag, so JSON.parse on the whole string fails. Unwrap, sanitize the
+  // JSON payload, then restore the same wrapper (Layout injects this via set:html).
+  const wrap = raw.match(/^\s*(<script[^>]*>)([\s\S]*?)(<\/script>)\s*$/i);
+  if (wrap) {
+    const inner = sanitizeJsonLd(wrap[2], origin);
+    return inner ? wrap[1] + inner + wrap[3] : '';
+  }
+
   const wp = (WP_MEDIA_BASE || '').replace(/\/+$/, '');
   const site = (origin || '').replace(/\/+$/, '');
 

@@ -3,8 +3,6 @@ import Services from '../components/services.astro';
 import { wpQuery } from '../lib/api';
 import { SEO_FRAGMENT } from '../lib/seo';
 
-export const prerender = false; // SSR: always shows latest Services content from WP
-
 let pageData = null;
 let seoData = null;
 

@@ -1,7 +1,13 @@
 ---
-export const prerender = false; // SSR: renders any product category live from WP
+// Static: every product category page is prerendered at build (deploy).
+// See getStaticPaths below.
 import Layout from '../../../layouts/Layout.astro';
-import { wpQuery } from '../../../lib/api';
+import { wpQuery, fetchAllNodes } from '../../../lib/api';
+
+export async function getStaticPaths() {
+  const nodes = await fetchAllNodes('productCategories', 'slug', 'where: { hideEmpty: false }');
+  return nodes.filter((c: any) => c?.slug).map((c: any) => ({ params: { category: c.slug } }));
+}
 
 const { category } = Astro.params;
 
@@ -42,10 +48,6 @@ try {
   allCats = data?.productCategories?.nodes || [];
 } catch (e) {
   console.warn('Failed to fetch category', category, e);
-}
-
-if (!cat) {
-  Astro.response.status = 404;
 }
 
 const cf = cat?.categoryFields || {};

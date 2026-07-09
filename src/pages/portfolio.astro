@@ -3,8 +3,6 @@ import Portfolio from '../components/portfolio.astro';
 import { wpQuery } from '../lib/api';
 import { SEO_FRAGMENT } from '../lib/seo';
 
-export const prerender = false; // SSR: always shows latest projects from WP
-
 let pageData = null;
 let seoData = null;
 let portfolios = [];
