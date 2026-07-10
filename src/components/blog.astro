@@ -93,7 +93,10 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
         </section>
         <!-- Article Grid (all posts, 12 per page with pagination) -->
         <section class="max-w-container-max mx-auto px-gutter py-xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md" id="blog-grid">
+            {/* No `grid-cols-1`: a bare grid is already single-column, and spelling it
+                out would match the `grid-cols-1 md:grid-cols-2 lg:grid-cols-4` mobile
+                override in global.css that is meant for the contact support cards. */}
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-md" id="blog-grid">
                 {activePosts.map((post: any) => (
                     <a href={`/blog/${post.slug}`}
                         data-cats={catSlugs(post)}
@@ -119,7 +122,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                                 <span class="text-outline text-[12px]">{formatDate(post.date)}</span>
                             </div>
                             <h3
-                                class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors line-clamp-2">
+                                class="font-headline-sm text-headline-sm text-primary group-hover:text-cta-orange transition-colors line-clamp-2">
                                 {post.title}</h3>
                             <div class="mt-auto pt-md">
                                 <span class="text-primary font-label-bold text-[12px] inline-flex items-center gap-1.5 group/btn">
@@ -154,7 +157,7 @@ const searchData = (p: any) => `${p?.title || ''} ${stripHtml(p?.excerpt || '')}
                                 placeholder="Enter your work email" type="email" />
                         </div>
                         <button
-                            class="bg-[#E67E22] text-white px-8 py-4 rounded-lg font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                            class="bg-cta-orange text-white px-8 py-4 rounded font-label-bold hover:brightness-110 transition-all shadow-lg active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                             type="submit">{newsletterButton}</button>
                         <p data-form-status role="status" aria-live="polite" class="text-[13px] text-white text-center min-h-[1rem]"></p>
                         <p class="text-[12px] text-primary-fixed/70 text-center">Strict B2B only. No spam.</p>

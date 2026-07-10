@@ -50,18 +50,18 @@ export const HOME_ADVANTAGES = [
   {
     icon: 'precision_manufacturing',
     title: 'Massive Production Capacity',
-    description: 'Our facilities handle orders from 50 to 500,000 units with consistent precision across the entire run. We scale with your growth.',
+    description: 'Order a single prototype or a full production run — no minimum, no maximum. The first piece and the last come off the line identical, with the same detail and the same finish.',
     isHighlight: false,
     stats: [
       { value: '24/7', label: 'Manufacturing' },
-      { value: '0.01mm', label: 'Tolerance' },
+      { value: '0', label: 'Minimum Order' },
       { value: '100%', label: 'Custom' }
     ]
   },
   {
-    icon: 'verified_user',
-    title: 'ISO 9001 Certified',
-    description: 'Every batch undergoes a rigorous 12-point inspection before it leaves our facility. Zero compromise on brand integrity.',
+    icon: 'fact_check',
+    title: 'You Approve Before We Produce',
+    description: 'Nothing reaches the production floor until you sign off. We send a free digital proof and revise it as many times as it takes — no charge for artwork, no pressure to approve.',
     isHighlight: true
   },
   {
@@ -71,15 +71,15 @@ export const HOME_ADVANTAGES = [
     isHighlight: false
   },
   {
-    icon: 'inventory',
-    title: 'White Label Shipping',
-    description: 'For resellers and agencies, we offer fully anonymous blind shipping directly to your clients.',
+    icon: 'design_services',
+    title: 'Free Design & Unlimited Revisions',
+    description: "Send a logo, a photo, or a rough sketch. Our team turns it into a production-ready file at no charge — and reworks it until you're happy.",
     isHighlight: false
   },
   {
     icon: 'bolt',
     title: 'Priority Rush Lane',
-    description: 'Urgent deadline? Our rush manufacturing can deliver finished custom products in as little as 5-7 business days.',
+    description: 'On a deadline? Tell us the date you need it in hand and we move your job to the front of the line — tooling, proofing and production, compressed to fit.',
     isHighlight: true
   }
 ];

@@ -162,7 +162,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                 </div>
               )}
 
-              <a href="/contact" class="block w-full text-center bg-cta-orange text-white px-lg py-4 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all mb-sm">Request Quote</a>
+              <a href="/contact" class="block w-full text-center bg-cta-orange text-white px-lg py-4 rounded font-label-bold uppercase tracking-wider hover:brightness-110 transition-all mb-sm">Request Quote</a>
               <div class="flex items-start gap-sm text-[12px] text-on-surface-variant">
                 <span class="material-symbols-outlined text-[18px] text-primary">verified</span>
                 <span>Fully customizable with your logo &amp; colours. Free design proof in 24h.</span>
@@ -176,7 +176,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       {product.content && (
         <section class="py-xl bg-surface-container-low border-y border-outline-variant">
           <div class="max-w-container-max mx-auto px-gutter">
-            <h2 class="font-headline-lg text-primary mb-lg">Product Details</h2>
+            <h2 class="font-headline-lg text-headline-lg text-primary mb-lg">Product Details</h2>
             <article class="prose prose-lg max-w-none
               prose-headings:text-primary prose-headings:font-bold
               prose-p:text-on-surface-variant prose-p:leading-relaxed
@@ -191,7 +191,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       {related.length > 0 && (
         <section class="py-xl bg-white">
           <div class="max-w-container-max mx-auto px-gutter">
-            <h2 class="font-headline-lg text-primary mb-lg">Related Products</h2>
+            <h2 class="font-headline-lg text-headline-lg text-primary mb-lg">Related Products</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
               {related.map((p: any) => (
                 <a href={`/products/${p.slug}`} class="card-lift bg-white border border-outline-variant hover:border-primary group overflow-hidden flex flex-col">
@@ -199,7 +199,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                     {relImg(p) && <img src={relImg(p)} alt={p.title} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                   </div>
                   <div class="p-md">
-                    <h4 class="font-headline-sm text-sm group-hover:text-primary transition-colors">{p.title}</h4>
+                    <h4 class="font-headline-sm text-sm text-primary group-hover:text-cta-orange transition-colors">{p.title}</h4>
                   </div>
                 </a>
               ))}
@@ -211,9 +211,9 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
       <!-- CTA -->
       <section class="py-xl bg-primary text-white text-center">
         <div class="max-w-container-max mx-auto px-gutter">
-          <h2 class="font-headline-lg mb-sm">Need this customised for your brand?</h2>
+          <h2 class="font-headline-lg text-headline-lg mb-sm">Need this customised for your brand?</h2>
           <p class="font-body-lg text-white/70 mb-lg max-w-xl mx-auto">Send us your artwork and our specialists will prepare a free digital proof and B2B quote.</p>
-          <a href="/contact" class="inline-block bg-cta-orange text-white px-xl py-md font-label-bold uppercase tracking-widest hover:brightness-110 transition-all">Request Free Quote</a>
+          <a href="/contact" class="inline-block bg-cta-orange text-white px-xl py-md rounded font-label-bold uppercase tracking-widest hover:brightness-110 transition-all">Request Free Quote</a>
         </div>
       </section>
     </main>
@@ -223,7 +223,7 @@ const relImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <span class="material-symbols-outlined text-outline text-7xl mb-md block">inventory_2</span>
         <h1 class="font-display-lg text-primary mb-md">Product not found</h1>
         <p class="text-on-surface-variant font-body-lg mb-lg">The product "{slug}" doesn't exist or has been removed.</p>
-        <a href="/products" class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
+        <a href="/products" class="inline-block px-lg py-3 rounded bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
       </section>
     </main>
   )}

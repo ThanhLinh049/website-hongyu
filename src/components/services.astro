@@ -105,7 +105,7 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
             <div class="max-w-container-max mx-auto px-gutter">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start mb-xl">
                     <div class="lg:col-span-4 lg:sticky lg:top-[96px]">
-                        <h2 class="font-headline-lg text-headline-lg text-on-background mb-md">{capabilitiesTitle}</h2>
+                        <h2 class="font-headline-lg text-headline-lg text-primary mb-md">{capabilitiesTitle}</h2>
                         <p class="font-body-md text-on-surface-variant mb-md">{capabilitiesDescription}</p>
                         <div class="w-16 h-1 bg-primary"></div>
                     </div>
@@ -116,7 +116,7 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                                     <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-md group-hover:bg-primary group-hover:text-white transition-colors">
                                         <span class="material-symbols-outlined">{one(card.icon)}</span>
                                     </div>
-                                    <h3 class="font-headline-sm text-headline-sm mb-sm">{card.title}</h3>
+                                    <h3 class="font-headline-sm text-headline-sm text-primary mb-sm">{card.title}</h3>
                                     <p class="font-body-md text-on-surface-variant">{card.description}</p>
                                 </div>
                             ))}
@@ -130,7 +130,7 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
         <section class="py-xl bg-surface-container-low">
             <div class="max-w-container-max mx-auto px-gutter">
                 <div class="text-center mb-xl">
-                    <h2 class="font-headline-lg text-headline-lg">{workflowTitle}</h2>
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{workflowTitle}</h2>
                     <p class="text-on-surface-variant mt-xs">{workflowSubtitle}</p>
                 </div>
                 <div class="relative mt-xl">
@@ -141,7 +141,7 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                                     {step.stepNumber}
                                 </div>
                                 <div>
-                                    <h4 class="font-label-bold text-label-bold mb-xs">{step.title}</h4>
+                                    <h4 class="font-label-bold text-label-bold text-primary mb-xs">{step.title}</h4>
                                     <p class="text-[13px] text-on-surface-variant leading-tight">{step.description}</p>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                             </div>
                         </div>
                         <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-xl rounded-xl">
-                            <h3 class="text-white font-headline-md mb-md">{certTitle}</h3>
+                            <h3 class="text-white font-headline-md text-headline-md mb-md">{certTitle}</h3>
                             <div class="space-y-sm mb-xl">
                                 {certList.map((item: any) => (
                                     <div class="flex justify-between text-body-sm py-2 border-b border-white/10">
@@ -218,8 +218,8 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
             <div class="max-w-container-max mx-auto px-gutter text-center">
                 <h2 class="font-headline-lg text-headline-lg mb-md">{ctaTitle}</h2>
                 <p class="font-body-lg text-white/80 max-w-2xl mx-auto mb-xl">{ctaDescription}</p>
-                <div class="flex flex-col md:flex-row gap-md justify-center items-stretch md:items-center">
-                    <a href="/contact" class="w-full md:w-auto bg-cta-orange text-white px-lg py-3 rounded-lg font-label-bold text-label-bold hover:brightness-110 transition-all shadow-lg text-center">
+                <div class="flex flex-col md:flex-row gap-md justify-center items-center">
+                    <a href="/contact" class="bg-cta-orange text-white px-lg py-3 rounded font-label-bold text-label-bold hover:brightness-110 transition-all shadow-lg text-center">
                         {ctaPrimaryText}
                     </a>
                 </div>

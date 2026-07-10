@@ -146,7 +146,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                             </p>
                             <div class="flex flex-wrap gap-md mb-lg hero-actions">
                                 <a href={heroCtaUrl}
-                                    class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:opacity-95 transition-all text-center">
+                                    class="inline-block bg-cta-orange text-white px-lg py-3 font-label-bold text-label-bold rounded shadow-md hover:brightness-110 transition-all text-center">
                                     {heroCtaLabel}
                                 </a>
                             </div>
@@ -204,7 +204,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                                 )}
                             </div>
                             <div class="p-3 sm:p-md text-center flex flex-col flex-grow">
-                                <h3 class="font-headline-sm text-sm sm:text-base mb-xs group-hover:text-primary transition-colors">{item.title}</h3>
+                                <h3 class="font-headline-sm text-sm sm:text-base text-primary mb-xs group-hover:text-cta-orange transition-colors">{item.title}</h3>
                                 <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-[11px] sm:text-sm uppercase tracking-wide group-hover:text-primary transition-colors">
                                     {noArrow(item.linkLabel) || 'Explore'} <span class="material-symbols-outlined text-[15px] sm:text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
@@ -226,7 +226,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                     <div class="col-span-12 md:col-span-8 bg-white p-lg border border-outline-variant rounded-xl flex flex-col justify-between card-lift hover:border-primary/40">
                         <div>
                             <span class="material-symbols-outlined text-primary text-4xl mb-md">{advantageBlocks?.[0]?.icon || 'precision_manufacturing'}</span>
-                            <h3 class="font-headline-md text-primary mb-sm">{advantageBlocks?.[0]?.title || 'Massive Production Capacity'}</h3>
+                            <h3 class="font-headline-md text-headline-md text-primary mb-sm">{advantageBlocks?.[0]?.title || 'Massive Production Capacity'}</h3>
                             <p class="text-body-lg text-on-surface-variant max-w-xl">{advantageBlocks?.[0]?.description || 'Our facilities handle orders from 50 to 500,000 units with consistent precision across the entire run. We scale with your growth.'}</p>
                         </div>
                         <div class="mt-xl flex gap-xl border-t border-outline-variant pt-md">
@@ -292,16 +292,20 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                 </div>
                 <div>
                     <h2 class="font-headline-lg text-headline-lg mb-md">{capabilitiesTitle}</h2>
-                    <p class="text-body-lg opacity-80 mb-xl">{capabilitiesDescription}</p>
+                    <p class="text-body-lg opacity-80 mb-lg">{capabilitiesDescription}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-md gap-x-xl">
                         {capabilitiesList.map((item: any) => (
-                            <div class="flex items-start gap-sm">
-                                <span class="material-symbols-outlined text-secondary-container">check_circle</span>
-                                <div>
-                                    <p class="font-label-bold uppercase tracking-widest text-xs text-secondary-container mb-1">
+                            <div class="flex items-start gap-md">
+                                {/* leading-4 matches the label's line box, so the icon centres on the
+                                    first line of the title; shrink-0 keeps it from being squashed
+                                    when an editor writes a long title in WP admin. */}
+                                <span class="material-symbols-outlined text-secondary-container shrink-0 text-[20px] leading-4">check_circle</span>
+                                {/* min-w-0 lets long words wrap instead of overflowing the grid cell. */}
+                                <div class="min-w-0">
+                                    <p class="font-label-bold uppercase tracking-widest text-xs text-secondary-container mb-1 break-words">
                                         {item.title}
                                     </p>
-                                    <p class="text-body-sm">{item.description}</p>
+                                    <p class="text-body-sm break-words">{item.description}</p>
                                 </div>
                             </div>
                         ))}
@@ -348,13 +352,12 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                                 )}
                             </div>
                             <div class="p-3">
-                                <h3 class="font-label-bold text-sm text-primary group-hover:text-cta-orange transition-colors line-clamp-1">{item.title}</h3>
+                                <h3 class="font-label-bold text-sm text-primary group-hover:text-cta-orange transition-colors line-clamp-2">{item.title}</h3>
                             </div>
                         </a>
                     ))}
                 </div>
                 <div id="recent-empty" class="hidden text-center py-lg text-outline font-body-md">No projects in this category yet.</div>
-                <nav id="recent-pagination" class="hidden flex flex-wrap items-center justify-center gap-xs pt-xl" aria-label="Recent work pagination"></nav>
             </div>
         </section>
 
@@ -384,7 +387,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                                 )}
                             </div>
                             <div class="p-md flex flex-col flex-grow">
-                                <h3 class="font-headline-sm text-on-surface mb-3 flex-grow line-clamp-2">{item.title}</h3>
+                                <h3 class="font-headline-sm text-primary mb-3 flex-grow line-clamp-2">{item.title}</h3>
                                 <span class="text-primary font-bold text-sm mt-auto">Read More →</span>
                             </div>
                         </a>
@@ -400,7 +403,7 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                 <p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">{ctaText}</p>
                 <div class="flex justify-center items-center gap-md">
                     <a href={ctaBtnUrl}
-                        class="w-full max-w-xs md:w-auto bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:opacity-90 transition-opacity rounded text-center">
+                        class="bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:brightness-110 transition-all rounded text-center">
                         {ctaBtnLabel}
                     </a>
                 </div>
@@ -517,60 +520,25 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             const filters = document.getElementById('recent-filters');
             const grid = document.getElementById('recent-grid');
             const empty = document.getElementById('recent-empty');
-            const pager = document.getElementById('recent-pagination');
             if (!filters || !grid) return;
             const buttons = Array.from(filters.querySelectorAll('.recent-filter')) as HTMLElement[];
             const cards = Array.from(grid.querySelectorAll('.recent-card')) as HTMLElement[];
 
-            // 4 per page on mobile (≤767px), 8 on tablet/desktop.
-            const perPage = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 8;
+            // No pagination: show at most 4 projects on mobile (≤767px), 8 on
+            // tablet/desktop. The same cap applies to every category filter.
+            const limit = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 8;
             let filter = 'all';
-            let page = 1;
 
             const filtered = () => cards.filter(card => {
                 const cats = (card.getAttribute('data-category') || '').split(' ');
                 return filter === 'all' || cats.includes(filter);
             });
 
-            const pageList = (total: number): (number | string)[] => {
-                if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-                const out: (number | string)[] = [1];
-                const start = Math.max(2, page - 1), end = Math.min(total - 1, page + 1);
-                if (start > 2) out.push('…');
-                for (let i = start; i <= end; i++) out.push(i);
-                if (end < total - 1) out.push('…');
-                out.push(total);
-                return out;
-            };
-
             const render = () => {
-                const PER_PAGE = perPage();
                 const visible = filtered();
-                const totalPages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
-                if (page > totalPages) page = totalPages;
-                const from = (page - 1) * PER_PAGE;
                 cards.forEach(c => { c.style.display = 'none'; });
-                visible.slice(from, from + PER_PAGE).forEach(c => { c.style.display = 'flex'; });
+                visible.slice(0, limit()).forEach(c => { c.style.display = 'flex'; });
                 if (empty) empty.classList.toggle('hidden', visible.length !== 0);
-
-                if (!pager) return;
-                pager.innerHTML = '';
-                if (totalPages <= 1) { pager.classList.add('hidden'); return; }
-                pager.classList.remove('hidden');
-                const mk = (label: string, target: number, opts: { active?: boolean, disabled?: boolean, dots?: boolean } = {}) => {
-                    if (opts.dots) { const s = document.createElement('span'); s.textContent = '…'; s.className = 'px-2 text-outline'; pager.appendChild(s); return; }
-                    const b = document.createElement('button');
-                    b.type = 'button';
-                    b.textContent = label;
-                    b.className = 'min-w-[38px] h-[38px] px-3 border text-sm font-bold transition-colors '
-                        + (opts.active ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-outline-variant hover:border-primary hover:text-primary')
-                        + (opts.disabled ? ' opacity-40 cursor-not-allowed pointer-events-none' : '');
-                    if (!opts.disabled && !opts.active) b.addEventListener('click', () => { page = target; render(); grid.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-                    pager.appendChild(b);
-                };
-                mk('‹', page - 1, { disabled: page === 1 });
-                pageList(totalPages).forEach(p => { if (typeof p === 'string') mk('', 0, { dots: true }); else mk(String(p), p, { active: p === page }); });
-                mk('›', page + 1, { disabled: page === totalPages });
             };
 
             buttons.forEach(btn => btn.addEventListener('click', () => {
@@ -581,12 +549,11 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
                 btn.classList.add('text-primary', 'font-bold', 'border-primary');
                 btn.classList.remove('text-on-surface-variant', 'border-transparent');
                 filter = btn.getAttribute('data-filter') || 'all';
-                page = 1;
                 render();
             }));
 
-            // Re-paginate when crossing the mobile breakpoint (rotate/resize).
-            window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
+            // Re-apply the cap when crossing the mobile breakpoint (rotate/resize).
+            window.matchMedia('(max-width: 767px)').onchange = () => render();
 
             render();
         };

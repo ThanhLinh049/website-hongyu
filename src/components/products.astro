@@ -87,7 +87,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                     <p class="font-body-lg text-white/80 mb-lg max-w-xl">{heroDescription}</p>
                     {hasCatalogue && (
                         <div class="flex flex-wrap gap-md hero-actions">
-                            <a href={heroCtaUrl} class="bg-[#E67E22] text-white px-md py-3 font-label-bold uppercase tracking-wider hover:brightness-110 transition-all text-center">{heroCtaLabel}</a>
+                            <a href={heroCtaUrl} class="bg-cta-orange text-white px-md py-3 rounded font-label-bold uppercase tracking-wider hover:brightness-110 transition-all text-center">{heroCtaLabel}</a>
                         </div>
                     )}
                 </div>
@@ -113,7 +113,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                                 )}
                             </div>
                             <div class="p-3 sm:p-md text-center flex flex-col flex-grow">
-                                <h3 class="font-headline-sm text-sm sm:text-base mb-xs group-hover:text-primary transition-colors">{c.name}</h3>
+                                <h3 class="font-headline-sm text-sm sm:text-base text-primary mb-xs group-hover:text-cta-orange transition-colors">{c.name}</h3>
                                 <span class="mt-auto inline-flex items-center justify-center gap-1 text-cta-orange font-bold text-[11px] sm:text-sm uppercase tracking-wide group-hover:text-primary transition-colors">
                                     View Range <span class="material-symbols-outlined text-[15px] sm:text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                 </span>
@@ -198,7 +198,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                                             {prodImg(p) && (<img loading="lazy" decoding="async" src={prodImg(p)} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
                                         </div>
                                         <div class="p-md flex flex-col flex-grow">
-                                            <h4 class="font-headline-sm text-sm text-on-surface mb-md flex-grow group-hover:text-primary transition-colors">{p.title}</h4>
+                                            <h4 class="font-headline-sm text-sm text-primary mb-md flex-grow group-hover:text-cta-orange transition-colors">{p.title}</h4>
                                             <span class="inline-flex items-center gap-1 text-cta-orange font-bold text-[12px] uppercase tracking-wider group-hover:text-primary transition-colors">
                                                 View Details <span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                                             </span>
@@ -225,7 +225,7 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-start">
                     <!-- Left: Finishes + Surface Textures + Backing -->
                     <div>
-                        <h2 class="font-headline-lg text-headline-lg mb-md">{finishesTitle}</h2>
+                        <h2 class="font-headline-lg text-headline-lg text-primary mb-md">{finishesTitle}</h2>
                         {finishesDescription && (<p class="text-on-surface-variant font-body-md mb-lg max-w-xl">{finishesDescription}</p>)}
                         <div class="space-y-lg">
                             <div>
@@ -280,10 +280,10 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
                 <p class="font-body-lg text-white/70 mb-xl max-w-2xl mx-auto">{ctaText}</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-md">
                     {ctaPrimaryLabel && (
-                        <a href={ctaPrimaryUrl} class="inline-block bg-[#E67E22] text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg hover:shadow-2xl transition-all sm:w-auto text-center font-black">{ctaPrimaryLabel}</a>
+                        <a href={ctaPrimaryUrl} class="inline-block bg-cta-orange text-white px-xl py-md rounded font-label-bold uppercase tracking-widest text-lg hover:brightness-110 transition-all text-center font-black">{ctaPrimaryLabel}</a>
                     )}
                     {ctaSecondaryLabel && ctaSecondaryUrl !== ctaPrimaryUrl && (
-                        <a href={ctaSecondaryUrl} class="inline-block border border-white/30 hover:bg-white/10 text-white px-xl py-md font-label-bold uppercase tracking-widest text-lg transition-all sm:w-auto text-center font-black">{ctaSecondaryLabel}</a>
+                        <a href={ctaSecondaryUrl} class="inline-block border border-white/30 hover:bg-white/10 text-white px-xl py-md rounded font-label-bold uppercase tracking-widest text-lg transition-all text-center font-black">{ctaSecondaryLabel}</a>
                     )}
                 </div>
             </div>

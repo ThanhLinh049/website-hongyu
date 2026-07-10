@@ -70,19 +70,16 @@ const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         </div>
       </nav>
 
-      <!-- Category banner — same height standard as the services hero
-           (min-h-[260px] md:min-h-[504px]); solid navy, no image. The product
-           filter/sort toolbar is a separate section below, so the banner height
-           never merges with the filter. -->
-      <section class="relative py-xl flex items-center min-h-[260px] md:min-h-[504px] bg-primary overflow-hidden">
-        <div class="relative z-10 w-full max-w-container-max mx-auto px-gutter">
-          <div class="max-w-3xl">
-            {cf.catTagline && (<span class="block font-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px] mb-sm">{cf.catTagline}</span>)}
-            <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">{cat.name}</h1>
-            {cf.catIntro && (<p class="font-body-lg text-body-lg text-white/80 max-w-2xl">{cf.catIntro}</p>)}
+      <!-- Compact category header (sub-page style: light, low profile) -->
+      <header id="cat-header" class="bg-surface-container-low border-b border-outline-variant">
+        <div class="max-w-container-max mx-auto px-gutter py-lg">
+          <div class="max-w-2xl">
+            {cf.catTagline && (<span class="block text-cta-orange uppercase tracking-[0.2em] text-[11px] font-bold mb-xs">{cf.catTagline}</span>)}
+            <h1 class="font-headline-lg text-[24px] sm:text-headline-lg text-primary">{cat.name}</h1>
+            {cf.catIntro && (<p class="font-body-md text-on-surface-variant mt-sm">{cf.catIntro}</p>)}
           </div>
         </div>
-      </section>
+      </header>
 
       <!-- Catalogue: category switcher + toolbar + grid -->
       <section class="py-xl">
@@ -120,7 +117,7 @@ const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
                     {prodImg(p) && (<img src={prodImg(p)} loading="lazy" decoding="async" alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />)}
                   </div>
                   <div class="p-md flex flex-col flex-grow">
-                    <h4 class="font-headline-sm text-sm text-on-surface mb-md flex-grow group-hover:text-primary transition-colors">{p.title}</h4>
+                    <h4 class="font-headline-sm text-sm text-primary mb-md flex-grow group-hover:text-cta-orange transition-colors">{p.title}</h4>
                     <span class="inline-flex items-center gap-1 text-cta-orange font-bold text-[12px] uppercase tracking-wider group-hover:text-primary transition-colors">
                       View Details <span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                     </span>
@@ -198,7 +195,7 @@ const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <div class="max-w-container-max mx-auto px-gutter">
           <h2 class="font-headline-lg text-headline-lg mb-sm">Ready to start your {cat.name} project?</h2>
           <p class="font-body-lg text-white/70 mb-lg max-w-xl mx-auto">Send us your artwork and our specialists will prepare a free digital proof and B2B quote.</p>
-          <a href="/contact" class="inline-block bg-cta-orange text-white px-xl py-md font-label-bold uppercase tracking-widest hover:brightness-110 transition-all">Request Free Quote</a>
+          <a href="/contact" class="inline-block bg-cta-orange text-white px-xl py-md rounded font-label-bold uppercase tracking-widest hover:brightness-110 transition-all">Request Free Quote</a>
         </div>
       </section>
     </main>
@@ -208,7 +205,7 @@ const prodImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
         <span class="material-symbols-outlined text-outline text-7xl mb-md block">category</span>
         <h1 class="font-display-lg text-primary mb-md text-[22px] sm:text-[30px] lg:text-[44px] leading-[1.15] tracking-tight">Category not found</h1>
         <p class="text-on-surface-variant font-body-lg mb-lg">The category "{category}" doesn't exist.</p>
-        <a href="/products" class="inline-block px-lg py-3 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
+        <a href="/products" class="inline-block px-lg py-3 rounded bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-all">Back to Products</a>
       </section>
     </main>
   )}

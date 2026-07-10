@@ -28,6 +28,11 @@ const formIntro = pageData?.formIntro || 'Provide your technical specifications 
 // normalise to a single value.
 const one = (v: any) => (Array.isArray(v) ? v[0] : v);
 
+// Editors often set an icon on some support cards but not others. Reserve the
+// icon row for every card when at least one has an icon, so the titles stay on
+// the same line; drop the row entirely when no card has one.
+const anySupportIcon = supportCards.some((c: any) => one(c.icon));
+
 // --- Quote form (fixed set of fields, hardcoded on purpose) ---
 // The form is intentionally NOT editable in WP — it's defined here for
 // reliability and a clean admin. Submissions still email via /api/contact
@@ -99,13 +104,15 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
         <section class="py-xl max-w-container-max mx-auto px-gutter">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
                 {supportCards.map((card: any) => (
-                    <div class="card-lift bg-white border border-outline-variant p-md hover:border-primary cursor-pointer group">
-                        <div class="flex flex-col items-start gap-sm">
-                            <span class="material-symbols-outlined text-primary text-4xl">{one(card.icon)}</span>
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">{card.title}</h3>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">{card.description}</p>
-                            <a href={card.linkUrl || '#'} class="text-primary font-label-bold text-label-bold group-hover:translate-x-1 transition-transform border-b border-primary/20 pb-0.5">{card.linkText}</a>
-                        </div>
+                    <div class="card-lift bg-white border border-outline-variant p-md hover:border-primary cursor-pointer group h-full flex flex-col items-start gap-sm">
+                        {anySupportIcon && (
+                            <span aria-hidden={!one(card.icon)} class="material-symbols-outlined text-primary text-4xl h-9 leading-none shrink-0">{one(card.icon)}</span>
+                        )}
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold">{card.title}</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">{card.description}</p>
+                        {/* mt-auto pins the link to the card's baseline without stretching the
+                            paragraph above it, so links line up across cards of unequal copy. */}
+                        <a href={card.linkUrl || '#'} class="mt-auto text-primary font-label-bold text-label-bold group-hover:translate-x-1 transition-transform border-b border-primary/20 pb-0.5">{card.linkText}</a>
                     </div>
                 ))}
             </div>
@@ -116,7 +123,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                 <!-- Quote Form: Main Focus -->
                 <div class="lg:col-span-8 bg-white shadow-sm border border-outline-variant p-lg">
                     <div class="mb-md">
-                        <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mb-4">{formTitle}</h2>
+                        <h2 class="font-headline-lg text-headline-lg text-primary font-bold mb-4">{formTitle}</h2>
                         <p class="font-body-md text-body-md text-on-surface-variant border-l-4 border-primary pl-4">{formIntro}</p>
                     </div>
                     <form class="space-y-md quote-form" action="/api/contact" method="POST" data-ajax-form data-success={successMessage}>
@@ -161,7 +168,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                             <label class="font-body-sm text-on-surface font-medium" for="legal">I agree to the Terms of Service and Artwork Responsibility policy.</label>
                         </div>
                         <p data-form-status role="status" aria-live="polite" class="font-body-sm text-body-sm"></p>
-                        <button class="w-full bg-primary text-white py-5 font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
+                        <button class="w-full bg-primary text-white py-5 rounded font-label-bold text-label-bold uppercase tracking-[0.2em] hover:bg-primary/90 transition-all shadow-lg font-black text-lg disabled:opacity-60 disabled:cursor-not-allowed" type="submit">
                             {submitButtonText}
                         </button>
                     </form>
@@ -169,7 +176,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                 <!-- Contact Details Sidebar: Clean & Structured -->
                 <div class="lg:col-span-4 space-y-md">
                     <div class="bg-white border border-outline-variant p-md shadow-sm">
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-md uppercase tracking-tight">Direct Contact</h3>
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold mb-md uppercase tracking-tight">Direct Contact</h3>
                         <div class="space-y-md">
                             <div class="flex items-start gap-sm">
                                 <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full shrink-0">location_on</span>
@@ -231,7 +238,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                     <div class="flex flex-col md:flex-row gap-md items-start">
                         <span class="material-symbols-outlined text-primary text-5xl">gavel</span>
                         <div>
-                            <h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 uppercase font-bold tracking-tight">{legalTitle}</h4>
+                            <h4 class="font-headline-sm text-headline-sm text-primary mb-2 uppercase font-bold tracking-tight">{legalTitle}</h4>
                             <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
                                 {legalText}
                             </p>

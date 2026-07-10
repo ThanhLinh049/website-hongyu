@@ -58,17 +58,26 @@ export default {
         "dark-navy": "#001a40"
       },
       borderRadius: {
+        // Buttons use `rounded` (DEFAULT). Keep it as the single button radius.
         "DEFAULT": "0.125rem",
         "lg": "0.25rem",
         "xl": "0.5rem",
+        // NOTE: `full` is 12px here, not a pill. Deliberate, but it means the
+        // un-overridden `rounded-2xl` (16px) and `rounded-3xl` (24px) round MORE
+        // than `rounded-full`. Don't read this scale as monotonic.
         "full": "0.75rem"
       },
       spacing: {
         "sm": "12px",
-        "xl": "80px",
+        // Fluid vertical rhythm. `xl` (section padding) and `lg` (block spacing)
+        // are used ~90x with no responsive variants, so a fixed 80px/48px left
+        // phones with ~160px of dead space between sections. clamp() scales them
+        // with the viewport and still resolves to the original 80px/48px at
+        // >=1280px, so desktop is pixel-identical to before.
+        "xl": "clamp(40px, 7vw, 80px)",
         "gutter": "24px",
         "base": "8px",
-        "lg": "48px",
+        "lg": "clamp(28px, 4.5vw, 48px)",
         "container-max": "1280px",
         "xs": "4px",
         "md": "24px"

@@ -665,10 +665,10 @@ img {
         overflow-wrap: break-word;
     }
 
-    main .flex-wrap > a[class*="py-"],
-    main .flex-wrap > button[class*="py-"],
-    main .flex-col > a[class*="py-"],
-    main .flex-col > button[class*="py-"],
+    /* Only buttons that deliberately opt in stay full-width on mobile: form
+       submits (contact + newsletter) and anything the markup marks `w-full`
+       (product sidebar CTA, in-card "View Details"). Section CTA links hug
+       their text — their flex container centres them via `items-center`. */
     main form button[type="submit"],
     main a[class*="w-full"],
     main button[class*="w-full"] {
