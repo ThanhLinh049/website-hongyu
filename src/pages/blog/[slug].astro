@@ -94,8 +94,9 @@ const formatDate = (dateStr: string) => {
         <!-- Post Hero -->
         <section class="relative bg-inverse-surface py-xl overflow-hidden">
           {post.featuredImage?.node?.sourceUrl && (
-            <div class="absolute inset-0 opacity-20 pointer-events-none">
-              <img alt={post.title} fetchpriority="high" decoding="async" class="w-full h-full object-cover" src={post.featuredImage.node.sourceUrl} />
+            <div class="absolute inset-0 pointer-events-none">
+              <img alt={post.title} fetchpriority="high" decoding="async" class="w-full h-full object-cover opacity-90" src={post.featuredImage.node.sourceUrl} />
+              <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
             </div>
           )}
           <div class="relative max-w-container-max mx-auto px-gutter">
@@ -107,9 +108,9 @@ const formatDate = (dateStr: string) => {
                 </a>
               </div>
               {post.categories?.nodes?.[0] && (
-                <span class="inline-block bg-primary text-white px-3 py-1 rounded-full text-[11px] font-label-bold uppercase tracking-widest mb-md">
-                  {post.categories.nodes[0].name}
-                </span>
+                <div class="flex items-center gap-sm mb-sm">
+                  <span class="font-label-bold text-label-bold text-cta-orange uppercase tracking-[0.2em] text-[12px]">{post.categories.nodes[0].name}</span>
+                </div>
               )}
               <h1 class="font-display-lg text-white mb-md text-[22px] sm:text-[28px] lg:text-[40px] leading-[1.15] tracking-tight">{post.title}</h1>
               <div class="flex items-center gap-lg text-white/60 font-body-sm">
@@ -130,9 +131,10 @@ const formatDate = (dateStr: string) => {
           </div>
         </section>
 
-        <!-- Post Content -->
+        <!-- Post Content — same container width as the product-detail article
+             (max-w-container-max), not the narrower max-w-3xl reading column. -->
         <section class="max-w-container-max mx-auto px-gutter py-xl">
-          <div class="max-w-3xl mx-auto">
+          <div>
             {toc.length >= 2 && (
               <nav aria-label="Table of contents" class="mb-lg rounded-lg border border-outline-variant bg-surface-container-low p-md">
                 <p class="font-label-bold text-label-bold uppercase tracking-wider text-on-surface-variant mb-sm flex items-center gap-2">
