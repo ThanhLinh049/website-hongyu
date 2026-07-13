@@ -272,8 +272,11 @@ button:not(#mobile-menu-btn):not(#mobile-menu-close):not(.faq-toggle):not([class
     content: '';
     position: absolute;
     top: 24px;
-    left: 0;
-    width: 100%;
+    /* Start at the centre of the first step and end at the centre of the last:
+       inset by half a column (50% / step count) each side, so the line never
+       overhangs past circle 1 or the last circle, at any step count. */
+    left: calc(50% / var(--steps, 6));
+    right: calc(50% / var(--steps, 6));
     height: 2px;
     background: #e0e0e0;
     z-index: 0;
@@ -284,6 +287,13 @@ button:not(#mobile-menu-btn):not(#mobile-menu-close):not(.faq-toggle):not([class
 @media (min-width: 1024px) {
     .assembly-line::before {
         display: block;
+    }
+    /* Workflow timeline spreads its steps evenly across however many there are
+       (--steps is set inline from workflowSteps.length), so 4, 5 or 6 steps all
+       fill the row instead of bunching under a fixed 6-column grid. Two-class
+       selector keeps it above Tailwind's sm:grid-cols-2 utility. */
+    .assembly-line.workflow-timeline {
+        grid-template-columns: repeat(var(--steps, 6), minmax(0, 1fr));
     }
 }
 

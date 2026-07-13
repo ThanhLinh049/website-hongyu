@@ -43,23 +43,6 @@ const workflowSteps = pageData?.workflowSteps || [
   { stepNumber: 6, title: 'Delivery', description: 'Secure logistics and final handover.' }
 ];
 
-// 4. QA Technical Panel
-const qaTitle = pageData?.qaTitle || 'QA Technical Framework';
-const qaDescription = pageData?.qaDescription || 'Our 7-point checklist ensures zero-defect delivery through rigorous automated and manual inspections.';
-const qaList = pageData?.qaList || [
-  { title: 'Color Chromatography', description: 'Matching to ±1% PMS variance using technical spectrometry.' },
-  { title: 'Abrasion Resistance', description: 'Standardized 3000-cycle friction testing for industrial durability.' },
-  { title: 'Adhesive Integrity', description: 'Peel-strength measurement aligned with 3M automotive standards.' }
-];
-
-const certTitle = pageData?.certTitle || 'Industrial Certification';
-const certList = pageData?.certList || [
-  { name: 'Quality Management', value: 'ISO 9001:2015' },
-  { name: 'Material Safety', value: 'OEKO-TEX 100' },
-  { name: 'Environmental Standard', value: 'ISO 14001' }
-];
-const certNote = pageData?.certNote || 'Facilities are audited bi-annually by third-party certification bodies to maintain global compliance standards.';
-
 // 5. FAQ Accordion
 const faqTitle = pageData?.faqTitle || 'Production FAQ';
 const faqSubtitle = pageData?.faqSubtitle || 'Common questions regarding our custom manufacturing processes.';
@@ -134,10 +117,10 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                     <p class="text-on-surface-variant mt-xs">{workflowSubtitle}</p>
                 </div>
                 <div class="relative mt-xl">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-lg lg:gap-md assembly-line lg:px-10">
-                        {workflowSteps.map((step: any, idx: number) => (
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-lg lg:gap-md assembly-line workflow-timeline" style={`--steps:${workflowSteps.length}`}>
+                        {workflowSteps.map((step: any) => (
                             <div class="relative z-10 flex lg:flex-col items-center text-left lg:text-center gap-md lg:gap-0 group">
-                                <div class={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center text-white font-bold lg:mb-sm group-hover:scale-110 transition-transform shadow-lg ${idx < 4 ? 'bg-primary' : 'bg-secondary'}`}>
+                                <div class="w-14 h-14 shrink-0 rounded-full flex items-center justify-center text-white font-bold lg:mb-sm group-hover:scale-110 transition-transform shadow-lg bg-primary">
                                     {step.stepNumber}
                                 </div>
                                 <div>
@@ -146,46 +129,6 @@ const ctaNote = pageData?.ctaNote || 'Typical technical response time: < 4 busin
                                 </div>
                             </div>
                         ))}
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Dark Blue QA Technical Panel -->
-        <section class="py-xl bg-primary">
-            <div class="max-w-container-max mx-auto px-gutter">
-                <div class="bg-on-primary-fixed p-xl md:p-24 rounded-2xl border border-white/10 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-xl opacity-5 pointer-events-none">
-                        <span class="material-symbols-outlined text-[20rem]">verified</span>
-                    </div>
-                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
-                        <div>
-                            <h2 class="font-headline-lg text-headline-lg text-white mb-md">{qaTitle}</h2>
-                            <p class="text-secondary-container font-body-lg mb-xl max-w-lg">{qaDescription}</p>
-                            <div class="space-y-md">
-                                {qaList.map((item: any) => (
-                                    <div class="flex items-start gap-md">
-                                        <span class="material-symbols-outlined text-secondary-container mt-1 shrink-0">check_circle</span>
-                                        <div>
-                                            <h4 class="text-white font-label-bold">{item.title}</h4>
-                                            <p class="text-surface-variant text-body-sm">{item.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-xl rounded-xl">
-                            <h3 class="text-white font-headline-md text-headline-md mb-md">{certTitle}</h3>
-                            <div class="space-y-sm mb-xl">
-                                {certList.map((item: any) => (
-                                    <div class="flex justify-between text-body-sm py-2 border-b border-white/10">
-                                        <span class="text-secondary-container">{item.name}</span>
-                                        <span class="text-white font-bold">{item.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <p class="text-surface-variant text-[12px] italic">{certNote}</p>
-                        </div>
                     </div>
                 </div>
             </div>

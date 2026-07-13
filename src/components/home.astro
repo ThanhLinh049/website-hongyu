@@ -2,18 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import {
   HOME_HERO_SLIDES, HOME_TRUST_BAR, HOME_SPECIALTIES, HOME_ADVANTAGES,
-  HOME_PROCESS, HOME_CAPABILITIES, HOME_PORTFOLIOS, HOME_POSTS,
+  HOME_PROCESS, HOME_CAPABILITIES, HOME_PORTFOLIOS, HOME_FAQ,
 } from '../lib/defaults';
 
 interface Props {
   pageData?: any;
   portfolios?: any[];
-  posts?: any[];
   categories?: any[];
   seo?: any;
 }
 
-const { pageData, portfolios = [], posts = [], categories = [], seo } = Astro.props;
+const { pageData, portfolios = [], categories = [], seo } = Astro.props;
 
 // Normalize internal links: strip any "https://domain" prefix so links stay
 // relative ("/contact"), regardless of what the client pastes into ACF URL fields.
@@ -87,14 +86,17 @@ const ctaText = pageData?.ctaText || 'Upload your artwork and receive a free dig
 const ctaBtnLabel = pageData?.ctaBtnLabel || 'Start Free Design Proof';
 const ctaBtnUrl = rel(pageData?.ctaBtnUrl) || '/contact';
 
+// FAQ — shared source of truth. Edited on the Home page; the Services page reads
+// this same list so the client maintains one FAQ.
+const faqTitle = pageData?.faqTitle || 'Frequently Asked Questions';
+const faqSubtitle = pageData?.faqSubtitle || '';
+const faqList = (pageData?.faqList && pageData.faqList.length > 0) ? pageData.faqList : HOME_FAQ;
+
 // Section headings + CTAs (Recent Work & Insights)
 const portfolioSectionTitle = pageData?.portfolioSectionTitle || 'Our Recent Work';
 const portfolioSectionSubtitle = pageData?.portfolioSectionSubtitle || '';
 const portfolioCtaLabel = pageData?.portfolioCtaLabel || 'View Case Studies';
 const portfolioCtaUrl = rel(pageData?.portfolioCtaUrl) || '/portfolio';
-const blogSectionTitle = pageData?.blogSectionTitle || 'Industry Insights';
-const blogCtaLabel = pageData?.blogCtaLabel || 'Browse All Articles';
-const blogCtaUrl = rel(pageData?.blogCtaUrl) || '/blog';
 
 // 7. Fallbacks for Portfolios (recent work grid)
 const displayPortfolios = portfolios.length > 0 ? portfolios : HOME_PORTFOLIOS;
@@ -116,8 +118,6 @@ const recentCats = selectedRecentCats.length > 0
   ? selectedRecentCats
   : [...recentCatMap].map(([key, name]) => ({ key, name }));
 
-// 8. Fallbacks for Blog Posts
-const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
 ---
 
 <Layout title="Hong Yu | Custom Badges, Patches & Metal Products" heroHeader={true} seo={seo}>
@@ -361,36 +361,22 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             </div>
         </section>
 
-        <!-- Section 8: Blog Preview (Dynamic) -->
-        <section class="py-xl bg-white">
-            <div class="max-w-container-max mx-auto px-gutter">
-                <div class="flex justify-between items-end mb-lg">
-                    <h2 class="font-headline-lg text-headline-lg text-primary">{blogSectionTitle}</h2>
-                    <a class="text-primary font-label-bold" href={blogCtaUrl}>{blogCtaLabel}</a>
+        <!-- Section: FAQ (shared source of truth — Services reads the same list) -->
+        <section class="py-xl bg-surface-container-low border-t border-outline-variant">
+            <div class="max-w-3xl mx-auto px-gutter">
+                <div class="text-center mb-lg">
+                    <h2 class="font-headline-lg text-headline-lg text-primary">{faqTitle}</h2>
+                    {faqSubtitle && (<p class="font-body-md text-on-surface-variant mt-xs">{faqSubtitle}</p>)}
                 </div>
-                <!-- Slider at every size: swipe or auto-advance through up to 12
-                     articles. 1 card per view on mobile, 2 on tablet, 3 on desktop. -->
-                <div id="blog-slider"
-                    class="flex overflow-x-auto snap-x snap-mandatory gap-gutter hide-scrollbar pb-1">
-                    {displayPosts.slice(0, 12).map((item: any) => (
-                        <a href={`/blog/${item.slug}`}
-                            class="blog-slide snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex flex-col bg-white border border-outline-variant rounded-lg overflow-hidden group card-lift hover:border-primary">
-                            <div class="aspect-square overflow-hidden">
-                                {item.featuredImage?.node?.sourceUrl ? (
-                                    <img alt={item.title} loading="lazy" decoding="async"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        src={item.featuredImage.node.sourceUrl} />
-                                ) : (
-                                    <div class="w-full h-full flex items-center justify-center bg-surface-container-low text-outline">
-                                        <span class="material-symbols-outlined text-5xl">image</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div class="p-md flex flex-col flex-grow">
-                                <h3 class="font-headline-sm text-primary mb-3 flex-grow line-clamp-2">{item.title}</h3>
-                                <span class="text-primary font-bold text-sm mt-auto">Read More →</span>
-                            </div>
-                        </a>
+                <div class="space-y-sm">
+                    {faqList.map((item: any) => (
+                        <details class="group bg-white border border-outline-variant rounded-lg">
+                            <summary class="flex items-center justify-between gap-md cursor-pointer p-md font-headline-sm text-sm text-primary list-none">
+                                {item.question}
+                                <span class="material-symbols-outlined shrink-0 text-outline transition-transform group-open:rotate-180">expand_more</span>
+                            </summary>
+                            <p class="px-md pb-md text-on-surface-variant font-body-md leading-relaxed">{item.answer}</p>
+                        </details>
                     ))}
                 </div>
             </div>
@@ -558,49 +544,9 @@ const displayPosts = posts.length > 0 ? posts : HOME_POSTS;
             render();
         };
 
-        // Blog preview: on mobile it's a swipeable, auto-advancing slider (one
-        // article at a time). Autoplay pauses while the user swipes and when the
-        // section is off-screen, then resumes. On sm+ it's a static grid.
-        const setupBlogSlider = () => {
-            const slider = document.getElementById('blog-slider');
-            if (!slider) return;
-            const slides = Array.from(slider.querySelectorAll<HTMLElement>('.blog-slide'));
-            if (slides.length < 2) return;
-            const slideLeft = (s: HTMLElement) => s.getBoundingClientRect().left - slider.getBoundingClientRect().left + slider.scrollLeft;
-
-            // Track the nearest slide so autoplay knows where to go next.
-            let current = 0, scrollT: any;
-            slider.addEventListener('scroll', () => {
-                clearTimeout(scrollT);
-                scrollT = setTimeout(() => {
-                    let best = 0, bestD = Infinity;
-                    slides.forEach((s, idx) => { const d = Math.abs(slideLeft(s) - slider.scrollLeft); if (d < bestD) { bestD = d; best = idx; } });
-                    current = best;
-                }, 90);
-            }, { passive: true });
-
-            let timer: any = null, paused = false, resumeT: any;
-            const advance = () => {
-                if (paused) return;
-                current = (current + 1) % slides.length;
-                slider.scrollTo({ left: slideLeft(slides[current]), behavior: 'smooth' });
-            };
-            const start = () => { stop(); timer = setInterval(advance, 4500); };
-            const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
-            const pauseThenResume = () => { paused = true; stop(); clearTimeout(resumeT); resumeT = setTimeout(() => { paused = false; start(); }, 6000); };
-            ['pointerdown', 'touchstart', 'wheel'].forEach(ev => slider.addEventListener(ev, pauseThenResume, { passive: true }));
-
-            if ('IntersectionObserver' in window) {
-                new IntersectionObserver((entries) => {
-                    entries.forEach(e => (e.isIntersecting ? start() : stop()));
-                }, { threshold: 0.25 }).observe(slider);
-            } else { start(); }
-        };
-
         setupSlider();
         setupScrollReveal();
         setupRecentFilter();
-        setupBlogSlider();
-        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); setupBlogSlider(); });
+        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); });
     </script>
 </Layout>

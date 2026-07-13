@@ -48,6 +48,12 @@ export const POST: APIRoute = async ({ request, url }) => {
   }
 
   const to = await resolveFormRecipient();
+  if (!to) {
+    return json(
+      { success: false, message: 'Email service is not configured (no recipient address).' },
+      500,
+    );
+  }
   const { subject, html, text } = renderNewsletterEmail({ email }, siteUrl);
 
   try {

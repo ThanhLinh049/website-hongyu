@@ -5,8 +5,12 @@ import { resolveFormRecipient } from '../../lib/form-recipient';
 export const prerender = false;
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-// Keep total request comfortably under Resend's limit; skip oversized uploads.
-const MAX_ATTACHMENT_BYTES = 15 * 1024 * 1024;
+// Vercel serverless functions cap the request body at ~4.5MB, so anything larger
+// never even reaches this handler (the platform returns 413). Keep our own limit
+// just under that and surface a clear error, instead of silently dropping the
+// file while still reporting success. Keep this number in sync with the
+// "Max Xmb" hint shown in contact.astro (uploadHint).
+const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -65,6 +69,12 @@ export const POST: APIRoute = async ({ request, url }) => {
   }
 
   const to = await resolveFormRecipient();
+  if (!to) {
+    return json(
+      { success: false, message: 'Email service is not configured (no recipient address).' },
+      500,
+    );
+  }
   const { subject, html, text } = renderContactEmail(fields, siteUrl);
 
   const payload: Record<string, any> = {
@@ -76,12 +86,22 @@ export const POST: APIRoute = async ({ request, url }) => {
     text,
   };
 
-  // Attach the uploaded artwork when present and within size limits.
-  if (file && file.size <= MAX_ATTACHMENT_BYTES) {
+  // Reject oversized artwork with a clear message rather than sending the
+  // enquiry without the file (which looked like success but lost the artwork).
+  if (file && file.size > MAX_ATTACHMENT_BYTES) {
+    return json(
+      {
+        success: false,
+        message:
+          'Your artwork file is too large (max 4MB). Please compress it or share a download link in the notes.',
+      },
+      400,
+    );
+  }
+  // Attach the uploaded artwork when present.
+  if (file) {
     const buf = Buffer.from(await file.arrayBuffer());
     payload.attachments = [{ filename: file.name || 'artwork', content: buf.toString('base64') }];
-  } else if (file) {
-    payload.text += `\n\n[Note: an attachment "${file.name}" was too large to include and should be requested from the sender.]`;
   }
 
   try {

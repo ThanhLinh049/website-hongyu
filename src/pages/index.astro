@@ -6,7 +6,6 @@ import { SEO_FRAGMENT } from '../lib/seo';
 let pageData = null;
 let seoData = null;
 let portfolios = [];
-let posts = [];
 let categories = [];
 
 try {
@@ -91,6 +90,12 @@ try {
             ctaText
             ctaBtnLabel
             ctaBtnUrl
+            faqTitle
+            faqSubtitle
+            faqList {
+              question
+              answer
+            }
           }
           ${SEO_FRAGMENT}
         }
@@ -104,24 +109,6 @@ try {
               }
             }
             portfolioCategories { nodes { name slug } }
-          }
-        }
-        posts(first: 12) {
-          nodes {
-            title
-            slug
-            excerpt
-            date
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            categories {
-              nodes {
-                name
-              }
-            }
           }
         }
         productCategories(first: 50, where: { hideEmpty: false }) {
@@ -145,9 +132,6 @@ try {
   if (data?.portfolios?.nodes) {
     portfolios = data.portfolios.nodes;
   }
-  if (data?.posts?.nodes) {
-    posts = data.posts.nodes;
-  }
   if (data?.productCategories?.nodes) {
     categories = data.productCategories.nodes;
   }
@@ -156,4 +140,4 @@ try {
 }
 ---
 
-<Home pageData={pageData} portfolios={portfolios} posts={posts} categories={categories} seo={seoData} />
+<Home pageData={pageData} portfolios={portfolios} categories={categories} seo={seoData} />

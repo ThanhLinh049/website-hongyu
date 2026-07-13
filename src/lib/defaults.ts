@@ -97,6 +97,14 @@ export const HOME_CAPABILITIES = [
   { title: 'Materials', description: 'TPU, Silicone, Brass, Zinc, and Eco-Felt.' }
 ];
 
+// Shared FAQ: source of truth is the Home page's ACF `faqList`. The Services page
+// reads this same list (see services page query), so the client maintains one FAQ.
+export const HOME_FAQ = [
+  { question: 'What is the lead time for custom tooling?', answer: 'Custom tool and mold fabrication typically takes 7-10 business days. For urgent projects, we offer expedited tooling lanes that can reduce this window to 4 business days for a surcharge.' },
+  { question: 'Do you provide physical pre-production samples?', answer: 'Yes. For orders over 1,000 units, we provide one physical pre-production sample for final sign-off. For smaller runs, we provide high-definition digital proofs or physical samples for a nominal setup fee.' },
+  { question: 'What technical file formats are required?', answer: 'We prefer vector-based files: .AI (Adobe Illustrator), .EPS, or .SVG. If these are unavailable, we can work with high-resolution PDFs or .TIFF files. Our design team can assist with vector conversion if necessary.' }
+];
+
 export const HOME_PORTFOLIOS = [
   {
     title: 'Elite Tactical Badge', slug: 'elite-tactical-badge',

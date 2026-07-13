@@ -8,6 +8,7 @@ interface Column1 {
   description?: string;
   phone?: string;
   email?: string;
+  address?: string;
   socialLinks?: SocialLink[] | null;
 }
 interface AbsoluteFooter { copyright?: string; credit?: string; }
@@ -27,6 +28,7 @@ const companyName = c1.companyName || 'Hong Yu';
 const description = c1.description || 'Global leader in industrial custom badge manufacturing for corporate, military, and lifestyle brands.';
 const phone = c1.phone || '';
 const email = c1.email || '';
+const address = c1.address || '';
 // Correct brand icons (inline SVG paths, viewBox 0 0 24 24). Each social row is
 // shown only when the client has entered a URL; empty rows are hidden.
 const one = (v: any) => (Array.isArray(v) ? v[0] : v);
@@ -85,6 +87,12 @@ const credit = absoluteFooter?.credit || 'Design by Vareno';
             </a>
             <p class="text-body-sm opacity-60 mb-6 max-w-xs">{description}</p>
             <div class="flex flex-col gap-2 mb-6 text-body-sm opacity-70">
+                {address && (
+                    <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-[18px] shrink-0">location_on</span>
+                        <span class="whitespace-pre-line">{address}</span>
+                    </div>
+                )}
                 {phone && (
                     <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2 hover:text-white transition-colors">
                         <span class="material-symbols-outlined text-[18px]">call</span>{phone}

@@ -211,6 +211,19 @@ const pImg = (p: any) => p?.featuredImage?.node?.sourceUrl || '';
             // Re-paginate when crossing the mobile breakpoint (rotate/resize).
             window.matchMedia('(max-width: 767px)').onchange = () => { page = 1; render(); };
 
+            // Honour a ?cat=<slug> deep link (e.g. a portfolio breadcrumb) as the
+            // initial filter, when a matching filter button exists.
+            const requested = new URLSearchParams(window.location.search).get('cat');
+            if (requested) {
+                const match = buttons.find(b => b.getAttribute('data-filter') === requested);
+                if (match) {
+                    buttons.forEach(b => { b.classList.remove('bg-primary', 'text-white', 'border-primary'); b.classList.add('border-outline-variant', 'hover:bg-surface-container-high'); });
+                    match.classList.add('bg-primary', 'text-white', 'border-primary');
+                    match.classList.remove('border-outline-variant', 'hover:bg-surface-container-high');
+                    filter = requested;
+                }
+            }
+
             render();
         };
         setupPortfolio();

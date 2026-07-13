@@ -41,6 +41,11 @@ const isActive = (href: string) => {
   return cleanPath === href;
 };
 
+// Slugify a nav label into a valid DOM id (e.g. "All Products" → "nav-all-products").
+// Using the raw lowercased label left spaces in the id, which is an invalid selector.
+const navId = (label: string) =>
+  "nav-" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 // Home: transparent overlay on the hero (solidifies on scroll via the script below).
 // Other pages: solid primary bar that matches the hero colour.
 const headerClass = transparent
@@ -72,12 +77,12 @@ const headerClass = transparent
                         : `${base} text-white/75 border-transparent font-medium hover:text-white`;
                     if (!hasDropdown) {
                         return (
-                            <a id={`nav-${item.label.toLowerCase()}`} href={item.url} class={linkClass}>{item.label}</a>
+                            <a id={navId(item.label)} href={item.url} class={linkClass}>{item.label}</a>
                         );
                     }
                     return (
                         <div class="relative group">
-                            <a id={`nav-${item.label.toLowerCase()}`} href={item.url} class={`${linkClass} flex items-center gap-1 cursor-pointer`}>
+                            <a id={navId(item.label)} href={item.url} class={`${linkClass} flex items-center gap-1 cursor-pointer`}>
                                 {item.label}
                                 <span class="material-symbols-outlined text-[18px] transition-transform group-hover:rotate-180">expand_more</span>
                             </a>

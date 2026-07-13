@@ -46,17 +46,11 @@ const backingFacet = backings || [];
 
 // Finishes & Materials
 const finishesTitle = pageData?.finishesTitle || 'Finishes & Materials';
-const finishesDescription = pageData?.finishesDescription || "Customize your product to match your brand's tactile and visual requirements. Our standard library includes over 200 finish combinations.";
+const finishesDescription = pageData?.finishesDescription || "Customize your product to match your brand's tactile and visual requirements.";
 const surfaceTexturesTitle = pageData?.surfaceTexturesTitle || 'Surface Textures';
 const surfaceTextures = (pageData?.surfaceTextures && pageData.surfaceTextures.length > 0) ? pageData.surfaceTextures : PRODUCTS_TEXTURES;
 const backingTitle = pageData?.backingTitle || 'Backing Solutions';
 const backingSolutions = (pageData?.backingSolutions && pageData.backingSolutions.length > 0) ? pageData.backingSolutions : PRODUCTS_BACKINGS;
-const labsTitle = pageData?.labsTitle || 'Material Durability Labs';
-const labsDescription = pageData?.labsDescription || 'All Hong Yu products undergo rigorous testing in our US-based quality control labs to ensure they meet international industrial standards.';
-const labsStats = (pageData?.labsStats && pageData.labsStats.length > 0) ? pageData.labsStats : [
-  { title: 'Heat Resistance', description: 'Tested up to 250°C for industrial laundering.' },
-  { title: 'UV Stability', description: 'Certified for 5 years outdoor exposure without fading.' }
-];
 const texImg = (t: any) => t?.swatchImage?.node?.sourceUrl || '';
 
 // Final CTA
@@ -219,54 +213,39 @@ const ctaSecondaryUrl = pageData?.ctaSecondaryUrl || '/contact';
             </div>
         </section>
 
-        <!-- Finishes & Materials (2-column: customization left, quality box right) -->
+        <!-- Finishes & Materials (heading left, swatch grid + backing right) -->
         <section class="py-xl bg-surface">
             <div class="container max-w-container-max mx-auto px-gutter">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-start">
-                    <!-- Left: Finishes + Surface Textures + Backing -->
-                    <div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+                    <!-- Left: intro (sticky on desktop) -->
+                    <div class="lg:col-span-4 lg:sticky lg:top-[96px]">
                         <h2 class="font-headline-lg text-headline-lg text-primary mb-md">{finishesTitle}</h2>
-                        {finishesDescription && (<p class="text-on-surface-variant font-body-md mb-lg max-w-xl">{finishesDescription}</p>)}
-                        <div class="space-y-lg">
-                            <div>
-                                <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-sm">{surfaceTexturesTitle}</h5>
-                                <div class="flex flex-wrap gap-md">
-                                    {surfaceTextures.map((tex: any) => (
-                                        <div class="w-20 sm:w-24 text-center group">
-                                            <div class="aspect-square rounded-lg overflow-hidden bg-surface-container border border-outline-variant group-hover:border-primary transition-colors mb-xs">
-                                                {texImg(tex) && (<img src={texImg(tex)} alt={tex.textureName} loading="lazy" class="w-full h-full object-cover" />)}
-                                            </div>
-                                            <span class="text-[10px] font-bold uppercase tracking-wide">{tex.textureName}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-sm">{backingTitle}</h5>
-                                <div class="flex flex-wrap gap-sm">
-                                    {backingSolutions.map((b: any) => (
-                                        <span class="px-sm py-xs bg-white border border-outline-variant rounded text-[12px] font-bold hover:border-primary transition-colors">{b.label}</span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                        {finishesDescription && (<p class="text-on-surface-variant font-body-md mb-md">{finishesDescription}</p>)}
+                        <div class="w-16 h-1 bg-primary"></div>
                     </div>
 
-                    <!-- Right: Material Durability Labs (quality box, sized to content) -->
-                    <div class="bg-surface-container border border-outline-variant rounded-xl p-lg relative overflow-hidden">
-                        <span class="material-symbols-outlined text-[120px] absolute -top-2 -right-2 opacity-[0.07] pointer-events-none select-none">science</span>
-                        <h4 class="font-headline-sm text-primary mb-sm relative">{labsTitle}</h4>
-                        {labsDescription && (<p class="text-sm text-on-surface-variant mb-lg max-w-md relative">{labsDescription}</p>)}
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-md relative">
-                            {labsStats.map((stat: any) => (
-                                <div class="bg-white p-md border border-outline-variant rounded-lg">
-                                    <div class="flex items-center gap-xs mb-xs">
-                                        {stat.icon && (<span class="material-symbols-outlined text-primary text-[20px]">{stat.icon}</span>)}
-                                        <h6 class="font-bold text-sm text-on-surface">{stat.title}</h6>
+                    <!-- Right: surface textures (fills the row; grows to any number of swatches) + backing -->
+                    <div class="lg:col-span-8 space-y-lg">
+                        <div>
+                            <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-md">{surfaceTexturesTitle}</h5>
+                            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-md">
+                                {surfaceTextures.map((tex: any) => (
+                                    <div class="text-center group">
+                                        <div class="aspect-square rounded-lg overflow-hidden bg-surface-container border border-outline-variant group-hover:border-primary transition-colors mb-xs">
+                                            {texImg(tex) && (<img src={texImg(tex)} alt={tex.textureName} loading="lazy" class="w-full h-full object-cover" />)}
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wide">{tex.textureName}</span>
                                     </div>
-                                    <p class="text-[12px] text-outline leading-relaxed">{stat.description}</p>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-label-bold uppercase text-[11px] tracking-widest text-primary mb-sm">{backingTitle}</h5>
+                            <div class="flex flex-wrap gap-sm">
+                                {backingSolutions.map((b: any) => (
+                                    <span class="px-sm py-xs bg-white border border-outline-variant rounded text-[12px] font-bold hover:border-primary transition-colors">{b.label}</span>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
