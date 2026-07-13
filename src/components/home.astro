@@ -362,7 +362,7 @@ const recentCats = selectedRecentCats.length > 0
         </section>
 
         <!-- Section: FAQ (shared source of truth — Services reads the same list) -->
-        <section class="py-xl bg-surface-container-low border-t border-outline-variant">
+        <section class="py-xl bg-surface-container-low">
             <div class="max-w-3xl mx-auto px-gutter">
                 <div class="text-center mb-lg">
                     <h2 class="font-headline-lg text-headline-lg text-primary">{faqTitle}</h2>
@@ -371,11 +371,11 @@ const recentCats = selectedRecentCats.length > 0
                 <div class="space-y-sm">
                     {faqList.map((item: any) => (
                         <details class="group bg-white border border-outline-variant rounded-lg transition-colors hover:border-primary/60 open:border-primary open:bg-primary/[0.03]">
-                            <summary class="flex items-center justify-between gap-md cursor-pointer p-md font-headline-sm text-sm text-primary list-none">
+                            <summary class="flex items-center justify-between gap-md cursor-pointer p-sm font-headline-sm text-sm text-primary list-none">
                                 {item.question}
                                 <span class="material-symbols-outlined shrink-0 text-primary group-open:text-cta-orange transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <p class="px-md pb-md text-on-surface-variant font-body-md leading-relaxed">{item.answer}</p>
+                            <p class="px-sm pb-sm text-on-surface-variant font-body-md leading-relaxed">{item.answer}</p>
                         </details>
                     ))}
                 </div>
