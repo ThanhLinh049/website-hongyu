@@ -370,10 +370,10 @@ const recentCats = selectedRecentCats.length > 0
                 </div>
                 <div class="space-y-sm">
                     {faqList.map((item: any) => (
-                        <details class="group bg-white border border-outline-variant rounded-lg">
+                        <details class="group bg-white border border-outline-variant rounded-lg transition-colors hover:border-primary/60 open:border-primary open:bg-primary/[0.03]">
                             <summary class="flex items-center justify-between gap-md cursor-pointer p-md font-headline-sm text-sm text-primary list-none">
                                 {item.question}
-                                <span class="material-symbols-outlined shrink-0 text-outline transition-transform group-open:rotate-180">expand_more</span>
+                                <span class="material-symbols-outlined shrink-0 text-primary group-open:text-cta-orange transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
                             <p class="px-md pb-md text-on-surface-variant font-body-md leading-relaxed">{item.answer}</p>
                         </details>
@@ -383,10 +383,10 @@ const recentCats = selectedRecentCats.length > 0
         </section>
 
         <!-- Section 9: CTA (Dynamic) -->
-        <section class="py-xl bg-surface-container-low text-center">
+        <section class="py-xl bg-primary text-center">
             <div class="max-w-container-max mx-auto px-gutter">
-                <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{ctaTitle}</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">{ctaText}</p>
+                <h2 class="font-headline-lg text-headline-lg text-white mb-sm">{ctaTitle}</h2>
+                <p class="font-body-lg text-body-lg text-white/80 mb-xl max-w-xl mx-auto">{ctaText}</p>
                 <div class="flex justify-center items-center gap-md">
                     <a href={ctaBtnUrl}
                         class="bg-cta-orange text-white px-8 py-3 font-label-bold text-label-bold hover:brightness-110 transition-all rounded text-center">
