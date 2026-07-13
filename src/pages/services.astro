@@ -37,24 +37,6 @@ try {
               title
               description
             }
-            qaTitle
-            qaDescription
-            qaList {
-              title
-              description
-            }
-            certTitle
-            certList {
-              name
-              value
-            }
-            certNote
-            faqTitle
-            faqSubtitle
-            faqList {
-              question
-              answer
-            }
             ctaTitle
             ctaDescription
             ctaPrimaryText
@@ -62,6 +44,16 @@ try {
             ctaNote
           }
           ${SEO_FRAGMENT}
+        }
+        homeFaq: page(id: "home", idType: URI) {
+          homePage {
+            faqTitle
+            faqSubtitle
+            faqList {
+              question
+              answer
+            }
+          }
         }
       }
     `
@@ -72,6 +64,18 @@ try {
   }
   if (data?.page?.seo) {
     seoData = data.page.seo;
+  }
+  // Shared FAQ: the Services page shows the HOME page's FAQ (single source of
+  // truth — the client edits it on Home), so both pages stay in sync. Override
+  // any services-level faq* with the home values.
+  const homeFaq = data?.homeFaq?.homePage;
+  if (homeFaq) {
+    pageData = {
+      ...(pageData || {}),
+      faqTitle: homeFaq.faqTitle,
+      faqSubtitle: homeFaq.faqSubtitle,
+      faqList: homeFaq.faqList,
+    };
   }
 } catch (e) {
   console.warn("Failed to fetch services page data from WordPress. Fallback content will be used.", e);
