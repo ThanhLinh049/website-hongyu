@@ -62,8 +62,8 @@ try {
             backings { nodes { slug } }
           }
         }
-        finishes(first: 50, where: { hideEmpty: true }) { nodes { name slug } }
-        backings(first: 50, where: { hideEmpty: true }) { nodes { name slug } }
+        finishes(first: 50, where: { hideEmpty: false }) { nodes { name slug } }
+        backings(first: 50, where: { hideEmpty: false }) { nodes { name slug } }
       }
     `
   });
