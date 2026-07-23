@@ -5,7 +5,7 @@ import { SEO_FRAGMENT } from '../lib/seo';
 
 let pageData = null;
 let seoData = null;
-let portfolios = [];
+let products = [];
 let categories = [];
 
 try {
@@ -66,16 +66,6 @@ try {
               title
               description
             }
-            portfolioSectionTitle
-            portfolioSectionSubtitle
-            recentCategories {
-              nodes {
-                name
-                slug
-              }
-            }
-            portfolioCtaLabel
-            portfolioCtaUrl
             ctaTitle
             ctaText
             ctaBtnLabel
@@ -89,16 +79,12 @@ try {
           }
           ${SEO_FRAGMENT}
         }
-        portfolios(first: 8) {
+        products(first: 8) {
           nodes {
             title
             slug
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            portfolioCategories { nodes { name slug } }
+            featuredImage { node { sourceUrl } }
+            productCategories { nodes { name slug } }
           }
         }
         productCategories(first: 50, where: { hideEmpty: false }) {
@@ -119,8 +105,8 @@ try {
   if (data?.page?.seo) {
     seoData = data.page.seo;
   }
-  if (data?.portfolios?.nodes) {
-    portfolios = data.portfolios.nodes;
+  if (data?.products?.nodes) {
+    products = data.products.nodes;
   }
   if (data?.productCategories?.nodes) {
     categories = data.productCategories.nodes;
@@ -130,4 +116,4 @@ try {
 }
 ---
 
-<Home pageData={pageData} portfolios={portfolios} categories={categories} seo={seoData} />
+<Home pageData={pageData} products={products} categories={categories} seo={seoData} />

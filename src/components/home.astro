@@ -2,17 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import {
   HOME_HERO_SLIDES, HOME_TRUST_BAR, HOME_SPECIALTIES, HOME_ADVANTAGES,
-  HOME_PROCESS, HOME_CAPABILITIES, HOME_PORTFOLIOS, HOME_FAQ,
+  HOME_PROCESS, HOME_CAPABILITIES, HOME_FAQ, PRODUCTS_LIST,
 } from '../lib/defaults';
 
 interface Props {
   pageData?: any;
-  portfolios?: any[];
+  products?: any[];
   categories?: any[];
   seo?: any;
 }
 
-const { pageData, portfolios = [], categories = [], seo } = Astro.props;
+const { pageData, products = [], categories = [], seo } = Astro.props;
 
 // Normalize internal links: strip any "https://domain" prefix so links stay
 // relative ("/contact"), regardless of what the client pastes into ACF URL fields.
@@ -92,31 +92,22 @@ const faqTitle = pageData?.faqTitle || 'Frequently Asked Questions';
 const faqSubtitle = pageData?.faqSubtitle || '';
 const faqList = (pageData?.faqList && pageData.faqList.length > 0) ? pageData.faqList : HOME_FAQ;
 
-// Section headings + CTAs (Recent Work & Insights)
-const portfolioSectionTitle = pageData?.portfolioSectionTitle || 'Our Recent Work';
-const portfolioSectionSubtitle = pageData?.portfolioSectionSubtitle || '';
-const portfolioCtaLabel = pageData?.portfolioCtaLabel || 'View Case Studies';
-const portfolioCtaUrl = rel(pageData?.portfolioCtaUrl) || '/portfolio';
+// Products preview keeps the former Recent Work layout and filter behavior.
+const productSectionTitle = 'Products';
+const productSectionSubtitle = '';
+const productCtaLabel = 'View All Products';
+const productCtaUrl = '/products';
+const displayProducts = products.length > 0 ? products : PRODUCTS_LIST;
 
-// 7. Fallbacks for Portfolios (recent work grid)
-const displayPortfolios = portfolios.length > 0 ? portfolios : HOME_PORTFOLIOS;
-
-// "Our Recent Work" filter: category key (slug if present, else derived from name) so buttons match cards
+// Derive filter tabs from the products actually displayed.
 const catKey = (c: any) => c?.slug || (c?.name || '').toLowerCase().split(/\s+/)[0];
-const recentCardCats = (p: any) => (p?.portfolioCategories?.nodes || []).map(catKey).filter(Boolean).join(' ');
-const recentCatMap = new Map<string, string>();
-displayPortfolios.forEach((p: any) => (p?.portfolioCategories?.nodes || []).forEach((c: any) => {
+const productCardCats = (p: any) => (p?.productCategories?.nodes || []).map(catKey).filter(Boolean).join(' ');
+const productCatMap = new Map<string, string>();
+displayProducts.forEach((p: any) => (p?.productCategories?.nodes || []).forEach((c: any) => {
   const k = catKey(c);
-  if (k) recentCatMap.set(k, c?.name || k);
+  if (k) productCatMap.set(k, c?.name || k);
 }));
-// Filter tabs the client picked in the admin (Home → Recent Work → Recent Categories).
-// If none are picked, fall back to auto-deriving them from the displayed projects.
-const selectedRecentCats = (pageData?.recentCategories?.nodes || [])
-  .map((c: any) => ({ key: catKey(c), name: c?.name || '' }))
-  .filter((c: any) => c.key && c.name);
-const recentCats = selectedRecentCats.length > 0
-  ? selectedRecentCats
-  : [...recentCatMap].map(([key, name]) => ({ key, name }));
+const productCats = [...productCatMap].map(([key, name]) => ({ key, name }));
 
 ---
 
@@ -314,40 +305,40 @@ const recentCats = selectedRecentCats.length > 0
             </div>
         </section>
 
-        <!-- Section 7: Portfolio Preview (Dynamic) -->
+        <!-- Section 7: Products Preview (Dynamic) -->
         <section class="py-xl bg-surface">
             <div class="max-w-container-max mx-auto px-gutter">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
                     <div class="w-full md:w-auto min-w-0">
-                        <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{portfolioSectionTitle}</h2>
-                        {portfolioSectionSubtitle && (
-                            <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{portfolioSectionSubtitle}</p>
+                        <h2 class="font-headline-lg text-headline-lg text-primary mb-sm">{productSectionTitle}</h2>
+                        {productSectionSubtitle && (
+                            <p class="font-body-md text-on-surface-variant mb-md max-w-xl">{productSectionSubtitle}</p>
                         )}
-                        <div id="recent-filters" class="flex gap-4 sm:gap-6 overflow-x-auto pb-2 hide-scrollbar min-w-0 max-w-full">
-                            <button type="button" data-filter="all" class="recent-filter shrink-0 text-primary font-bold border-b-2 border-primary whitespace-nowrap pb-px">All Projects</button>
-                            {recentCats.map((c: any) => (
-                                <button type="button" data-filter={c.key} class="recent-filter shrink-0 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
+                        <div id="product-filters" class="flex gap-4 sm:gap-6 overflow-x-auto pb-2 hide-scrollbar min-w-0 max-w-full">
+                            <button type="button" data-filter="all" class="product-filter shrink-0 text-primary font-bold border-b-2 border-primary whitespace-nowrap pb-px">All Products</button>
+                            {productCats.map((c: any) => (
+                                <button type="button" data-filter={c.key} class="product-filter shrink-0 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap border-b-2 border-transparent pb-px">{c.name}</button>
                             ))}
                         </div>
                     </div>
-                    <a href={portfolioCtaUrl} class="flex items-center gap-2 text-primary font-bold hover:underline mb-2 shrink-0">
-                        {portfolioCtaLabel} <span class="material-symbols-outlined">arrow_forward</span>
+                    <a href={productCtaUrl} class="flex items-center gap-2 text-primary font-bold hover:underline mb-2 shrink-0">
+                        {productCtaLabel} <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
                 </div>
-                <div id="recent-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {displayPortfolios.map((item: any) => (
-                        <a href={`/portfolio/${item.slug}`}
-                            data-category={recentCardCats(item)}
-                            class="recent-card card-lift group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:border-primary/40">
+                <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {displayProducts.map((item: any) => (
+                        <a href={`/products/${item.slug}`}
+                            data-category={productCardCats(item)}
+                            class="product-preview-card card-lift group flex flex-col bg-white rounded-xl border border-outline-variant overflow-hidden hover:border-primary/40">
                             <div class="relative aspect-square overflow-hidden bg-surface-container-high">
                                 {item.featuredImage?.node?.sourceUrl && (
                                     <img alt={item.title} loading="lazy" decoding="async"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                         src={item.featuredImage.node.sourceUrl} />
                                 )}
-                                {item.portfolioCategories?.nodes?.[0]?.name && (
+                                {item.productCategories?.nodes?.[0]?.name && (
                                     <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary shadow-sm">
-                                        {item.portfolioCategories.nodes[0].name}
+                                        {item.productCategories.nodes[0].name}
                                     </span>
                                 )}
                             </div>
@@ -357,7 +348,7 @@ const recentCats = selectedRecentCats.length > 0
                         </a>
                     ))}
                 </div>
-                <div id="recent-empty" class="hidden text-center py-lg text-outline font-body-md">No projects in this category yet.</div>
+                <div id="product-empty" class="hidden text-center py-lg text-outline font-body-md">No products in this category yet.</div>
             </div>
         </section>
 
@@ -502,15 +493,15 @@ const recentCats = selectedRecentCats.length > 0
             }, 1200);
         };
 
-        const setupRecentFilter = () => {
-            const filters = document.getElementById('recent-filters');
-            const grid = document.getElementById('recent-grid');
-            const empty = document.getElementById('recent-empty');
+        const setupProductFilter = () => {
+            const filters = document.getElementById('product-filters');
+            const grid = document.getElementById('product-grid');
+            const empty = document.getElementById('product-empty');
             if (!filters || !grid) return;
-            const buttons = Array.from(filters.querySelectorAll('.recent-filter')) as HTMLElement[];
-            const cards = Array.from(grid.querySelectorAll('.recent-card')) as HTMLElement[];
+            const buttons = Array.from(filters.querySelectorAll('.product-filter')) as HTMLElement[];
+            const cards = Array.from(grid.querySelectorAll('.product-preview-card')) as HTMLElement[];
 
-            // No pagination: show at most 4 projects on mobile (≤767px), 8 on
+            // No pagination: show at most 4 products on mobile (≤767px), 8 on
             // tablet/desktop. The same cap applies to every category filter.
             const limit = () => window.matchMedia('(max-width: 767px)').matches ? 4 : 8;
             let filter = 'all';
@@ -546,7 +537,7 @@ const recentCats = selectedRecentCats.length > 0
 
         setupSlider();
         setupScrollReveal();
-        setupRecentFilter();
-        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupRecentFilter(); });
+        setupProductFilter();
+        document.addEventListener('astro:after-swap', () => { setupSlider(); setupScrollReveal(); setupProductFilter(); });
     </script>
 </Layout>

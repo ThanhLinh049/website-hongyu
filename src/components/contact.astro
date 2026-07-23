@@ -37,12 +37,24 @@ const anySupportIcon = supportCards.some((c: any) => one(c.icon));
 // The form is intentionally NOT editable in WP — it's defined here for
 // reliability and a clean admin. Submissions still email via /api/contact
 // (Resend). Each input's `name` is its label, which the email lists automatically.
+
+// Backing Attachment depends on the selected Product Type (populated client-side).
+// Challenge coins / Lapel pin have no defined backing options, so their select
+// stays disabled with a "Not applicable" placeholder.
+const backingOptionsByProductType: Record<string, string[]> = {
+  'Flex badge': ['Velcro', '3M Adhesive', 'Iron On', 'Magnet', 'Sew On', 'Safety Pin'],
+  'Embroidery patch': ['Velcro', '3M Adhesive', 'Iron On', 'Plastic', 'Sew On'],
+  'PVC patch': ['Velcro', '3M Adhesive', 'Iron On', 'No Backing', 'Key Ring', 'Luggage Tag'],
+  'Challenge coins': [],
+  'Lapel pin': [],
+};
+
 const formFields = [
-  { label: 'Product Type', type: 'select', width: 'half', required: false, placeholder: '', options: ['Flex Badges', 'Embroidered Patches', 'PVC 3D Patches', 'Metal Hardware', 'Woven Labels'] },
+  { label: 'Product Type', type: 'select', width: 'half', required: false, placeholder: '', options: ['Flex badge', 'Embroidery patch', 'PVC patch', 'Challenge coins', 'Lapel pin'] },
   { label: 'Estimated Quantity', type: 'number', width: 'half', required: false, placeholder: 'Estimated Quantity', options: [] },
   { label: 'Dimensions (W x H)', type: 'text', width: 'half', required: false, placeholder: 'Dimensions (W x H)', options: [] },
-  { label: 'Backing Attachment', type: 'select', width: 'half', required: false, placeholder: '', options: ['Heat Seal', 'Velcro', 'Adhesive', 'Plain'] },
-  { label: 'Finish Preference', type: 'select', width: 'half', required: false, placeholder: '', options: ['Matte', 'Glossy', 'Metallic', 'Textured'] },
+  { label: 'Backing Attachment', type: 'select', width: 'half', required: false, placeholder: 'Select Product Type first', options: [] },
+  { label: 'Finish Preference', type: 'text', width: 'half', required: false, placeholder: 'Finish Preference', options: [] },
   { label: 'Requested Lead Time', type: 'select', width: 'half', required: false, placeholder: '', options: ['Standard (15-20 days)', 'Expedited (10 days)', 'Rush (5-7 days)'] },
   { label: 'Full Name', type: 'text', width: 'half', required: true, placeholder: 'Full Name', options: [] },
   { label: 'Email Address', type: 'email', width: 'half', required: true, placeholder: 'Email Address', options: [] },
@@ -139,7 +151,7 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                                         <textarea id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} placeholder={f.placeholder || f.label} rows="4" class="w-full border border-outline-variant p-sm font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"></textarea>
                                     ) : f.type === 'select' ? (
                                         <div class="relative">
-                                            <select id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                                            <select id={`ff-${f.label}`} name={f.label} aria-label={f.label} required={f.required} disabled={f.label === 'Backing Attachment'} class="w-full appearance-none border border-outline-variant p-sm pr-10 font-body-md bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer disabled:bg-surface-container-low disabled:cursor-not-allowed">
                                                 <option value="" selected disabled>{f.placeholder || f.label}</option>
                                                 {f.options.map((o: string) => (<option>{o}</option>))}
                                             </select>
@@ -264,6 +276,70 @@ const legalText = pageData?.legalText || 'By submitting artwork to Hong Yu Manuf
                 input.closest('div')?.querySelector('label')?.classList.remove('text-primary');
             });
         });
+
+        // --- Dependent "Backing Attachment" options based on "Product Type" ---
+        // Kept in sync with the `backingOptionsByProductType` map in the
+        // frontmatter above. Update both places together if options change.
+        const backingOptionsByProductType: Record<string, string[]> = {
+            'Flex badge': ['Velcro', '3M Adhesive', 'Iron On', 'Magnet', 'Sew On', 'Safety Pin'],
+            'Embroidery patch': ['Velcro', '3M Adhesive', 'Iron On', 'Plastic', 'Sew On'],
+            'PVC patch': ['Velcro', '3M Adhesive', 'Iron On', 'No Backing', 'Key Ring', 'Luggage Tag'],
+            'Challenge coins': [],
+            'Lapel pin': [],
+        };
+
+        const productTypeSelect = document.getElementById('ff-Product Type') as HTMLSelectElement | null;
+        const backingSelect = document.getElementById('ff-Backing Attachment') as HTMLSelectElement | null;
+
+        const updateBackingOptions = () => {
+            if (!productTypeSelect || !backingSelect) return;
+            const selectedType = productTypeSelect.value;
+            const options = backingOptionsByProductType[selectedType] || [];
+
+            backingSelect.innerHTML = '';
+
+            if (!selectedType) {
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = 'Select Product Type first';
+                placeholder.selected = true;
+                placeholder.disabled = true;
+                backingSelect.appendChild(placeholder);
+                backingSelect.disabled = true;
+                return;
+            }
+
+            if (options.length === 0) {
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = 'Not applicable';
+                placeholder.selected = true;
+                placeholder.disabled = true;
+                backingSelect.appendChild(placeholder);
+                backingSelect.disabled = true;
+                return;
+            }
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Backing Attachment';
+            placeholder.selected = true;
+            placeholder.disabled = true;
+            backingSelect.appendChild(placeholder);
+
+            options.forEach((opt) => {
+                const optionEl = document.createElement('option');
+                optionEl.textContent = opt;
+                backingSelect.appendChild(optionEl);
+            });
+
+            backingSelect.disabled = false;
+        };
+
+        if (productTypeSelect && backingSelect) {
+            updateBackingOptions();
+            productTypeSelect.addEventListener('change', updateBackingOptions);
+        }
 
         const dropZone = document.querySelector('.design-file-upload') as HTMLElement | null;
         const fileInput = document.getElementById('artwork-upload') as HTMLInputElement | null;
